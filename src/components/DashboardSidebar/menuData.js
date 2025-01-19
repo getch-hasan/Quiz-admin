@@ -19,7 +19,18 @@ export const menuData = [
   {
     title: "Category",
     icon: <HiBars3 />,
-    path: "/dashboard/category",
+    childrens: [
+      {
+        title: "Category List",
+        icon: <IoColorPaletteOutline />,
+        path: "/dashboard/category",
+      },
+      {
+        title: " Create Category",
+        icon: <IoColorPaletteOutline />,
+        path: "/dashboard/create-category",
+      },
+    ]
   },
   {
     title: "Banner",

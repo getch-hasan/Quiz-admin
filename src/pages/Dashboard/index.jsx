@@ -1,10 +1,7 @@
-
-
 export const Dashboard = () => {
   return (
     <>
-<p>dashboard</p>
-
+      <p>dashboard</p>
     </>
   );
 };

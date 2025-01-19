@@ -7,6 +7,8 @@ import { DashboardLayout } from "../layouts/dashboard.layout"
 import { Dashboard } from "../pages/Dashboard"
 import ProductList from "../pages/product/ProductList/ProductList"
 import AddProduct from "../pages/product/AddProduct/AddProduct"
+import CreateCategory from "../pages/category/CreateCategory"
+import EditCategory from "../pages/category/EditCategory"
 
 const appRoutes = [
     {
@@ -19,6 +21,8 @@ const appRoutes = [
                      
             /** category */
             { path:"category", element: <CategoryList /> },
+            { path:"create-category", element: <CreateCategory/> },
+            { path:"edit-category/:id", element: <EditCategory/> },
 
             // /** product */
             // { path: "product", element:  <Product /> },
