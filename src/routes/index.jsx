@@ -9,6 +9,10 @@ import { QuestionList } from "../pages/question/Index"
 import { CreateQuestion } from "../pages/question/CreateQuestion"
 import { EditQuestion } from "../pages/question/EditQusetion"
 
+import OptionList from "../pages/option/Index"
+import EditOption from "../pages/option/EditOption"
+import { CreateOption } from "../pages/option/CreateOption"
+
 
 
 const appRoutes = [
@@ -29,6 +33,11 @@ const appRoutes = [
             { path:"question-list", element: <QuestionList/> },
             { path:"create-question", element: <CreateQuestion/> },
             { path:"edit-question/:id", element: <EditQuestion/> },
+
+            // /** question */
+            { path:"option-list", element: <OptionList/>},
+            { path:"create-option", element:  <CreateOption/> },
+            { path:"edit-question/:id", element: <EditOption/> },
          
 
          

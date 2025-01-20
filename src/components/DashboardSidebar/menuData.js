@@ -46,21 +46,24 @@ export const menuData = [
         icon: <FaUnity />,
         path: "/dashboard/create-question",
       },
-      {
-        title: "Attribute",
-        icon: <CgAttribution />,
-        path: "/dashboard/attribute",
-      },
-      {
-        title: "Product Variant",
-        icon: <RiProductHuntLine />,
-        path: "/dashboard/product-variant",
-      },
+
     ],
   },
   {
-    title: "WebSetting",
+    title: "Option",
     icon: <MdSettingsAccessibility />,
-    path: "/dashboard/web-setting",
+    childrens: [
+      {
+        title: "Option List",
+        icon: <IoColorPaletteOutline />,
+        path: "/dashboard/option-list",
+      },
+      {
+        title: "Create Option",
+        icon: <FaUnity />,
+        path: "/dashboard/create-option",
+      },
+      
+    ],
   },
 ];
