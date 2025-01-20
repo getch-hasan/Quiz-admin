@@ -33,39 +33,18 @@ export const menuData = [
     ]
   },
   {
-    title: "Banner",
-    icon: <RiGalleryFill />,
-    path: "/dashboard/banner",
-  },
-  {
-    title: "Category",
-    icon: <MdOutlineCategory />,
-    path: "/dashboard/category",
-  },
-  {
-    title: "Brand",
-    icon: <MdBrandingWatermark />,
-    path: "/dashboard/brand",
-  },
-  {
-    title: "Product",
-    icon: <MdOutlineProductionQuantityLimits />,
-    path: "/dashboard/product",
-  },
-
-  {
-    title: "Product Variant",
+    title: "Question",
     icon: <RiProductHuntLine />,
     childrens: [
       {
-        title: "Color",
+        title: "Question List",
         icon: <IoColorPaletteOutline />,
-        path: "/dashboard/color",
+        path: "/dashboard/question-list",
       },
       {
-        title: "Unit",
+        title: "Create Question",
         icon: <FaUnity />,
-        path: "/dashboard/unit",
+        path: "/dashboard/create-question",
       },
       {
         title: "Attribute",

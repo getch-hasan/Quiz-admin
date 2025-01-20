@@ -20,7 +20,7 @@ export const PageHeader = ({ propsData }) => {
   return (
     <section className="flex items-center justify-between shadow-md p-4 rounded-lg bg-white my-3">
       <div>
-        <p className="flex items-center gap-2 font-semibold text-gray-700 text-xl capitalize">
+        <p className="flex items-center gap-2 font-semibold text-gray-700 text-lg capitalize">
           {propsData?.pageIcon} 
           <span>{propsData?.pageTitle}</span>
         </p>
