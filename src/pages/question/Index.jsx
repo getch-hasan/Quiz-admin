@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { FaEdit, FaList, FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import Select from "react-select";
 import { useState } from "react";
+import Select from "react-select";
 
 export const QuestionList = () => {
   const [questions, setQuestions] = useState([
@@ -11,7 +11,8 @@ export const QuestionList = () => {
       id: 1,
       name: "What is the capital of Bangladesh?",
       category: "Geography",
-      description: "This question tests knowledge about the capital of Bangladesh.",
+      description:
+        "This question tests knowledge about the capital of Bangladesh.",
       difficulty: "Easy",
       exam: "General Knowledge",
     },
@@ -31,12 +32,11 @@ export const QuestionList = () => {
       difficulty: "Medium",
       exam: "English Literature",
     },
-    // Add more questions as needed
   ]);
 
-  const [searchName, setSearchName] = useState(null);
+  const [searchName, setSearchName] = useState("");
   const [searchCategory, setSearchCategory] = useState(null);
-  const [searchExam, setSearchExam] = useState(null);
+  const [searchExam, setSearchExam] = useState("");
   const [searchDifficulty, setSearchDifficulty] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
@@ -49,7 +49,8 @@ export const QuestionList = () => {
     type: "add",
   };
 
-  /** Function to get difficulty color */
+  console.log("searchCategory", searchCategory);
+
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "Easy":
@@ -63,32 +64,30 @@ export const QuestionList = () => {
     }
   };
 
-  // Filter options for Select inputs
-  const nameOptions = questions.map((q) => ({ value: q.name, label: q.name }));
-  const categoryOptions = [...new Set(questions.map((q) => q.category))].map((c) => ({
-    value: c,
-    label: c,
+  const categoryOptions = [
+    ...new Set(questions.map((question) => question.category)),
+  ].map((singleCategory) => ({
+    value: singleCategory,
+    label: singleCategory,
   }));
-  const examOptions = [...new Set(questions.map((q) => q.exam))].map((e) => ({
-    value: e,
-    label: e,
-  }));
-  const difficultyOptions = [...new Set(questions.map((q) => q.difficulty))].map((d) => ({
-    value: d,
-    label: d,
+  const difficultyOptions = [
+    ...new Set(questions.map((question) => question.difficulty)),
+  ].map((singleDifficulty) => ({
+    value: singleDifficulty,
+    label: singleDifficulty,
   }));
 
-  // Filter questions based on search criteria
   const filteredQuestions = questions.filter((question) => {
     return (
-      (!searchName || question.name === searchName.value) &&
+      (!searchName ||
+        question.name.toLowerCase().includes(searchName.toLowerCase())) &&
       (!searchCategory || question.category === searchCategory.value) &&
-      (!searchExam || question.exam === searchExam.value) &&
+      (!searchExam ||
+        question.exam.toLowerCase().includes(searchExam.toLowerCase())) &&
       (!searchDifficulty || question.difficulty === searchDifficulty.value)
     );
   });
 
-  // Pagination logic
   const totalPages = Math.ceil(filteredQuestions.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const paginatedQuestions = filteredQuestions.slice(
@@ -105,17 +104,16 @@ export const QuestionList = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      {/* Search Inputs */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <Select
+        <input
+          type="text"
           placeholder="Search by Name"
-          options={nameOptions}
+          className="border border-gray-300 focus:border-blue-400  focus:border-[3px] p-2 rounded outline-none h-[38px]"
           value={searchName}
-          onChange={(selectedOption) => {
-            setSearchName(selectedOption);
-            setCurrentPage(1); // Reset pagination
+          onChange={(e) => {
+            setSearchName(e.target.value);
+            setCurrentPage(1);
           }}
-          isClearable
         />
         <Select
           placeholder="Search by Category"
@@ -123,19 +121,19 @@ export const QuestionList = () => {
           value={searchCategory}
           onChange={(selectedOption) => {
             setSearchCategory(selectedOption);
-            setCurrentPage(1); // Reset pagination
+            setCurrentPage(1);
           }}
           isClearable
         />
-        <Select
+        <input
+          type="text"
           placeholder="Search by Exam"
-          options={examOptions}
+          className="border border-gray-300 focus:border-blue-400  focus:border-[3px] p-2 rounded outline-none h-[38px]"
           value={searchExam}
-          onChange={(selectedOption) => {
-            setSearchExam(selectedOption);
-            setCurrentPage(1); // Reset pagination
+          onChange={(e) => {
+            setSearchExam(e.target.value);
+            setCurrentPage(1);
           }}
-          isClearable
         />
         <Select
           placeholder="Search by Difficulty"
@@ -143,12 +141,11 @@ export const QuestionList = () => {
           value={searchDifficulty}
           onChange={(selectedOption) => {
             setSearchDifficulty(selectedOption);
-            setCurrentPage(1); // Reset pagination
+            setCurrentPage(1);
           }}
           isClearable
         />
       </div>
-      {/* Table */}
       <div className="overflow-x-auto">
         <table className="table w-full border border-gray-200">
           <thead>
@@ -184,7 +181,9 @@ export const QuestionList = () => {
                     </Link>
                     <MdDelete
                       className="text-red-500 text-xl cursor-pointer"
-                      onClick={() => (question.id)}
+                      onClick={() =>
+                        console.log(`Delete question ${question.id}`)
+                      }
                     />
                   </div>
                 </td>
@@ -193,7 +192,6 @@ export const QuestionList = () => {
           </tbody>
         </table>
       </div>
-      {/* Pagination */}
       <div className="flex items-center justify-between mt-5">
         <div>
           <p className="mb-2">
@@ -214,7 +212,9 @@ export const QuestionList = () => {
               <button
                 key={pageIndex}
                 className={`px-4 py-2 border ${
-                  currentPage === pageIndex + 1 ? "bg-[#6c757d] text-white" : "hover:bg-[#6c757d]"
+                  currentPage === pageIndex + 1
+                    ? "bg-[#6c757d] text-white"
+                    : "hover:bg-[#6c757d]"
                 }`}
                 onClick={() => handlePageChange(pageIndex + 1)}
               >

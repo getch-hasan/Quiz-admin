@@ -67,7 +67,7 @@ export const CategoryList = () => {
         <input
           type="text"
           placeholder="Search categories"
-          className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
+          className="border w-full border-gray-300 focus:border-blue-400  focus:border-[3px] p-2 rounded outline-none h-[38px]"
           value={searchTerm}
           onChange={(e) => {
             setSearchTerm(e.target.value);
@@ -99,7 +99,7 @@ export const CategoryList = () => {
                 <td>{category.name}</td>
                 <td>
                   <div className="flex gap-1">
-                    <Link to={`/dashboard/edit-category/${category.id}`}>
+                    <Link to={`/dashboard/edit-question/${category.id}`}>
                       <FaEdit className="text-primary text-xl" />
                     </Link>
                     <MdDelete

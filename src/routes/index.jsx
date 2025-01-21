@@ -8,10 +8,9 @@ import EditCategory from "../pages/category/EditCategory"
 import { QuestionList } from "../pages/question/Index"
 import { CreateQuestion } from "../pages/question/CreateQuestion"
 import { EditQuestion } from "../pages/question/EditQusetion"
-
-import OptionList from "../pages/option/Index"
-import EditOption from "../pages/option/EditOption"
 import { CreateOption } from "../pages/option/CreateOption"
+import { OptionList } from "../pages/option/Index"
+import { EditOption } from "../pages/option/EditOption"
 
 
 
@@ -37,7 +36,7 @@ const appRoutes = [
             // /** question */
             { path:"option-list", element: <OptionList/>},
             { path:"create-option", element:  <CreateOption/> },
-            { path:"edit-question/:id", element: <EditOption/> },
+            { path:"edit-option/:id", element: <EditOption/> },
          
 
          
