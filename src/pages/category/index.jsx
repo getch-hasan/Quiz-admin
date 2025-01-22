@@ -24,7 +24,7 @@ export const CategoryList = () => {
   ]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 10;
+  const itemsPerPage = 2;
 
   /** Delete a category */
   const confirmDelete = (id) => {
@@ -38,10 +38,10 @@ export const CategoryList = () => {
     pageIcon: <FaList />,
     buttonName: "Create New Category",
     buttonUrl: "/dashboard/task/create",
-    type: "add", // This indicates the page type for the button
+    type: "add", 
   };
 
-  // Filter categories based on search term
+  // Filter categories 
   const filteredCategories = categories.filter((category) =>
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -59,6 +59,31 @@ export const CategoryList = () => {
       setCurrentPage(pageNumber);
     }
   };
+
+  // Function to generate dynamic page numbers
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 5;
+    console.log("pages", pages);
+
+    if (totalPages <= maxVisiblePages + 1) {
+      // Show all pages if total pages are less than or equal to 6
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      // Show first 5 pages, ellipsis, and last page
+      for (let i = 1; i <= maxVisiblePages; i++) {
+        pages.push(i);
+      }
+      pages.push("...");
+      pages.push(totalPages);
+    }
+
+    return pages;
+    
+  };
+  
 
   return (
     <>
@@ -117,32 +142,49 @@ export const CategoryList = () => {
       <div className="flex flex-wrap items-center justify-between mt-5">
         <div>
           <p className="mb-2">
-            Showing {startIndex + 1}-{Math.min(startIndex + itemsPerPage, filteredCategories.length)} of{" "}
+            Showing {startIndex + 1}-
+            {Math.min(startIndex + itemsPerPage, filteredCategories.length)} of{" "}
             {filteredCategories.length}
           </p>
         </div>
         <div>
           <span className="inline-flex border border-[#6c757d] rounded-sm overflow-hidden">
+            {/* Previous button */}
             <button
               className="px-4 py-2 border border-r-[#6c757d] hover:bg-[#6c757d]"
               onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
             >
               <FaArrowLeft />
             </button>
-            {[...Array(totalPages)].map((_, pageIndex) => (
-              <button
-                key={pageIndex}
-                className={`px-4 py-2 border border-r-[#6c757d] ${
-                  currentPage === pageIndex + 1 ? "bg-[#6c757d] text-white" : "hover:bg-[#6c757d]"
-                }`}
-                onClick={() => handlePageChange(pageIndex + 1)}
-              >
-                {pageIndex + 1}
-              </button>
-            ))}
+            {/* Dynamic page numbers */}
+            {getPageNumbers().map((page, index) =>
+              page === "..." ? (
+                <span
+                  key={index}
+                  className="px-4 py-2 border border-r-[#6c757d]"
+                >
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={index}
+                  className={`px-4 py-2 border border-r-[#6c757d] ${
+                    currentPage === page
+                      ? "bg-[#6c757d] text-white"
+                      : "hover:bg-[#6c757d]"
+                  }`}
+                  onClick={() => handlePageChange(page)}
+                >
+                  {page}
+                </button>
+              )
+            )}
+            {/* Next button */}
             <button
               className="px-4 py-2 border border-r-[#6c757d] hover:bg-[#6c757d]"
               onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
             >
               <FaArrowRight />
             </button>
@@ -152,3 +194,5 @@ export const CategoryList = () => {
     </>
   );
 };
+
+

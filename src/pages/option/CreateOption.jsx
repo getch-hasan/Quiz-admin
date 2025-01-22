@@ -56,7 +56,9 @@ export const CreateOption = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Question Name</label>
+          <label className="block text-sm font-medium mb-1">
+            Question Name
+          </label>
           <input
             type="text"
             {...register("question_id", {
@@ -69,33 +71,34 @@ export const CreateOption = () => {
           )}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-  {options.map((option, index) => (
-    <div key={index}>
-      <label className="block text-sm font-medium mb-1">{`Option ${index + 1}`}</label>
-      <div className="flex items-center space-x-4">
-        <div className="flex-1">
-          <input
-            type="text"
-            value={option.name}
-            onChange={(e) => handleOptionChange(index, e)}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-            placeholder={`Option ${index + 1}`}
-          />
+          {options.map((option, index) => (
+            <div key={index}>
+              <label className="block text-sm font-medium mb-1">{`Option ${
+                index + 1
+              }`}</label>
+              <div className="flex items-center space-x-4">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={option.name}
+                    onChange={(e) => handleOptionChange(index, e)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
+                    placeholder={`Option ${index + 1}`}
+                  />
+                </div>
+                <div className="w-auto flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={option.is_correct}
+                    onChange={(e) => handleCheckboxChange(index, e)}
+                    className="mr-2"
+                  />
+                  <span className="text-sm">Correct Option</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
-        <div className="w-auto flex items-center">
-          <input
-            type="checkbox"
-            checked={option.is_correct}
-            onChange={(e) => handleCheckboxChange(index, e)}
-            className="mr-2"
-          />
-          <span className="text-sm">Correct Option</span>
-        </div>
-      </div>
-    </div>
-  ))}
-</div>
-
 
         <button
           type="submit"
