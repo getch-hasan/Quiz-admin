@@ -66,4 +66,16 @@ export const menuData = [
       
     ],
   },
+  {
+    title: "User",
+    icon: <MdSettingsAccessibility />,
+    childrens: [
+      {
+        title: "User List",
+        icon: <IoColorPaletteOutline />,
+        path: "/dashboard/user-list",
+      },
+      
+    ],
+  },
 ];

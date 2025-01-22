@@ -11,6 +11,8 @@ import { EditQuestion } from "../pages/question/EditQusetion"
 import { CreateOption } from "../pages/option/CreateOption"
 import { OptionList } from "../pages/option/Index"
 import { EditOption } from "../pages/option/EditOption"
+import { UserList } from "../pages/User/Index"
+
 
 
 
@@ -37,9 +39,9 @@ const appRoutes = [
             { path:"option-list", element: <OptionList/>},
             { path:"create-option", element:  <CreateOption/> },
             { path:"edit-option/:id", element: <EditOption/> },
-         
-
-         
+            // /** User */
+            { path:"user-list", element: <UserList/>},
+                
        
         ],
     },

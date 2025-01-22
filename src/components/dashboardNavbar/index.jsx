@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { removeToken } from "../../utils/helper";
 import { IoIosNotifications } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -41,7 +41,7 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
                     height={16}
                     width={60}
                     className="d-block border  rounded-md"
-                    src= {logo}
+                    // src= {logo}
                     alt=""
                   />
                 </Link> */}
@@ -126,6 +126,6 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
         </div>
       </div>
-    </>
-  );
+</>
+);
 };
