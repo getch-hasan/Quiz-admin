@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { FaArrowLeft, FaArrowRight, FaEdit, FaList } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const CategoryList = () => {
   const [categories, setCategories] = useState([
@@ -24,7 +24,22 @@ export const CategoryList = () => {
   ]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const itemsPerPage = 2;
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false); // Loading state
+  const itemsPerPage = 10;
+
+  // Update `debouncedSearchTerm` after 1000ms
+  useEffect(() => {
+    setLoading(true); 
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setLoading(false);
+    }, 1000);
+
+    return () => {
+      clearTimeout(handler); // Clear the timeout if `searchTerm` changes
+    };
+  }, [searchTerm]);
 
   /** Delete a category */
   const confirmDelete = (id) => {
@@ -38,12 +53,12 @@ export const CategoryList = () => {
     pageIcon: <FaList />,
     buttonName: "Create New Category",
     buttonUrl: "/dashboard/task/create",
-    type: "add", 
+    type: "add",
   };
 
-  // Filter categories 
+  // Filter categories based on the debounced search term
   const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
+    category.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
   );
 
   // Pagination logic
@@ -64,7 +79,6 @@ export const CategoryList = () => {
   const getPageNumbers = () => {
     const pages = [];
     const maxVisiblePages = 5;
-    console.log("pages", pages);
 
     if (totalPages <= maxVisiblePages + 1) {
       // Show all pages if total pages are less than or equal to 6
@@ -81,9 +95,7 @@ export const CategoryList = () => {
     }
 
     return pages;
-    
   };
-  
 
   return (
     <>
@@ -114,27 +126,41 @@ export const CategoryList = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedCategories.map((category) => (
-              <tr key={category.id}>
-                <th>
-                  <label>
-                    <input type="checkbox" className="checkbox" />
-                  </label>
-                </th>
-                <td>{category.name}</td>
-                <td>
-                  <div className="flex gap-1">
-                    <Link to={`/dashboard/edit-question/${category.id}`}>
-                      <FaEdit className="text-primary text-xl" />
-                    </Link>
-                    <MdDelete
-                      className="text-red-500 text-xl cursor-pointer"
-                      onClick={() => confirmDelete(category.id)}
-                    />
-                  </div>
+            {loading ? (
+              <tr>
+                <td colSpan="3" className="text-center py-4">
+                  Loading...
                 </td>
               </tr>
-            ))}
+            ) : paginatedCategories.length > 0 ? (
+              paginatedCategories.map((category) => (
+                <tr key={category.id}>
+                  <th>
+                    <label>
+                      <input type="checkbox" className="checkbox" />
+                    </label>
+                  </th>
+                  <td>{category.name}</td>
+                  <td>
+                    <div className="flex gap-1">
+                      <Link to={`/dashboard/edit-question/${category.id}`}>
+                        <FaEdit className="text-primary text-xl" />
+                      </Link>
+                      <MdDelete
+                        className="text-red-500 text-xl cursor-pointer"
+                        onClick={() => confirmDelete(category.id)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="3" className="text-center py-4">
+                  No categories found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
@@ -194,5 +220,3 @@ export const CategoryList = () => {
     </>
   );
 };
-
-

@@ -9,7 +9,7 @@ export const UserList = () => {
     {
       id: 1,
       image: "https://example.com/images/image1.jpg",
-      name: "John Doe",
+      name: "LLLLL",
       email: "johndoe@example.com",
       phone: "+1 555-1234",
     },
@@ -72,77 +72,77 @@ export const UserList = () => {
     {
       id: 10,
       image: "https://example.com/images/image10.jpg",
-      name: "Sophia Thomas",
+      name: "John Doe",
       email: "sophiathomas@example.com",
       phone: "+1 555-6802",
     },
     {
       id: 11,
       image: "https://example.com/images/image11.jpg",
-      name: "James Jackson",
+      name: "John Doe",
       email: "jamesjackson@example.com",
       phone: "+1 555-7913",
     },
     {
       id: 12,
       image: "https://example.com/images/image12.jpg",
-      name: "Mia White",
+      name: "John Doe",
       email: "miawhite@example.com",
       phone: "+1 555-8024",
     },
     {
       id: 13,
       image: "https://example.com/images/image13.jpg",
-      name: "Benjamin Harris",
+      name: "John Doe",
       email: "benjaminharris@example.com",
       phone: "+1 555-9135",
     },
     {
       id: 14,
       image: "https://example.com/images/image14.jpg",
-      name: "Isabella Clark",
+      name: "John Doe",
       email: "isabellaclark@example.com",
       phone: "+1 555-0246",
     },
     {
       id: 15,
       image: "https://example.com/images/image15.jpg",
-      name: "Ethan Lewis",
+      name: "John Doe",
       email: "ethanlewis@example.com",
       phone: "+1 555-1358",
     },
     {
       id: 16,
       image: "https://example.com/images/image16.jpg",
-      name: "Charlotte Young",
+      name: "John Doe",
       email: "charlotteyoung@example.com",
       phone: "+1 555-2469",
     },
     {
       id: 17,
       image: "https://example.com/images/image17.jpg",
-      name: "Daniel Walker",
+      name: "John Doe",
       email: "danielwalker@example.com",
       phone: "+1 555-3570",
     },
     {
       id: 18,
       image: "https://example.com/images/image18.jpg",
-      name: "Amelia King",
+      name: "John Doe",
       email: "ameliaking@example.com",
       phone: "+1 555-4681",
     },
     {
       id: 19,
       image: "https://example.com/images/image19.jpg",
-      name: "Henry Scott",
+      name: "John Doe",
       email: "henryscott@example.com",
       phone: "+1 555-5792",
     },
     {
       id: 20,
       image: "https://example.com/images/image20.jpg",
-      name: "Zoe Adams",
+      name: "John Doe",
       email: "zoeadams@example.com",
       phone: "+1 555-6803",
     },
@@ -153,7 +153,7 @@ export const UserList = () => {
   const [nameSearch, setNameSearch] = useState("");
   const [emailSearch, setEmailSearch] = useState("");
   const [phoneSearch, setPhoneSearch] = useState("");
-  const itemsPerPage = 2;
+  const itemsPerPage = 10;
 
   const propsData = {
     pageTitle: "User List",
