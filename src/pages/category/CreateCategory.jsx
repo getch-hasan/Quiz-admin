@@ -5,11 +5,13 @@ import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
+import { useNavigate } from "react-router-dom";
 
 const CreateCategory = () => {
    const [categories, setCategories] = useState([]);
 
    console.log("categories", categories);
+   const navigate=useNavigate()
   const {
     register,
     handleSubmit,
@@ -38,7 +40,7 @@ const CreateCategory = () => {
       const response = await NetworkServices.Category.store(data);
       console.log("objecttt", response);
       if (response && response.status === 200) {
-        // navigate('/dashboard/category')
+        navigate('/dashboard/category')
         return Toastify.Success("Category Created.");
       }
     } catch (error) {
@@ -51,7 +53,7 @@ const CreateCategory = () => {
     pageTitle: " Create Category ",
     pageIcon: <IoMdCreate />,
     buttonName: "Category List",
-    buttonUrl: "/dashboard/task/create",
+    buttonUrl: "/dashboard/category",
     type: "add", // This indicates the page type for the button
   };
   return (
@@ -67,21 +69,19 @@ const CreateCategory = () => {
             htmlFor="parentCategory"
             className="block text-gray-600 font-medium"
           >
-            Parent Category
+            Perent Category
           </label>
           <select
             id="parentCategory"
-            {...register("parent_category", {
-              required: "Parent category is required",
-            })}
+            {...register("parent_id")}
             className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
           >
             <option value="">Select a category</option>
-            <option value="electronics">Electronics</option>
-            <option value="fashion">Fashion</option>
-            <option value="home_appliances">Home Appliances</option>
-            <option value="books">Books</option>
-            <option value="others">Others</option>
+            {categories.map((category) => (
+              <option key={category.category_id} value={category.category_id}>
+                {category.category_name}
+              </option>
+            ))}
           </select>
           {errors.parent_category && (
             <p className="text-red-500 text-sm mt-1">

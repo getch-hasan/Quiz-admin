@@ -30,3 +30,8 @@ export const update = async(id, data) => {
 export const destroy = async (id) => {
     return await privateRequest.delete(`/admin/category/${id}`)
 }
+
+/* resource destory */
+export const bulkDestroy = async (ids) => {
+    return await privateRequest.post(`/admin/bulk-destroy-category`,ids)
+}
