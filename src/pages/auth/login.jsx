@@ -4,6 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { NetworkServices } from "../../network/index";
 import { PrimaryButton } from "../../components/button";
 import adminIcon from "../../assets/icon/ZanIcon.jpg";
+import { getToken, networkErrorHandeller, setToken } from "../../utils/helper";
+import { Toastify } from "../../components/toastify";
 
 const inputStyle =
   "mt-1 px-3 py-2 bg-white border shadow-sm border-slate-300  focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1";
@@ -21,26 +23,27 @@ export const Login = () => {
 
   const onSubmit = async (data) => {
     console.log("data", data);
-    navigate("/dashboard");
-    // try {
-    //     setLoading(true)
-    //     const response = await NetworkServices.Authentication.login(data)
-    //     if (response.status === 200) {
-    //         setToken(response.data.data.token);
-    //         navigate("/dashboard");
-    //         setLoading(false)
-    //     }
-    // } catch (error) {
-    //     setLoading(false)
-    //     networkErrorHandeller(error)
-    // }
+    
+    try {
+        setLoading(true)
+        const response = await NetworkServices.Authentication.login(data)
+        if (response.status === 200) {
+            setToken(response.data.data.token);
+            navigate("/dashboard");
+            setLoading(false)
+            Toastify.Success("Login successfully done");
+        }
+    } catch (error) {
+        setLoading(false)
+        networkErrorHandeller(error)
+    }
   };
 
-  // useEffect(() => {
-  //     if (getToken()) {
-  //         navigate("/dashboard");
-  //     }
-  // }, [navigate]);
+  useEffect(() => {
+      if (getToken()) {
+          navigate("/dashboard");
+      }
+  }, [navigate]);
 
   return (
     <section className="flex items-center justify-center h-screen">

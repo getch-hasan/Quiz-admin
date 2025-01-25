@@ -1,36 +1,30 @@
 import { Link } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaEdit,  FaPlus } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaEdit, FaPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { NetworkServices } from "../../network";
+import { Toastify } from "../../components/toastify";
+import { networkErrorHandeller } from "../../utils/helper";
+import React from "react";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css"; // Import styles
+
+
+
 
 export const CategoryList = () => {
-  const [categories, setCategories] = useState([
-    { id: 1, name: "Science" },
-    { id: 2, name: "Math" },
-    { id: 3, name: "History" },
-    { id: 4, name: "Geography" },
-    { id: 5, name: "English" },
-    { id: 6, name: "Physics" },
-    { id: 7, name: "Chemistry" },
-    { id: 8, name: "Biology" },
-    { id: 9, name: "Computer Science" },
-    { id: 10, name: "Arts" },
-    { id: 11, name: "Sports" },
-    { id: 12, name: "Politics" },
-    { id: 13, name: "Economics" },
-    { id: 14, name: "Music" },
-    { id: 15, name: "Dance" },
-  ]);
+  const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [loading, setLoading] = useState(false); // Loading state
   const itemsPerPage = 10;
 
+
   // Update `debouncedSearchTerm` after 1000ms
   useEffect(() => {
-    setLoading(true); 
+    setLoading(true);
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
       setLoading(false);
@@ -41,10 +35,52 @@ export const CategoryList = () => {
     };
   }, [searchTerm]);
 
-  /** Delete a category */
-  const confirmDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this category?")) {
-      setCategories(categories.filter((category) => category.id !== id));
+  const fetchCategory = useCallback(async () => {
+    const response = await NetworkServices.Category.index();
+    console.log("object", response);
+    if (response && response.status === 200) {
+      setCategories(response?.data?.data);
+    }
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchCategory();
+  }, [fetchCategory]);
+
+// confirm delete
+  const handleDelete = (id) => {
+    confirmAlert({
+      title: "Confirm to delete",
+      message: "Are you sure you want to delete this item?",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: () => {
+            destroy(id);
+          },
+        },
+        {
+          label: "No",
+          onClick: () => {
+            console.log("Delete canceled");
+          },
+        },
+      ],
+    });
+  };
+
+  /* destory */
+  const destroy = async (id) => {
+    try {
+      const response = await NetworkServices.Category.destroy(id);
+      console.log("response", response);
+      if (response.status === 200) {
+        fetchCategory();
+        return Toastify.Info("Category Deleted");
+      }
+    } catch (error) {
+      networkErrorHandeller(error);
     }
   };
 
@@ -58,7 +94,9 @@ export const CategoryList = () => {
 
   // Filter categories based on the debounced search term
   const filteredCategories = categories.filter((category) =>
-    category.name.toLowerCase().includes(debouncedSearchTerm.toLowerCase())
+    category?.category_name
+      .toLowerCase()
+      .includes(debouncedSearchTerm.toLowerCase())
   );
 
   // Pagination logic
@@ -140,15 +178,17 @@ export const CategoryList = () => {
                       <input type="checkbox" className="checkbox" />
                     </label>
                   </th>
-                  <td>{category.name}</td>
+                  <td>{category.category_name}</td>
                   <td>
                     <div className="flex gap-1">
-                      <Link to={`/dashboard/edit-question/${category.id}`}>
+                      <Link
+                        to={`/dashboard/edit-question/${category.category_id}`}
+                      >
                         <FaEdit className="text-primary text-xl" />
                       </Link>
                       <MdDelete
                         className="text-red-500 text-xl cursor-pointer"
-                        onClick={() => confirmDelete(category.id)}
+                        onClick={() => handleDelete(category.category_id)}
                       />
                     </div>
                   </td>
@@ -164,6 +204,7 @@ export const CategoryList = () => {
           </tbody>
         </table>
       </div>
+
       {/* Pagination */}
       <div className="flex flex-wrap items-center justify-between mt-5">
         <div>
