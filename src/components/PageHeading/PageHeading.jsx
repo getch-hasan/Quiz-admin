@@ -17,6 +17,8 @@ export const PageHeader = ({ propsData }) => {
     }
   };
 
+  console.log("propsData", propsData);
+
   return (
     <section className="flex items-center justify-between shadow-md p-4 rounded-lg bg-white my-3">
       <div>

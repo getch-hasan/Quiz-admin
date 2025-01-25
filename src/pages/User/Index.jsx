@@ -1,6 +1,8 @@
 
 import { Link } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaEdit, FaList } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight,  } from "react-icons/fa";
+import {  FaPlus } from "react-icons/fa";
+
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useEffect, useState } from "react";
@@ -163,9 +165,10 @@ export const UserList = () => {
   const itemsPerPage = 10;
   const propsData = {
     pageTitle: "User List",
-    pageIcon: <FaList />,
+    pageIcon: <FaPlus />,
     buttonName: "Add New User",
     buttonUrl: "/dashboard/user/create",
+    type: "add",
   };
 
   // Update `debouncedSearchTerm` after 1000ms
@@ -303,9 +306,9 @@ export const UserList = () => {
                     <td>{user.phone}</td>
                     <td>
                       <div className="flex gap-2">
-                        <Link to={`/dashboard/edit-user/${user.id}`}>
+                        {/* <Link to={`/dashboard/edit-user/${user.id}`}>
                           <FaEdit className="text-primary text-xl" />
-                        </Link>
+                        </Link> */}
                         <MdDelete
                           className="text-red-500 text-xl cursor-pointer"
                           onClick={() => confirmDelete(user.id)}

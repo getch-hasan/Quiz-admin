@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaEdit, FaList } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaEdit,  FaPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useEffect, useState } from "react";
@@ -50,7 +50,7 @@ export const CategoryList = () => {
 
   const propsData = {
     pageTitle: "Category List",
-    pageIcon: <FaList />,
+    pageIcon: <FaPlus />,
     buttonName: "Create New Category",
     buttonUrl: "/dashboard/task/create",
     type: "add",
