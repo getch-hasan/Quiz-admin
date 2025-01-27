@@ -2,21 +2,57 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { IoIosCreate } from "react-icons/io";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { NetworkServices } from "../../network";
+import { Toastify } from "../../components/toastify";
+import { networkErrorHandeller } from "../../utils/helper";
 
 export const CreateQuestion = () => {
-  const [categories] = useState(["Math", "Science", "History", "Literature"]);
+  const [categories,setCategories] = useState([]);
+  const [loading,setLoading]=useState(false)
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  // console.log("cate", categories);
 
-  const onSubmit = (data) => {
+    const fetchCategory = useCallback(async () => {
+      setLoading(true); // Start loading
+      try {
+        const response = await NetworkServices.Category.index();
+        
+        if (response && response.status === 200) {
+          setCategories(response?.data?.data);
+        }
+      } catch (error) {
+        console.error("Fetch Category Error:", error);
+      }
+      setLoading(false); // End loading (handled in both success and error)
+    }, []);
+    
+      // category api fetch
+      useEffect(() => {
+        fetchCategory();
+      }, [fetchCategory]);
+
+  const onSubmit = async (data) => {
     console.log("Question Saved:", data);
-    alert("Question Created Successfully!");
-    navigate("/dashboard/questions");
+     try {
+       setLoading(true)
+       const response = await NetworkServices.Question.store(data);
+      //  console.log("objecttt", response);
+       if (response && response.status === 200) {
+         navigate("/dashboard/question-list");
+         return Toastify.Success("Category Created.");
+       }
+     } catch (error) {
+      
+       console.log("error", error);
+       networkErrorHandeller(error);
+     }
+      setLoading(false);
   };
 
   const propsData = {
@@ -47,59 +83,76 @@ export const CreateQuestion = () => {
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Question Name</label>
+          <label className="block text-sm font-medium mb-1">
+            Question Name
+          </label>
           <input
             type="text"
-            {...register("name", { required: "Question Name is required" })}
+            {...register("question", { required: "Question Name is required" })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
           />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-red-500 text-sm">{errors.name.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Category</label>
           <select
-            {...register("category", { required: "Category is required" })}
+            {...register("category_id", { required: "Category is required" })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
           >
             <option value="">Select a category</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
+            {categories.map((category) => (
+              <option key={category?.category_id} value={category?.category_id}>
+                {category?.category_name}
               </option>
             ))}
           </select>
-          {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
+          {errors.category && (
+            <p className="text-red-500 text-sm">{errors.category.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
-            {...register("description", { required: "Description is required" })}
+            {...register("q_description", {
+              required: "Description is required",
+            })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
             rows="4"
           ></textarea>
-          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+          {errors.description && (
+            <p className="text-red-500 text-sm">{errors.description.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Difficulty</label>
           <select
-            {...register("difficulty", { required: "Difficulty is required" })}
+            {...register("difficulty_level", { required: "Difficulty is required" })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
           >
             <option value="Easy">Easy</option>
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
-          {errors.difficulty && <p className="text-red-500 text-sm">{errors.difficulty.message}</p>}
+          {errors.difficulty && (
+            <p className="text-red-500 text-sm">{errors.difficulty.message}</p>
+          )}
         </div>
-
+        {/* Submit Button */}
         <button
           type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none"
+          className={`px-4 py-2 text-white rounded-md transition ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+          disabled={loading} // Disable button when loading
         >
-          Save Question
+          {loading ? "Loading..." : "Create Question"}
         </button>
       </form>
     </>

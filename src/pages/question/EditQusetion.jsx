@@ -3,11 +3,15 @@ import { useNavigate, useParams } from "react-router-dom";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { IoIosCreate } from "react-icons/io";
 import { useEffect, useState } from "react";
+import { NetworkServices } from "../../network";
 
 export const EditQuestion = () => {
-  const [categories] = useState(["Math", "Science", "History", "Literature"]); // Predefined categories
+  const [categories] = useState(["Math", "Science", "History", "Literature"]); 
   const [questionData, setQuestionData] = useState(null);
-  const { id } = useParams(); // Get question ID from URL
+  
+  const { questionId } = useParams();
+
+  console.log("objectid", questionData);
   const navigate = useNavigate();
   const {
     register,
@@ -16,38 +20,43 @@ export const EditQuestion = () => {
     formState: { errors },
   } = useForm();
 
-  // Mock existing data for the question
-  const existingQuestions = [
-    {
-      id: "1",
-      name: "What is 2 + 2?",
-      examName: "Math Exam", // Added exam name
-      category: "Math",
-      description: "Basic arithmetic question.",
-      difficulty: "Easy",
-    },
-    {
-      id: "2",
-      name: "What is the capital of France?",
-      examName: "Geography Exam", // Added exam name
-      category: "Geography",
-      description: "Knowledge about countries and capitals.",
-      difficulty: "Medium",
-    },
-  ];
 
-  useEffect(() => {
-    // Fetch question data based on ID (simulate API call)
-    const question = existingQuestions.find((q) => q.id === id);
-    if (question) {
-      setQuestionData(question);
 
-      // Set initial values in the form
-      Object.keys(question).forEach((key) => {
-        setValue(key, question[key]);
-      });
-    }
-  }, [id, setValue]);
+    // Fetch the category details from the API and populate the form
+    const fetchQuestion = async (questionId) => {
+      try {
+        const response = await NetworkServices.Question.show(questionId);
+        console.log("responserrrr", response);
+        if (response && response.status === 200) {
+          const category = response?.data?.data;
+          setQuestionData(category);
+          
+          setValue("examName", questionData.question);
+          setValue("name", questionData.question);
+        }
+      } catch (error) {
+        console.error("Error fetching category:", error);
+      }
+    };
+  
+    useEffect(() => {
+      if (questionId) {
+        fetchQuestion(questionId);
+      }
+    }, [questionId, setValue]);
+
+  // useEffect(() => {
+  //   // Fetch question data based on ID (simulate API call)
+  //   const question = existingQuestions.find((q) => q.id === questionId);
+  //   if (question) {
+  //     setQuestionData(question);
+
+  //     // Set initial values in the form
+  //     Object.keys(question).forEach((key) => {
+  //       setValue(key, question[key]);
+  //     });
+  //   }
+  // }, [questionId, setValue]);
 
   const onSubmit = (data) => {
     console.log("Updated Question:", data);
@@ -63,9 +72,9 @@ export const EditQuestion = () => {
     type: "edit",
   };
 
-  if (!questionData) {
-    return <div>Loading...</div>; // Loading state while data is fetched
-  }
+  // if (!questionData) {
+  //   return <div>Loading...</div>; // Loading state while data is fetched
+  // }
 
   return (
     <>

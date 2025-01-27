@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 
 const CreateCategory = () => {
    const [categories, setCategories] = useState([]);
+   const [loading,setLoading]=useState(false)
 
    console.log("categories", categories);
    const navigate=useNavigate()
@@ -18,13 +19,18 @@ const CreateCategory = () => {
     formState: { errors },
   } = useForm({});
 
-    const fetchCategory = useCallback(async () => {
+  const fetchCategory = useCallback(async () => {
+    setLoading(true); // Start loading
+    try {
       const response = await NetworkServices.Category.index();
-      console.log("object", response);
       if (response && response.status === 200) {
         setCategories(response?.data?.data);
       }
-    }, []);
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
   
     // category api fetch
     useEffect(() => {
@@ -36,7 +42,7 @@ const CreateCategory = () => {
     console.log("data", data);
 
     try {
-      // setLoading(true)
+      setLoading(true)
       const response = await NetworkServices.Category.store(data);
       console.log("objecttt", response);
       if (response && response.status === 200) {
@@ -44,10 +50,11 @@ const CreateCategory = () => {
         return Toastify.Success("Category Created.");
       }
     } catch (error) {
-      // setLoading(false)
+      
       console.log("error", error);
       networkErrorHandeller(error);
     }
+    setLoading(false);
   };
   const propsData = {
     pageTitle: " Create Category ",
@@ -59,6 +66,7 @@ const CreateCategory = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
+
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
@@ -117,9 +125,14 @@ const CreateCategory = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition"
+          className={`px-4 py-2 text-white rounded-md transition ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+          disabled={loading} // Disable button when loading
         >
-          Create Category
+          {loading ? "Loading..." : "Create Category"}
         </button>
       </form>
     </>

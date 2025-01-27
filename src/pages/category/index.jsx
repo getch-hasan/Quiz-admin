@@ -14,6 +14,7 @@ export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
   const [selectedCategories, setSelectedCategories] = useState([]);
   const itemsPerPage = 10;
@@ -22,8 +23,10 @@ export const CategoryList = () => {
 
   // Debounced search
   useEffect(() => {
+    setLoading(true); // Start loading
     const handler = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
+      setLoading(false); // Stop loading
     }, 1000);
 
     return () => clearTimeout(handler);
@@ -92,10 +95,8 @@ export const CategoryList = () => {
     dialog.showDialog();
   };
 
-
   // Handle multiple categories deletion
 
-  
   const handleMultipleDelete = () => {
     confirmAlert({
       title: "Confirm to delete",
@@ -122,8 +123,43 @@ export const CategoryList = () => {
       ],
     });
   };
-  
 
+  const getPageNumbers = () => {
+    const pages = [];
+    const maxVisiblePages = 4;
+
+    if (totalPages <= maxVisiblePages) {
+      for (let i = 1; i <= totalPages; i++) {
+        pages.push(i);
+      }
+    } else {
+      const startPage = Math.max(1, currentPage - 2);
+      const endPage = Math.min(totalPages, currentPage + 2);
+
+      // Add initial pages or ellipsis
+      if (startPage > 1) {
+        pages.push(1);
+        if (startPage > 2) {
+          pages.push("...");
+        }
+      }
+
+      // Add visible pages
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
+      }
+
+      // Add ending pages or ellipsis
+      if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+          pages.push("...");
+        }
+        pages.push(totalPages);
+      }
+    }
+
+    return pages;
+  };
 
   // Filter categories based on the search term
   const filteredCategories = categories.filter((category) =>
@@ -217,7 +253,15 @@ export const CategoryList = () => {
             </tr>
           </thead>
           <tbody>
-            {paginatedCategories.length > 0 ? (
+            {loading ? (
+              // Show loading spinner or text when loading
+              <tr>
+                <td colSpan="3" className="text-center py-4">
+                  Loading...
+                </td>
+              </tr>
+            ) : paginatedCategories.length > 0 ? (
+              // Map over categories if they exist
               paginatedCategories.map((category) => (
                 <tr key={category.category_id}>
                   <td>
@@ -238,7 +282,7 @@ export const CategoryList = () => {
                   <td>
                     <div className="flex gap-2">
                       <Link
-                        to={`/dashboard/edit-question/${category?.category_id}`}
+                        to={`/dashboard/edit-category/${category?.category_id}`}
                       >
                         <FaEdit className="text-primary text-xl" />
                       </Link>
@@ -251,6 +295,7 @@ export const CategoryList = () => {
                 </tr>
               ))
             ) : (
+              // Show "No categories found" when not loading and no categories
               <tr>
                 <td colSpan="3" className="text-center py-4">
                   No categories found.
@@ -261,40 +306,59 @@ export const CategoryList = () => {
         </table>
       </div>
       {/* Pagination */}
-      <div className="flex justify-between items-center mt-5">
+
+      <div className="flex flex-wrap items-center justify-between mt-5">
         <div>
-          <p>
+          <p className="mb-2">
             Showing {startIndex + 1}-
             {Math.min(startIndex + itemsPerPage, filteredCategories.length)} of{" "}
             {filteredCategories.length}
           </p>
         </div>
-        <div className="flex gap-2">
-          <button
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-            className="px-3 py-1 border rounded"
-          >
-            <FaArrowLeft />
-          </button>
-          {[...Array(totalPages)].map((_, index) => (
+        <div>
+          <span className="inline-flex border border-[#6c757d] rounded-sm overflow-hidden">
+            {/* Previous Button */}
             <button
-              key={index}
-              onClick={() => handlePageChange(index + 1)}
-              className={`px-3 py-1 border rounded ${
-                index + 1 === currentPage ? "bg-gray-700 text-white" : ""
-              }`}
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className="px-4 py-2 border border-r-[#6c757d]"
             >
-              {index + 1}
+              <FaArrowLeft />
             </button>
-          ))}
-          <button
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-            className="px-3 py-1 border rounded"
-          >
-            <FaArrowRight />
-          </button>
+
+            {/* Dynamic Page Numbers */}
+            {getPageNumbers().map((page, index) =>
+              page === "..." ? (
+                <span
+                  key={index}
+                  className="px-4 py-2 border border-r-[#6c757d]"
+                >
+                  ...
+                </span>
+              ) : (
+                <button
+                  key={index}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-4 py-2 border border-r-[#6c757d] ${
+                    page === currentPage
+                      ? "bg-gray-700 text-white"
+                      : "hover:bg-[#6c757d]"
+                  }`}
+                >
+                  {page}
+                </button>
+              )
+            )}
+
+            {/* Next Button */}
+            <button
+              className="px-4 py-2 border border-r-[#6c757d] hover:bg-[#6c757d]"
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+            >
+              <FaArrowRight />
+            </button>
+          </span>
         </div>
       </div>
     </>

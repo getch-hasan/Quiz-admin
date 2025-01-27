@@ -17,34 +17,32 @@ import { UserList } from "../pages/User/Index"
 
 
 const appRoutes = [
-    {
-        path: "dashboard",
-        element: <DashboardLayout />,
-        children: [
-            { path: "*", element: <Navigate to="/404" /> },
-            // dashboard
-            {path:"",element:<Dashboard/>},
-                     
-            /** category */
-            { path:"category", element: <CategoryList /> },
-            { path:"create-category", element: <CreateCategory/> },
-            { path:"edit-category/:id", element: <EditCategory/> },
+  {
+    path: "dashboard",
+    element: <DashboardLayout />,
+    children: [
+      { path: "*", element: <Navigate to="/404" /> },
+      // dashboard
+      { path: "", element: <Dashboard /> },
 
-            // /** question */
-            { path:"question-list", element: <QuestionList/> },
-            { path:"create-question", element: <CreateQuestion/> },
-            { path:"edit-question/:id", element: <EditQuestion/> },
+      /** category */
+      { path: "category", element: <CategoryList /> },
+      { path: "create-category", element: <CreateCategory /> },
+      { path: "edit-category/:categoryId", element: <EditCategory /> },
 
-            // /** question */
-            { path:"option-list", element: <OptionList/>},
-            { path:"create-option", element:  <CreateOption/> },
-            { path:"edit-option/:id", element: <EditOption/> },
-            // /** User */
-            { path:"user-list", element: <UserList/>},
-                
-       
-        ],
-    },
+      // /** question */
+      { path: "question-list", element: <QuestionList /> },
+      { path: "create-question", element: <CreateQuestion /> },
+      { path: "edit-question/:questionId", element: <EditQuestion /> },
+
+      // /** question */
+      { path: "option-list", element: <OptionList /> },
+      { path: "create-option", element: <CreateOption /> },
+      { path: "edit-option/:id", element: <EditOption /> },
+      // /** User */
+      { path: "user-list", element: <UserList /> },
+    ],
+  },
 ]; 
 
 /* Generate permitted routes */
