@@ -4,6 +4,7 @@ import { RiGalleryFill, RiProductHuntLine } from "react-icons/ri";
 import { FaUnity } from "react-icons/fa";
 import { CgAttribution } from "react-icons/cg";
 import { HiBars3 } from "react-icons/hi2";
+import { PiExam } from "react-icons/pi";
 import {
   MdOutlineProductionQuantityLimits,
   MdBrandingWatermark,
@@ -30,7 +31,7 @@ export const menuData = [
         icon: <IoColorPaletteOutline />,
         path: "/dashboard/create-category",
       },
-    ]
+    ],
   },
   {
     title: "Question",
@@ -46,7 +47,6 @@ export const menuData = [
         icon: <FaUnity />,
         path: "/dashboard/create-question",
       },
-
     ],
   },
   {
@@ -63,7 +63,22 @@ export const menuData = [
         icon: <FaUnity />,
         path: "/dashboard/create-option",
       },
-      
+    ],
+  },
+  {
+    title: "Exam",
+    icon: <PiExam />,
+    childrens: [
+      {
+        title: "Exam List",
+        icon: <IoColorPaletteOutline />,
+        path: "/dashboard/exam-list",
+      },
+      {
+        title: "Create Exam",
+        icon: <FaUnity />,
+        path: "/dashboard/create-exam",
+      },
     ],
   },
   {
@@ -75,7 +90,6 @@ export const menuData = [
         icon: <IoColorPaletteOutline />,
         path: "/dashboard/user-list",
       },
-      
     ],
   },
 ];

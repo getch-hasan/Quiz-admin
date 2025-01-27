@@ -12,6 +12,9 @@ import { CreateOption } from "../pages/option/CreateOption"
 import { OptionList } from "../pages/option/Index"
 import { EditOption } from "../pages/option/EditOption"
 import { UserList } from "../pages/User/Index"
+import ExamList from "../pages/exam"
+import CreateExam from "../pages/exam/CreateExam"
+import EditExam from "../pages/exam/EditExam"
 
 
 
@@ -41,6 +44,11 @@ const appRoutes = [
       { path: "edit-option/:id", element: <EditOption /> },
       // /** User */
       { path: "user-list", element: <UserList /> },
+
+      // /** exam */
+      { path: "exam-list", element: <ExamList /> },
+      { path: "create-exam", element: <CreateExam/> },
+      { path: "edit-exam/:examId", element: <EditExam/> },
     ],
   },
 ]; 
