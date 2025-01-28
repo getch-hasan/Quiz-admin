@@ -1,11 +1,11 @@
-
 import { Link } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight,  } from "react-icons/fa";
-import {  FaPlus } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaPlus } from "react-icons/fa";
 
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { NetworkServices } from "../../network";
 
 export const UserList = () => {
   const [users, setUsers] = useState([
@@ -155,6 +155,7 @@ export const UserList = () => {
   const [nameSearch, setNameSearch] = useState("");
   const [emailSearch, setEmailSearch] = useState("");
   const [phoneSearch, setPhoneSearch] = useState("");
+  // const [user, setUser] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState({
     nameSearch,
     emailSearch,
@@ -170,6 +171,25 @@ export const UserList = () => {
     buttonUrl: "/dashboard/user/create",
     type: "add",
   };
+
+  // const fetchCategory = useCallback(async () => {
+  //   setLoading(true); // Start loading
+  //   try {
+  //     const response = await NetworkServices.Authentication.index();
+
+  //     if (response && response.status === 200) {
+  //       setUser(response?.data?.data);
+  //     }
+  //   } catch (error) {
+  //     console.error("Fetch Category Error:", error);
+  //   }
+  //   setLoading(false); // End loading (handled in both success and error)
+  // }, []);
+
+  // // category api fetch
+  // useEffect(() => {
+  //   fetchCategory();
+  // }, [fetchCategory]);
 
   // Update `debouncedSearchTerm` after 1000ms
   useEffect(() => {
@@ -376,4 +396,3 @@ export const UserList = () => {
     </>
   );
 };
-
