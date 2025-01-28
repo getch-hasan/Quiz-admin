@@ -6,15 +6,41 @@ import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useCallback, useEffect, useState } from "react";
 import Select from "react-select";
 import { NetworkServices } from "../../network";
-import { networkErrorHandeller } from "../../utils/helper";
+import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { destroy } from "../../network/question.network";
 import { confirmAlert } from "react-confirm-alert";
 import { Toastify } from "../../components/toastify";
 
 export const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
+  const [searchName, setSearchName] = useState("");
+  const [searchCategory, setSearchCategory] = useState(null);
+  const [searchExam, setSearchExam] = useState("");
+  const [searchDifficulty, setSearchDifficulty] = useState(null);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+  const [categories, setCategories] = useState([]);
 
-  console.log("questions", questions);
+  console.log("questions", debouncedSearchTerm);
+  console.log("categories", categories);
+
+  // Debounced search
+  useEffect(() => {
+    setLoading(true); // Start loading
+    const handler = setTimeout(() => {
+      setDebouncedSearchTerm({
+        name: searchName,
+        category: searchCategory,
+        exam: searchExam,
+        difficulty: searchDifficulty,
+      });
+      setLoading(false); // Stop loading
+    }, 1000);
+
+    return () => clearTimeout(handler);
+  }, [searchName, searchCategory, searchExam, searchDifficulty]);
 
   // Fetch question from API
   const fetchQuestion = useCallback(async () => {
@@ -35,7 +61,7 @@ export const QuestionList = () => {
 
   // Handle single category deletion
   const destroy = (id) => {
-    console.log("object",id);
+    console.log("object", id);
     confirmAlert({
       title: "Confirm Delete",
       message: "Are you sure you want to delete this category?",
@@ -44,7 +70,7 @@ export const QuestionList = () => {
           label: "Yes",
           onClick: async () => {
             try {
-              const response = await NetworkServices.Category.destroy(id);
+              const response = await NetworkServices.Question.destroy(id);
               if (response?.status === 200) {
                 Toastify.Info("Category deleted successfully.");
                 fetchQuestion();
@@ -60,13 +86,6 @@ export const QuestionList = () => {
       ],
     });
   };
-
-  const [searchName, setSearchName] = useState("");
-  const [searchCategory, setSearchCategory] = useState(null);
-  const [searchExam, setSearchExam] = useState("");
-  const [searchDifficulty, setSearchDifficulty] = useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
 
   const propsData = {
     pageTitle: "Question List",
@@ -91,28 +110,53 @@ export const QuestionList = () => {
     }
   };
 
-  const categoryOptions = [
-    ...new Set(questions.map((question) => question.category)),
-  ].map((singleCategory) => ({
-    value: singleCategory,
-    label: singleCategory,
-  }));
-  const difficultyOptions = [
-    ...new Set(questions.map((question) => question.difficulty_level)),
-  ].map((singleDifficulty) => ({
-    value: singleDifficulty,
-    label: singleDifficulty,
-  }));
+  // const categoryOptions = [
+  //   ...new Set(questions.map((question) => question.category)),
+  // ].map((singleCategory) => ({
+  //   value: singleCategory,
+  //   label: singleCategory,
+  // }));
+  // const difficultyOptions = [
+  //   ...new Set(questions.map((question) => question.difficulty_level)),
+  // ].map((singleDifficulty) => ({
+  //   value: singleDifficulty,
+  //   label: singleDifficulty,
+  // }));
 
+    // Fetch categories from API
+    const fetchCategory = useCallback(async () => {
+      try {
+        const response = await NetworkServices.Category.index();
+        console.log(response);
+        if (responseChecker(response, 200)) {
+          setCategories(response?.data?.data || []);
+        }
+      } catch (error) {
+        networkErrorHandeller(error);
+      }
+    }, []);
+  
+    useEffect(() => {
+      fetchCategory();
+    }, [fetchCategory]);
+
+  // Filtered Questions
   const filteredQuestions = questions.filter((question) => {
     return (
-      (!searchName ||
-        question.question.toLowerCase().includes(searchName.toLowerCase())) &&
-      (!searchCategory || question.category === searchCategory.value) &&
-      (!searchExam ||
-        question.exam.toLowerCase().includes(searchExam.toLowerCase())) &&
-      (!searchDifficulty ||
-        question.difficulty_level === searchDifficulty.value)
+      (!debouncedSearchTerm.name ||
+        question.question
+          .toLowerCase()
+          .includes(debouncedSearchTerm.name.toLowerCase())) &&
+      (!debouncedSearchTerm.category ||
+        question.category.some(
+          (cat) => cat.category_name === debouncedSearchTerm.category.value
+        )) &&
+      (!debouncedSearchTerm.exam ||
+        question.exam
+          .toLowerCase()
+          .includes(debouncedSearchTerm.exam.toLowerCase())) &&
+      (!debouncedSearchTerm.difficulty ||
+        question.difficulty_level === debouncedSearchTerm.difficulty.value)
     );
   });
 
@@ -183,7 +227,10 @@ export const QuestionList = () => {
         />
         <Select
           placeholder="Search by Category"
-          options={categoryOptions}
+          options={categories.map((cat) => ({
+            value: cat.category_name,
+            label: cat.category_name,
+          }))}
           value={searchCategory}
           onChange={(selectedOption) => {
             setSearchCategory(selectedOption);
@@ -191,7 +238,8 @@ export const QuestionList = () => {
           }}
           isClearable
         />
-        <input
+
+        {/* <input
           type="text"
           placeholder="Search by Exam"
           className="border border-gray-300 focus:border-blue-400  focus:border-[3px] p-2 rounded outline-none h-[38px]"
@@ -200,10 +248,15 @@ export const QuestionList = () => {
             setSearchExam(e.target.value);
             setCurrentPage(1);
           }}
-        />
+        /> */}
         <Select
           placeholder="Search by Difficulty"
-          options={difficultyOptions}
+          options={[...new Set(questions.map((q) => q.difficulty_level))].map(
+            (diff) => ({
+              value: diff,
+              label: diff,
+            })
+          )}
           value={searchDifficulty}
           onChange={(selectedOption) => {
             setSearchDifficulty(selectedOption);
@@ -219,42 +272,65 @@ export const QuestionList = () => {
               <th>Question Name</th>
               <th>Category</th>
               <th>Description</th>
-              <th>Exam Name</th>
+
               <th>Difficulty</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {paginatedQuestions.map((question) => (
-              <tr key={question.id}>
-                <td>{question.question}</td>
-                <td>{question.category}</td>
-                <td>{question.description}</td>
-                <td>{question.exam}</td>
-                <td>
-                  <span
-                    className={`px-2 py-1 rounded-full text-sm font-semibold ${getDifficultyColor(
-                      question.difficulty_level
-                    )}`}
-                  >
-                    {question.difficulty_level}
-                  </span>
-                </td>
-                <td>
-                  <div className="flex gap-1">
-                    <Link
-                      to={`/dashboard/edit-question/${question?.question_id}`}
-                    >
-                      <FaEdit className="text-primary text-xl" />
-                    </Link>
-                    <MdDelete
-                      className="text-red-500 text-xl cursor-pointer"
-                      onClick={() => destroy(question?.question_id)}
-                    />
-                  </div>
+            {loading ? (
+              // Show loading spinner or text when loading
+              <tr>
+                <td colSpan="6" className="text-center py-4">
+                  Loading...
                 </td>
               </tr>
-            ))}
+            ) : paginatedQuestions.length > 0 ? (
+              // Map over questions if they exist
+              paginatedQuestions.map((question) => (
+                <tr key={question.question_id}>
+                  <td>{question.question}</td>
+                  {question.category && question.category.length > 0
+                    ? question.category.map((cat, index) => (
+                        <span key={index} className="inline-block mr-2">
+                          {cat?.category_name}
+                        </span>
+                      ))
+                    : "No categories"}
+                  <td>{question.q_description}</td>
+
+                  <td>
+                    <span
+                      className={`px-2 py-1 rounded-full text-sm font-semibold ${getDifficultyColor(
+                        question.difficulty_level
+                      )}`}
+                    >
+                      {question.difficulty_level}
+                    </span>
+                  </td>
+                  <td>
+                    <div className="flex gap-1">
+                      <Link
+                        to={`/dashboard/edit-question/${question?.question_id}`}
+                      >
+                        <FaEdit className="text-primary text-xl" />
+                      </Link>
+                      <MdDelete
+                        className="text-red-500 text-xl cursor-pointer"
+                        onClick={() => destroy(question?.question_id)}
+                      />
+                    </div>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              // Show "No questions found" when not loading and no questions
+              <tr>
+                <td colSpan="6" className="text-center py-4">
+                  No questions found.
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

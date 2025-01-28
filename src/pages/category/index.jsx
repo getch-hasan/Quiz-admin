@@ -37,7 +37,7 @@ export const CategoryList = () => {
     try {
       const response = await NetworkServices.Category.index();
       console.log(response);
-      if (responseChecker(response,200)) {
+      if (responseChecker(response, 200)) {
         setCategories(response?.data?.data || []);
       }
     } catch (error) {

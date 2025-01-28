@@ -53,7 +53,7 @@ const EditCategory = () => {
       // console.log("response", response.data.data);
       if (responseChecker(response, 200)) {
         const category = response?.data?.data;
-        setCategories([category]); // Assume categories is an array
+        // setCategories([category]); // Assume categories is an array
         setValue("category_name", category.category_name);
         setValue("parent_id", category.parent_id);
       }
@@ -81,6 +81,7 @@ const EditCategory = () => {
       console.log("update", response);
     if (responseChecker(response)) {
      navigator("/dashboard/category")
+     return Toastify.Success("Category Updated.");
     }
     } catch (error) {
        
