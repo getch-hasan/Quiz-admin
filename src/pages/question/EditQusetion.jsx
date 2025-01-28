@@ -4,14 +4,20 @@ import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { IoIosCreate } from "react-icons/io";
 import { useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
+import { useCallback } from "react";
+import { networkErrorHandeller, responseChecker } from "../../utils/helper";
+import { Toastify } from "../../components/toastify";
 
 export const EditQuestion = () => {
-  const [categories] = useState(["Math", "Science", "History", "Literature"]); 
+  const [categories] = useState(["Math", "Science", "History", "Literature"]);
   const [questionData, setQuestionData] = useState(null);
-  
+  const [loading, setLoading] = useState(false);
+  const [parentCategories, setParentCategories] = useState([]);
+  const [exam, setExam] = useState([]);
+
   const { questionId } = useParams();
 
-  console.log("objectid", questionData);
+  console.log("qdata", questionData);
   const navigate = useNavigate();
   const {
     register,
@@ -20,30 +26,70 @@ export const EditQuestion = () => {
     formState: { errors },
   } = useForm();
 
+  // Fetch categories from API
+  const fetchCategoryParent = useCallback(async () => {
+    try {
+      const response = await NetworkServices.Category.index();
 
+      if (responseChecker(response, 200)) {
+        setParentCategories(response?.data?.data || []);
+      }
+    } catch (error) {
+      networkErrorHandeller(error);
+    }
+  }, []);
 
-    // Fetch the category details from the API and populate the form
-    const fetchQuestion = async (questionId) => {
+  useEffect(() => {
+    fetchCategoryParent();
+  }, [fetchCategoryParent]);
+  // Fetch exam from API
+  const fetchExam = useCallback(async () => {
+    try {
+      const response = await NetworkServices.Exam.index();
+
+      if (responseChecker(response, 200)) {
+        setExam(response?.data?.data || []);
+      }
+    } catch (error) {
+      networkErrorHandeller(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchExam();
+  }, [fetchExam]);
+
+  // Fetch the category details from the API and populate the form
+  const fetchQuestion = useCallback(
+    async (questionId) => {
       try {
+        setLoading(true);
         const response = await NetworkServices.Question.show(questionId);
         console.log("responserrrr", response);
         if (response && response.status === 200) {
-          const category = response?.data?.data;
-          setQuestionData(category);
-          
-          setValue("examName", questionData.question);
-          setValue("name", questionData.question);
+          const question = response?.data?.data;
+          setQuestionData(question);
+
+          // Correctly use the fetched data for setting the form values
+          setValue("exam", question?.exam_id);
+          setValue("name", question?.question);
+          setValue("description", question?.q_description || "");
+          setValue("category", question?.category_id);
+          setValue("difficulty", question?.difficulty_level);
         }
       } catch (error) {
         console.error("Error fetching category:", error);
       }
-    };
-  
-    useEffect(() => {
-      if (questionId) {
-        fetchQuestion(questionId);
-      }
-    }, [questionId, setValue]);
+      setLoading(false);
+    },
+    [setValue, setLoading]
+  );
+
+  useEffect(() => {
+    if (questionId) {
+      fetchQuestion(questionId);
+    }
+  }, [questionId, setValue]);
 
   // useEffect(() => {
   //   // Fetch question data based on ID (simulate API call)
@@ -58,10 +104,31 @@ export const EditQuestion = () => {
   //   }
   // }, [questionId, setValue]);
 
-  const onSubmit = (data) => {
-    console.log("Updated Question:", data);
-    alert("Question Updated Successfully!");
-    navigate("/dashboard/questions");
+  const onSubmit = async (data) => {
+
+    console.log("data",data);
+    // update function for category
+    const formData = new FormData();
+    formData.append("exam_id", data.exam);
+    formData.append("question", data.name);
+    formData.append("q_description", data.description);
+    formData.append("category_id", data.category);
+    formData.append("difficulty_level", data.difficulty);
+    formData.append("_method", "PUT");
+    try {
+      const response = await NetworkServices.Question.update(
+        questionId,
+        formData
+      );
+
+      console.log("update", response);
+      if (response && response.status === 200) {
+        navigate("/dashboard/question-list");
+        return Toastify.Success("Category Updated.");
+      }
+    } catch (error) {
+      networkErrorHandeller(error);
+    }
   };
 
   const propsData = {
@@ -85,22 +152,34 @@ export const EditQuestion = () => {
       >
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Exam Name</label>
-          <input
-            type="text"
-            {...register("examName", { required: "Exam Name is required" })}
+          <select
+            {...register("exam", { required: "Category is required" })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          />
-          {errors.examName && <p className="text-red-500 text-sm">{errors.examName.message}</p>}
+          >
+            <option value="">Select a category</option>
+            {exam.map((singleExam) => (
+              <option key={singleExam.exam_id} value={singleExam.exam_id}>
+                {singleExam.exam_name}
+              </option>
+            ))}
+          </select>
+          {errors.examName && (
+            <p className="text-red-500 text-sm">{errors.examName.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Question Name</label>
+          <label className="block text-sm font-medium mb-1">
+            Question Name
+          </label>
           <input
             type="text"
             {...register("name", { required: "Question Name is required" })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
           />
-          {errors.name && <p className="text-red-500 text-sm">{errors.name.message}</p>}
+          {errors.name && (
+            <p className="text-red-500 text-sm">{errors.name.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -110,23 +189,29 @@ export const EditQuestion = () => {
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
           >
             <option value="">Select a category</option>
-            {categories.map((category, index) => (
-              <option key={index} value={category}>
-                {category}
+            {parentCategories.map((category) => (
+              <option key={category.category_id} value={category.category_id}>
+                {category.category_name}
               </option>
             ))}
           </select>
-          {errors.category && <p className="text-red-500 text-sm">{errors.category.message}</p>}
+          {errors.category && (
+            <p className="text-red-500 text-sm">{errors.category.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>
           <textarea
-            {...register("description", { required: "Description is required" })}
+            {...register("description", {
+              required: "Description is required",
+            })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
             rows="4"
           ></textarea>
-          {errors.description && <p className="text-red-500 text-sm">{errors.description.message}</p>}
+          {errors.description && (
+            <p className="text-red-500 text-sm">{errors.description.message}</p>
+          )}
         </div>
 
         <div className="mb-4">
@@ -135,18 +220,25 @@ export const EditQuestion = () => {
             {...register("difficulty", { required: "Difficulty is required" })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
           >
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
           </select>
-          {errors.difficulty && <p className="text-red-500 text-sm">{errors.difficulty.message}</p>}
+          {errors.difficulty && (
+            <p className="text-red-500 text-sm">{errors.difficulty.message}</p>
+          )}
         </div>
 
         <button
           type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none"
+          className={`px-4 py-2 text-white rounded-md transition ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
+          disabled={loading} // Disable button when loading
         >
-          Update Question
+          {loading ? "Loading..." : "Update Question"}
         </button>
       </form>
     </>

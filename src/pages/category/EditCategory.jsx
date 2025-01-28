@@ -15,7 +15,7 @@ const EditCategory = () => {
   const [categories, setCategories] = useState([]);
   const [parentCategories, setParentCategories] = useState([]);
   const { categoryId } = useParams();
-  const navigator = useNavigate();
+  const navigate = useNavigate();
   // console.log("objectid", categoryId);
   // console.log("object", categories);
   // console.log("parent", parentCategories);
@@ -79,8 +79,8 @@ const EditCategory = () => {
       const response = await NetworkServices.Category.update(categoryId, formData);
 
       console.log("update", response);
-    if (responseChecker(response)) {
-     navigator("/dashboard/category")
+    if (responseChecker(response,200)) {
+     navigate("/dashboard/category")
      return Toastify.Success("Category Updated.");
     }
     } catch (error) {
