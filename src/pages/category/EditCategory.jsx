@@ -1,83 +1,93 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { MdBrowserUpdated } from "react-icons/md";
 import { NetworkServices } from "../../network";
-import { networkErrorHandeller } from "../../utils/helper";
+import {
+  getToken,
+  networkErrorHandeller,
+  responseChecker,
+} from "../../utils/helper";
+import { Toastify } from "../../components/toastify";
 
 const EditCategory = () => {
   const [categories, setCategories] = useState([]);
   const [parentCategories, setParentCategories] = useState([]);
   const { categoryId } = useParams();
-
+  const navigator = useNavigate();
   // console.log("objectid", categoryId);
-  console.log("object", categories);
-  console.log("parent", parentCategories);
+  // console.log("object", categories);
+  // console.log("parent", parentCategories);
 
   const {
     register,
     handleSubmit,
     setValue,
     formState: { errors },
+    getValues,
   } = useForm();
+  console.log(getValues());
 
-  
-    // Fetch categories from API
-    const fetchCategoryParent = useCallback(async () => {
-      try {
-        const response = await NetworkServices.Category.index();
-        
-        if (response?.status === 200) {
-          setParentCategories(response?.data?.data || []);
-        }
-      } catch (error) {
-        networkErrorHandeller(error);
+  // Fetch categories from API
+  const fetchCategoryParent = useCallback(async () => {
+    try {
+      const response = await NetworkServices.Category.index();
+
+      if (responseChecker(response, 200)) {
+        setParentCategories(response?.data?.data || []);
       }
-    }, []);
-  
-    useEffect(() => {
-      fetchCategoryParent();
-    }, [fetchCategoryParent]);
+    } catch (error) {
+      networkErrorHandeller(error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCategoryParent();
+  }, [fetchCategoryParent]);
 
   // Fetch the category details from the API and populate the form
   const fetchCategory = async (categoryId) => {
     try {
       const response = await NetworkServices.Category.show(categoryId);
-      console.log("response", response.data.data);
-      if (response && response.status === 200) {
+      // console.log("response", response.data.data);
+      if (responseChecker(response, 200)) {
         const category = response?.data?.data;
         setCategories([category]); // Assume categories is an array
         setValue("category_name", category.category_name);
-        
+        setValue("parent_id", category.parent_id);
       }
     } catch (error) {
-      console.error("Error fetching category:", error);
+      // console.error("Error fetching category:", error);
+      networkErrorHandeller(error);
     }
   };
 
   useEffect(() => {
     if (categoryId) {
-      fetchCategory(categoryId); 
+      fetchCategory(categoryId);
     }
   }, [categoryId, setValue]);
-
-  const onFormSubmit = async (data) => {
-    console.log("Updated Data:", data);
+  // edit category api 
+  const onFormSubmit = async (data) => { 
+    // update function for category 
+     const formData = new FormData();
+     formData.append("category_name", data.category_name);
+     formData.append("parent_id", data.parent_id);
+     formData.append("_method", 'PUT');
     try {
-      const response = await NetworkServices.Category.update(categoryId, data);
+      const response = await NetworkServices.Category.update(categoryId, formData);
 
       console.log("update", response);
-      // if (response && response.status === 200) {
-      //   // Redirect or show success message
-
-      // }
+    if (responseChecker(response)) {
+     navigator("/dashboard/category")
+    }
     } catch (error) {
+       
      networkErrorHandeller(error);
     }
   };
-
+  
   const propsData = {
     pageTitle: "Update Category",
     pageIcon: <MdBrowserUpdated />,
@@ -106,7 +116,7 @@ const EditCategory = () => {
             {...register("parent_id")}
             className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
           >
-            <option value="">Select a category</option>
+            <option value=""> select parent id </option>
             {parentCategories.map((category) => (
               <option key={category.category_id} value={category.category_id}>
                 {category.category_name}

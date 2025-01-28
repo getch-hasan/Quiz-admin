@@ -29,3 +29,12 @@ export const networkErrorHandeller = (error) => {
         return Toastify.Error("Something going wrong, Try again.");
     }
 };
+
+// response check for return true false 
+export const responseChecker = (response,status_code=200) => {
+    if ((response && response.status == status_code) || response.status == 201) {
+      return true;
+    } else {
+      return false;
+    }
+  };
