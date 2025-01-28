@@ -5,7 +5,7 @@ import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-import { networkErrorHandeller } from "../../utils/helper";
+import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import Confirmation from "../../components/Confirmation/Confirmation";
@@ -36,7 +36,8 @@ export const CategoryList = () => {
   const fetchCategory = useCallback(async () => {
     try {
       const response = await NetworkServices.Category.index();
-      if (response?.status === 200) {
+      console.log(response);
+      if (responseChecker(response,200)) {
         setCategories(response?.data?.data || []);
       }
     } catch (error) {

@@ -15,6 +15,7 @@ import { UserList } from "../pages/User/Index"
 import ExamList from "../pages/exam"
 import CreateExam from "../pages/exam/CreateExam"
 import EditExam from "../pages/exam/EditExam"
+import { getToken } from "../utils/helper"
 
 
 
@@ -27,24 +28,20 @@ const appRoutes = [
       { path: "*", element: <Navigate to="/404" /> },
       // dashboard
       { path: "", element: <Dashboard /> },
-
       /** category */
       { path: "category", element: <CategoryList /> },
       { path: "create-category", element: <CreateCategory /> },
       { path: "edit-category/:categoryId", element: <EditCategory /> },
-
       // /** question */
       { path: "question-list", element: <QuestionList /> },
       { path: "create-question", element: <CreateQuestion /> },
       { path: "edit-question/:questionId", element: <EditQuestion /> },
-
       // /** question */
       { path: "option-list", element: <OptionList /> },
       { path: "create-option", element: <CreateOption /> },
       { path: "edit-option/:id", element: <EditOption /> },
       // /** User */
       { path: "user-list", element: <UserList /> },
-
       // /** exam */
       { path: "exam-list", element: <ExamList /> },
       { path: "create-exam", element: <CreateExam/> },
@@ -55,10 +52,10 @@ const appRoutes = [
 
 /* Generate permitted routes */
 export const permittedRoutes = () => {
-    // const token = getToken();
-    // if (token) {
-    //     return appRoutes;
-    // }
-    return appRoutes;
-    return [];
+    const token = getToken();
+    if (token) {
+        return appRoutes;
+    } 
+    return  [];
+    
 };

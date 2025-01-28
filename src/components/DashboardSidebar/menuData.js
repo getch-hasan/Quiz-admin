@@ -1,16 +1,8 @@
 import { RxDashboard } from "react-icons/rx";
-import { IoColorPaletteOutline } from "react-icons/io5";
-import { RiGalleryFill, RiProductHuntLine } from "react-icons/ri";
-import { FaUnity } from "react-icons/fa";
-import { CgAttribution } from "react-icons/cg";
+import { RiProductHuntLine } from "react-icons/ri";
 import { HiBars3 } from "react-icons/hi2";
 import { PiExam } from "react-icons/pi";
-import {
-  MdOutlineProductionQuantityLimits,
-  MdBrandingWatermark,
-  MdSettingsAccessibility,
-  MdOutlineCategory,
-} from "react-icons/md";
+import { MdSettingsAccessibility } from "react-icons/md";
 export const menuData = [
   {
     title: "Dashboard",
@@ -20,76 +12,26 @@ export const menuData = [
   {
     title: "Category",
     icon: <HiBars3 />,
-    childrens: [
-      {
-        title: "Category List",
-        icon: <IoColorPaletteOutline />,
-        path: "/dashboard/category",
-      },
-      {
-        title: " Create Category",
-        icon: <IoColorPaletteOutline />,
-        path: "/dashboard/create-category",
-      },
-    ],
+    path: "/dashboard/category",
   },
   {
     title: "Question",
     icon: <RiProductHuntLine />,
-    childrens: [
-      {
-        title: "Question List",
-        icon: <IoColorPaletteOutline />,
-        path: "/dashboard/question-list",
-      },
-      {
-        title: "Create Question",
-        icon: <FaUnity />,
-        path: "/dashboard/create-question",
-      },
-    ],
+    path: "/dashboard/question-list",
   },
   {
     title: "Option",
     icon: <MdSettingsAccessibility />,
-    childrens: [
-      {
-        title: "Option List",
-        icon: <IoColorPaletteOutline />,
-        path: "/dashboard/option-list",
-      },
-      {
-        title: "Create Option",
-        icon: <FaUnity />,
-        path: "/dashboard/create-option",
-      },
-    ],
+    path: "/dashboard/option-list",
   },
   {
     title: "Exam",
     icon: <PiExam />,
-    childrens: [
-      {
-        title: "Exam List",
-        icon: <IoColorPaletteOutline />,
-        path: "/dashboard/exam-list",
-      },
-      {
-        title: "Create Exam",
-        icon: <FaUnity />,
-        path: "/dashboard/create-exam",
-      },
-    ],
+    path: "/dashboard/exam-list",
   },
   {
     title: "User",
     icon: <MdSettingsAccessibility />,
-    childrens: [
-      {
-        title: "User List",
-        icon: <IoColorPaletteOutline />,
-        path: "/dashboard/user-list",
-      },
-    ],
+    path: "/dashboard/user-list",
   },
 ];
