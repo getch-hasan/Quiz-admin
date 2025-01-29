@@ -9,14 +9,16 @@ import { networkErrorHandeller } from "../../utils/helper";
 
 export const CreateQuestion = () => {
   const [categories,setCategories] = useState([]);
+  const [exam,setExam] = useState([]);
   const [loading,setLoading]=useState(false)
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
-  // console.log("cate", categories);
+  } = useForm({})
+
+  console.log("eete", exam);
 
     const fetchCategory = useCallback(async () => {
       setLoading(true); // Start loading
@@ -36,6 +38,25 @@ export const CreateQuestion = () => {
       useEffect(() => {
         fetchCategory();
       }, [fetchCategory]);
+      // fetch exam
+    const fetchExam = useCallback(async () => {
+      setLoading(true); // Start loading
+      try {
+        const response = await NetworkServices.Exam.index();
+        
+        if (response && response.status === 200) {
+          setExam(response?.data?.data);
+        }
+      } catch (error) {
+        console.error("Fetch Category Error:", error);
+      }
+      setLoading(false); // End loading (handled in both success and error)
+    }, []);
+    
+      // category api fetch
+      useEffect(() => {
+        fetchExam();
+      }, [fetchExam]);
 
   const onSubmit = async (data) => {
     console.log("Question Saved:", data);
@@ -45,7 +66,7 @@ export const CreateQuestion = () => {
       //  console.log("objecttt", response);
        if (response && response.status === 200) {
          navigate("/dashboard/question-list");
-         return Toastify.Success("Category Created.");
+         return Toastify.Success("Question Created.");
        }
      } catch (error) {
       
@@ -72,11 +93,22 @@ export const CreateQuestion = () => {
       >
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Exam Name</label>
-          <input
+          {/* <select
             type="text"
             {...register("examName", { required: "Exam Name is required" })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          />
+          /> */}
+          <select
+            {...register("exam_id", { required: "Category is required" })}
+            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
+          >
+            <option value="">Select a Exam</option>
+            {exam.map((aexam) => (
+              <option key={aexam?.exam_id} value={aexam?.exam_id}>
+                {aexam?.exam_name}
+              </option>
+            ))}
+          </select>
           {errors.examName && (
             <p className="text-red-500 text-sm">{errors.examName.message}</p>
           )}
@@ -131,12 +163,14 @@ export const CreateQuestion = () => {
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Difficulty</label>
           <select
-            {...register("difficulty_level", { required: "Difficulty is required" })}
+            {...register("difficulty_level", {
+              required: "Difficulty is required",
+            })}
             className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
           >
-            <option value="Easy">Easy</option>
-            <option value="Medium">Medium</option>
-            <option value="Hard">Hard</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
           </select>
           {errors.difficulty && (
             <p className="text-red-500 text-sm">{errors.difficulty.message}</p>

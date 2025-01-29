@@ -20,7 +20,7 @@ import Confirmation from "../../components/Confirmation/Confirmation";
   const [selectedCategories, setSelectedCategories] = useState([]);
   const itemsPerPage = 10;
 
-  console.log("categ", exam);
+  console.log("exam", exam);
 
   // Debounced search
   useEffect(() => {
@@ -83,9 +83,9 @@ import Confirmation from "../../components/Confirmation/Confirmation";
       message: "Are you sure you want to delete this category?",
       onConfirm: async () => {
         try {
-          const response = await NetworkServices.Category.destroy(id);
+          const response = await NetworkServices.Exam.destroy(id);
           if (response?.status === 200) {
-            Toastify.Info("Category deleted successfully.");
+            Toastify.Info("Exam deleted successfully.");
             fetchExam();
           }
         } catch (error) {
@@ -99,32 +99,32 @@ import Confirmation from "../../components/Confirmation/Confirmation";
 
   // Handle multiple categories deletion
 
-  const handleMultipleDelete = () => {
-    confirmAlert({
-      title: "Confirm to delete",
-      message: "Are you sure you want to delete the selected categories?",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: async () => {
-            try {
-              await NetworkServices.Category.bulkDestroy({
-                ids: selectedCategories,
-              });
-              Toastify.Info("Selected categories deleted.");
-              fetchExam();
-              setSelectedCategories([]);
-            } catch (error) {
-              networkErrorHandeller(error);
-            }
-          },
-        },
-        {
-          label: "No",
-        },
-      ],
-    });
-  };
+  // const handleMultipleDelete = () => {
+  //   confirmAlert({
+  //     title: "Confirm to delete",
+  //     message: "Are you sure you want to delete the selected categories?",
+  //     buttons: [
+  //       {
+  //         label: "Yes",
+  //         onClick: async () => {
+  //           try {
+  //             await NetworkServices.Category.bulkDestroy({
+  //               ids: selectedCategories,
+  //             });
+  //             Toastify.Info("Selected categories deleted.");
+  //             fetchExam();
+  //             setSelectedCategories([]);
+  //           } catch (error) {
+  //             networkErrorHandeller(error);
+  //           }
+  //         },
+  //       },
+  //       {
+  //         label: "No",
+  //       },
+  //     ],
+  //   });
+  // };
 
   const getPageNumbers = () => {
     const pages = [];
@@ -164,16 +164,16 @@ import Confirmation from "../../components/Confirmation/Confirmation";
   };
 
   // Filter categories based on the search term
-  const filteredCategories = exam.filter((aexam) =>
+  const filteredExam = exam.filter((aexam) =>
     aexam?.exam_name
       ?.toLowerCase()
       .includes(debouncedSearchTerm.toLowerCase())
   );
 
   // Pagination calculations
-  const totalPages = Math.ceil(filteredCategories.length / itemsPerPage);
+  const totalPages = Math.ceil(filteredExam.length / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
-  const paginatedCategories = filteredCategories.slice(
+  const paginatedExam = filteredExam.slice(
     startIndex,
     startIndex + itemsPerPage
   );
@@ -194,7 +194,7 @@ import Confirmation from "../../components/Confirmation/Confirmation";
 
   const handleSelectAll = (isChecked) => {
     if (isChecked) {
-      setSelectedCategories(paginatedCategories.map((cat) => cat.category_id));
+      setSelectedCategories(paginatedExam.map((cat) => cat.category_id));
     } else {
       setSelectedCategories([]);
     }
@@ -227,7 +227,7 @@ import Confirmation from "../../components/Confirmation/Confirmation";
         {selectedCategories.length > 0 && (
           <button
             className="bg-red-500 text-white px-4 py-2 rounded"
-            onClick={handleMultipleDelete}
+            // onClick={handleMultipleDelete}
           >
             Delete Selected
           </button>
@@ -244,13 +244,16 @@ import Confirmation from "../../components/Confirmation/Confirmation";
                     className="checkbox"
                     onChange={(e) => handleSelectAll(e.target.checked)}
                     checked={
-                      paginatedCategories.length > 0 &&
-                      selectedCategories.length === paginatedCategories.length
+                      paginatedExam.length > 0 &&
+                      selectedCategories.length === paginatedExam.length
                     }
                   />
                 </label>
               </th>
+              <th>Thumbnail</th>
               <th>Exam Name</th>
+              <th>Total questions</th>
+              <th>Total marks</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -258,37 +261,43 @@ import Confirmation from "../../components/Confirmation/Confirmation";
             {loading ? (
               // Show loading spinner or text when loading
               <tr>
-                <td colSpan="3" className="text-center py-4">
+                <td colSpan="6" className="text-center py-4">
                   Loading...
                 </td>
               </tr>
-            ) : paginatedCategories.length > 0 ? (
+            ) : paginatedExam.length > 0 ? (
               // Map over categories if they exist
-              paginatedCategories.map((category) => (
-                <tr key={category.category_id}>
+              paginatedExam.map((aexam) => (
+                <tr key={aexam.category_id}>
                   <td>
                     <label>
                       <input
                         type="checkbox"
                         className="checkbox"
-                        onChange={() =>
-                          handleCheckboxChange(category.category_id)
-                        }
-                        checked={selectedCategories.includes(
-                          category.category_id
-                        )}
+                        onChange={() => handleCheckboxChange(aexam.category_id)}
+                        checked={selectedCategories.includes(aexam.category_id)}
                       />
                     </label>
                   </td>
-                  <td>{category.exam_name}</td>
+                  <td>
+                    <img
+                      className="w-10 h-10 rounded-md"
+                      src={`${process.env.REACT_APP_API_SERVER}/${aexam?.thumbnail}`}
+                      alt="image"
+                    />
+                  </td>
+                  <td>{aexam.exam_name}</td>
+                  <td>{aexam.total_questions}</td>
+                  <td>{aexam.total_marks}</td>
+
                   <td>
                     <div className="flex gap-2">
-                      <Link to={`/dashboard/edit-exam/${category?.exam_id}`}>
+                      <Link to={`/dashboard/edit-exam/${aexam?.exam_id}`}>
                         <FaEdit className="text-primary text-xl" />
                       </Link>
                       <MdDelete
                         className="text-red-500 text-xl cursor-pointer"
-                        onClick={() => destroy(category?.exam_id)}
+                        onClick={() => destroy(aexam?.exam_id)}
                       />
                     </div>
                   </td>
@@ -297,7 +306,7 @@ import Confirmation from "../../components/Confirmation/Confirmation";
             ) : (
               // Show "No categories found" when not loading and no categories
               <tr>
-                <td colSpan="3" className="text-center py-4">
+                <td colSpan="6" className="text-center py-4">
                   No categories found.
                 </td>
               </tr>
@@ -305,14 +314,15 @@ import Confirmation from "../../components/Confirmation/Confirmation";
           </tbody>
         </table>
       </div>
+
       {/* Pagination */}
 
       <div className="flex flex-wrap items-center justify-between mt-5">
         <div>
           <p className="mb-2">
             Showing {startIndex + 1}-
-            {Math.min(startIndex + itemsPerPage, filteredCategories.length)} of{" "}
-            {filteredCategories.length}
+            {Math.min(startIndex + itemsPerPage, filteredExam.length)} of{" "}
+            {filteredExam.length}
           </p>
         </div>
         <div>

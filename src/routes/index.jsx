@@ -39,7 +39,7 @@ const appRoutes = [
       // /** question */
       { path: "option-list", element: <OptionList /> },
       { path: "create-option", element: <CreateOption /> },
-      { path: "edit-option/:id", element: <EditOption /> },
+      { path: "edit-option/:optionId", element: <EditOption /> },
       // /** User */
       { path: "user-list", element: <UserList /> },
       // /** exam */

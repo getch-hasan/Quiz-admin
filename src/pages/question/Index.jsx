@@ -91,7 +91,7 @@ export const QuestionList = () => {
     pageTitle: "Question List",
     pageIcon: <FaList />,
     buttonName: "Create New Question",
-    buttonUrl: "/dashboard/question/create",
+    buttonUrl: "/dashboard/create-question",
     type: "add",
   };
 
@@ -101,9 +101,9 @@ export const QuestionList = () => {
     switch (difficulty) {
       case "easy":
         return "bg-green-200 text-green-800";
-      case "Medium":
+      case "medium":
         return "bg-yellow-200 text-yellow-800";
-      case "Hard":
+      case "hard":
         return "bg-red-200 text-red-800";
       default:
         return "bg-gray-200 text-gray-800";
@@ -214,7 +214,7 @@ export const QuestionList = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
         <input
           type="text"
           placeholder="Search by Name"
@@ -237,6 +237,7 @@ export const QuestionList = () => {
             setCurrentPage(1);
           }}
           isClearable
+          className="w-full"
         />
 
         {/* <input

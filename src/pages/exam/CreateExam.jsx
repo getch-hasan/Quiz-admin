@@ -7,6 +7,7 @@ import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
+import { Controller } from "react-hook-form";
 
 const CreateExam = () => {
    const [categories, setCategories] = useState([]);
@@ -18,7 +19,13 @@ const CreateExam = () => {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({});
+    setValue,
+    watch,
+  } = useForm({
+    defaultValues: {
+      status: 0,
+    },
+  });
 
   const fetchCategory = useCallback(async () => {
     setLoading(true); // Start loading
@@ -44,7 +51,20 @@ const CreateExam = () => {
 
     try {
       setLoading(true)
-      const response = await NetworkServices.Exam.store(data);
+
+          const formData = new FormData();
+          formData.append("category_id", data.category_id);
+          formData.append("exam_name", data.exam_name);
+          formData.append("total_marks", data.total_marks);
+          formData.append("total_questions", data.total_questions);
+          formData.append("duration", data.duration);
+          formData.append("status", data.status); // Checkbox value (0 or 1)
+
+          
+          if (data.thumbnail && data.thumbnail[0]) {
+            formData.append("thumbnail", data.thumbnail[0]); 
+          }
+      const response = await NetworkServices.Exam.store(formData);
       console.log("objecttt", response);
       if (response && response.status === 200) {
         navigate("/dashboard/exam-list");
@@ -66,12 +86,12 @@ const CreateExam = () => {
   };
   return (
     <>
-      <PageHeader propsData={propsData}/>
-
+      <PageHeader propsData={propsData} />
       <form
         onSubmit={handleSubmit(onFormSubmit)}
         className="p-4 shadow-md rounded-md bg-white"
       >
+        {/* Category */}
         <div className="mb-4">
           <label htmlFor="category" className="block text-gray-600 font-medium">
             Category
@@ -88,17 +108,17 @@ const CreateExam = () => {
               </option>
             ))}
           </select>
-          {errors.parent_category && (
+          {errors.category_id && (
             <p className="text-red-500 text-sm mt-1">
-              {errors.parent_category.message}
+              {errors.category_id.message}
             </p>
           )}
         </div>
 
-        {/* Category Name */}
+        {/* Exam Name */}
         <div className="mb-4">
           <label
-            htmlFor="categoryName"
+            htmlFor="exam_name"
             className="block text-gray-600 font-medium"
           >
             Exam Name
@@ -106,23 +126,131 @@ const CreateExam = () => {
           <input
             type="text"
             id="exam_name"
-            {...register("exam_name", {
-              required: "Category name is required",
-            })}
+            {...register("exam_name", { required: "Exam name is required" })}
             className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-            placeholder="Enter category name"
+            placeholder="Enter exam name"
           />
-          {errors.category_name && (
+          {errors.exam_name && (
             <p className="text-red-500 text-sm mt-1">
               {errors.exam_name.message}
             </p>
           )}
         </div>
 
+        {/* Grid Layout for Additional Fields */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* Total Marks */}
+          <div>
+            <label
+              htmlFor="total_marks"
+              className="block text-gray-600 font-medium"
+            >
+              Total Marks
+            </label>
+            <input
+              type="number"
+              id="total_marks"
+              {...register("total_marks", {
+                required: "Total marks is required",
+              })}
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
+              placeholder="Enter total marks"
+            />
+            {errors.total_marks && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.total_marks.message}
+              </p>
+            )}
+          </div>
+
+          {/* Total Questions */}
+          <div>
+            <label
+              htmlFor="total_questions"
+              className="block text-gray-600 font-medium"
+            >
+              Total Questions
+            </label>
+            <input
+              type="number"
+              id="total_questions"
+              {...register("total_questions", {
+                required: "Total questions are required",
+              })}
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
+              placeholder="Enter total questions"
+            />
+            {errors.total_questions && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.total_questions.message}
+              </p>
+            )}
+          </div>
+
+          {/* Duration */}
+          <div>
+            <label
+              htmlFor="duration"
+              className="block text-gray-600 font-medium"
+            >
+              Duration (minutes)
+            </label>
+            <input
+              type="number"
+              id="duration"
+              {...register("duration", { required: "Duration is required" })}
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
+              placeholder="Enter exam duration in minutes"
+            />
+            {errors.duration && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.duration.message}
+              </p>
+            )}
+          </div>
+
+          {/* Thumbnail Upload */}
+          <div>
+            <label
+              htmlFor="thumbnail"
+              className="block text-gray-600 font-medium"
+            >
+              Thumbnail
+            </label>
+            <input
+              type="file"
+              id="thumbnail"
+              {...register("thumbnail")}
+              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
+            />
+            {errors.thumbnail && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.thumbnail.message}
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Status (Checkbox) */}
+        <div className="mt-4">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              id="status"
+              {...register("status")}
+              className="mr-2"
+              value="1"
+              checked={watch("status") === 1}
+              onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
+            />
+            <span className="text-gray-600 font-medium">Status</span>
+          </label>
+        </div>
+
         {/* Submit Button */}
         <button
           type="submit"
-          className={`px-4 py-2 text-white rounded-md transition ${
+          className={`mt-4 px-4 py-2 text-white rounded-md transition ${
             loading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"

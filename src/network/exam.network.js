@@ -23,7 +23,7 @@ export const show = async (id) => {
 
 /* reosurce update */
 export const update = async (id, data) => {
-  return await privateRequest.put(`/admin/exam/${id}`, data);
+  return await privateRequest.post(`/admin/exam/${id}`, data);
 };
 
 /* resource destory */
