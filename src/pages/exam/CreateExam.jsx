@@ -7,7 +7,7 @@ import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
-import { Controller } from "react-hook-form";
+
 
 const CreateExam = () => {
    const [categories, setCategories] = useState([]);
@@ -64,8 +64,9 @@ const CreateExam = () => {
           if (data.thumbnail && data.thumbnail[0]) {
             formData.append("thumbnail", data.thumbnail[0]); 
           }
+          console.log("objecttt", formData);
       const response = await NetworkServices.Exam.store(formData);
-      console.log("objecttt", response);
+      
       if (response && response.status === 200) {
         navigate("/dashboard/exam-list");
         return Toastify.Success("Category Created.");
@@ -233,7 +234,7 @@ const CreateExam = () => {
 
         {/* Status (Checkbox) */}
         <div className="mt-4">
-          <label className="flex items-center">
+          {/* <label className="flex items-center"> */}
             <input
               type="checkbox"
               id="status"
@@ -244,7 +245,7 @@ const CreateExam = () => {
               onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
             />
             <span className="text-gray-600 font-medium">Status</span>
-          </label>
+          {/* </label> */}
         </div>
 
         {/* Submit Button */}

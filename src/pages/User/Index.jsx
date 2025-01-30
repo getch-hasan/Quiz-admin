@@ -8,154 +8,14 @@ import { useCallback, useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
 
 export const UserList = () => {
-  const [users, setUsers] = useState([
-        {
-          id: 1,
-          image: "https://example.com/images/image1.jpg",
-          name: "LLLLL",
-          email: "johndoe@example.com",
-          phone: "+1 555-1234",
-        },
-        {
-          id: 2,
-          image: "https://example.com/images/image2.jpg",
-          name: "Jane Smith",
-          email: "janesmith@example.com",
-          phone: "+1 555-5678",
-        },
-        {
-          id: 3,
-          image: "https://example.com/images/image3.jpg",
-          name: "Alex Johnson",
-          email: "alexjohnson@example.com",
-          phone: "+1 555-8765",
-        },
-        {
-          id: 4,
-          image: "https://example.com/images/image4.jpg",
-          name: "Emily Davis",
-          email: "emilydavis@example.com",
-          phone: "+1 555-4321",
-        },
-        {
-          id: 5,
-          image: "https://example.com/images/image5.jpg",
-          name: "Michael Brown",
-          email: "michaelbrown@example.com",
-          phone: "+1 555-1357",
-        },
-        {
-          id: 6,
-          image: "https://example.com/images/image6.jpg",
-          name: "Sarah Wilson",
-          email: "sarahwilson@example.com",
-          phone: "+1 555-2468",
-        },
-        {
-          id: 7,
-          image: "https://example.com/images/image7.jpg",
-          name: "David Moore",
-          email: "davidmoore@example.com",
-          phone: "+1 555-3579",
-        },
-        {
-          id: 8,
-          image: "https://example.com/images/image8.jpg",
-          name: "Olivia Taylor",
-          email: "oliviataylor@example.com",
-          phone: "+1 555-4680",
-        },
-        {
-          id: 9,
-          image: "https://example.com/images/image9.jpg",
-          name: "William Anderson",
-          email: "williamanderson@example.com",
-          phone: "+1 555-5791",
-        },
-        {
-          id: 10,
-          image: "https://example.com/images/image10.jpg",
-          name: "John Doe",
-          email: "sophiathomas@example.com",
-          phone: "+1 555-6802",
-        },
-        {
-          id: 11,
-          image: "https://example.com/images/image11.jpg",
-          name: "John Doe",
-          email: "jamesjackson@example.com",
-          phone: "+1 555-7913",
-        },
-        {
-          id: 12,
-          image: "https://example.com/images/image12.jpg",
-          name: "John Doe",
-          email: "miawhite@example.com",
-          phone: "+1 555-8024",
-        },
-        {
-          id: 13,
-          image: "https://example.com/images/image13.jpg",
-          name: "John Doe",
-          email: "benjaminharris@example.com",
-          phone: "+1 555-9135",
-        },
-        {
-          id: 14,
-          image: "https://example.com/images/image14.jpg",
-          name: "John Doe",
-          email: "isabellaclark@example.com",
-          phone: "+1 555-0246",
-        },
-        {
-          id: 15,
-          image: "https://example.com/images/image15.jpg",
-          name: "John Doe",
-          email: "ethanlewis@example.com",
-          phone: "+1 555-1358",
-        },
-        {
-          id: 16,
-          image: "https://example.com/images/image16.jpg",
-          name: "John Doe",
-          email: "charlotteyoung@example.com",
-          phone: "+1 555-2469",
-        },
-        {
-          id: 17,
-          image: "https://example.com/images/image17.jpg",
-          name: "John Doe",
-          email: "danielwalker@example.com",
-          phone: "+1 555-3570",
-        },
-        {
-          id: 18,
-          image: "https://example.com/images/image18.jpg",
-          name: "John Doe",
-          email: "ameliaking@example.com",
-          phone: "+1 555-4681",
-        },
-        {
-          id: 19,
-          image: "https://example.com/images/image19.jpg",
-          name: "John Doe",
-          email: "henryscott@example.com",
-          phone: "+1 555-5792",
-        },
-        {
-          id: 20,
-          image: "https://example.com/images/image20.jpg",
-          name: "John Doe",
-          email: "zoeadams@example.com",
-          phone: "+1 555-6803",
-        },
-  ]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const [nameSearch, setNameSearch] = useState("");
   const [emailSearch, setEmailSearch] = useState("");
   const [phoneSearch, setPhoneSearch] = useState("");
-  // const [user, setUser] = useState("");
+  const [users, setUsers] = useState([]);
+
+  console.log("users", users);
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState({
     nameSearch,
     emailSearch,
@@ -167,29 +27,28 @@ export const UserList = () => {
   const propsData = {
     pageTitle: "User List",
     pageIcon: <FaPlus />,
-    buttonName: "Add New User",
-    buttonUrl: "/dashboard/user/create",
     type: "add",
   };
 
-  // const fetchCategory = useCallback(async () => {
-  //   setLoading(true); // Start loading
-  //   try {
-  //     const response = await NetworkServices.Authentication.index();
+  const fetchCategory = useCallback(async () => {
+    setLoading(true); // Start loading
+    try {
+      const response = await NetworkServices.Authentication.index();
+      console.log(response);
 
-  //     if (response && response.status === 200) {
-  //       setUser(response?.data?.data);
-  //     }
-  //   } catch (error) {
-  //     console.error("Fetch Category Error:", error);
-  //   }
-  //   setLoading(false); // End loading (handled in both success and error)
-  // }, []);
+      if (response && response.status === 200) {
+        setUsers(response?.data?.data);
+      }
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
 
-  // // category api fetch
-  // useEffect(() => {
-  //   fetchCategory();
-  // }, [fetchCategory]);
+  // category api fetch
+  useEffect(() => {
+    fetchCategory();
+  }, [fetchCategory]);
 
   // Update `debouncedSearchTerm` after 1000ms
   useEffect(() => {
@@ -206,14 +65,8 @@ export const UserList = () => {
 
   // Filter users based on name, email, and phone search criteria
   const filteredUsers = users.filter(
-    (user) =>
-      user.name
-        .toLowerCase()
-        .includes(debouncedSearchTerm.nameSearch.toLowerCase()) &&
-      user.email
-        .toLowerCase()
-        .includes(debouncedSearchTerm.emailSearch.toLowerCase()) &&
-      user.phone.includes(debouncedSearchTerm.phoneSearch)
+    (user) => user
+ 
   );
 
   const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
@@ -316,14 +169,13 @@ export const UserList = () => {
                   <tr key={user.id}>
                     <td>
                       <img
-                        src={user.image}
-                        alt={user.name}
-                        className="w-12 h-12 rounded-full"
+                        src={`${process.env.REACT_APP_API_SERVER}/${user?.profile_pic}`}
+                        alt="userImage"
                       />
                     </td>
-                    <td>{user.name}</td>
-                    <td>{user.email}</td>
-                    <td>{user.phone}</td>
+                    <td>{user?.name}</td>
+                    <td>{user?.email}</td>
+                    <td>{user?.phone}</td>
                     <td>
                       <div className="flex gap-2">
                         {/* <Link to={`/dashboard/edit-user/${user.id}`}>

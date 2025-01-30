@@ -36,7 +36,7 @@ const appRoutes = [
       { path: "question-list", element: <QuestionList /> },
       { path: "create-question", element: <CreateQuestion /> },
       { path: "edit-question/:questionId", element: <EditQuestion /> },
-      // /** question */
+      // /** option */
       { path: "option-list", element: <OptionList /> },
       { path: "create-option", element: <CreateOption /> },
       { path: "edit-option/:optionId", element: <EditOption /> },

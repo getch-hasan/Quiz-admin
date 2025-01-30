@@ -6,5 +6,5 @@ export const login = async (data) => {
 
 /* list of resource */
 export const index = async () => {
-    return await privateRequest.get('/user');
+    return await privateRequest.get('admin/user-list');
 };

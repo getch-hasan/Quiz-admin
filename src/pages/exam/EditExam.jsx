@@ -307,7 +307,7 @@ const EditExam = () => {
 
         {/* Status (Checkbox) */}
         <div className="mt-4">
-          <label className="flex items-center">
+          {/* <label className="flex items-center"> */}
             <input
               type="checkbox"
               id="status"
@@ -318,7 +318,7 @@ const EditExam = () => {
               onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
             />
             <span className="text-gray-600 font-medium">Status</span>
-          </label>
+          {/* </label> */}
         </div>
 
         {/* Submit Button */}

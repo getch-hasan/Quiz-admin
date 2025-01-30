@@ -9,7 +9,7 @@ export const index = async () => {
 
 /* resource store */
 export const store = async (data) => {
-  console.log("object", data);
+  
   return await privateRequest.post("/admin/option", data);
 };
 
