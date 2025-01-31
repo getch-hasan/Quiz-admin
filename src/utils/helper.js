@@ -1,18 +1,22 @@
 import { Toastify } from "../components/toastify";
-
-
+import Cookies from 'js-cookie';
 export const getToken = () => {
-    return localStorage.getItem("token");
+    if (typeof window !== "undefined") {
+        console.log(Cookies.get('token'))
+        return Cookies.get('token'); // Retrieve token from cookie
+        
+      }
 }
 
 /* set token */
 export const setToken = (token) => {
-    return localStorage.setItem("token", token);
+    Cookies.set('token', token, { expires: 7, path: '/' }); // Set token with expiration (7 days) and path
+    return true;
 }
 
 /* remove token */
 export const removeToken = () => {
-    return localStorage.removeItem("token");
+    return  Cookies.remove('token');
 };
 
 /* Global network error handeller */
