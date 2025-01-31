@@ -7,7 +7,6 @@ import { useCallback, useEffect, useState } from "react";
 import Select from "react-select";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller, responseChecker } from "../../utils/helper";
-import { destroy } from "../../network/question.network";
 import { confirmAlert } from "react-confirm-alert";
 import { Toastify } from "../../components/toastify";
 

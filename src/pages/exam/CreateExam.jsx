@@ -7,7 +7,7 @@ import { networkErrorHandeller } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
 import { MdList } from "react-icons/md";
-import CategoryFormSkeleton from "../../components/loading/categoryForm-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 
 const CreateExam = () => {
@@ -80,7 +80,7 @@ const CreateExam = () => {
     pageIcon: <MdList />,
     buttonName: "Exam List",
     buttonUrl: "/dashboard/exam-list",
-    type: "add", // This indicates the page type for the button
+    type: "list", // This indicates the page type for the button
   };
   if(loading){
     return <>

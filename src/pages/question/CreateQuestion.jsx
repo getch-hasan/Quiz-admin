@@ -6,74 +6,96 @@ import { useCallback, useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
+import { SingleSelect, TextInput } from "../../components/input";
 
 export const CreateQuestion = () => {
-  const [categories,setCategories] = useState([]);
-  const [exam,setExam] = useState([]);
-  const [loading,setLoading]=useState(false)
+  const [categories, setCategories] = useState([]);
+  const [exam, setExam] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm({})
+    control,
+    setValue,
+    watch,
+  } = useForm({});
+  //  i want to see category id
+  const categoryId = watch("category_id");
+  // console.log(examId);
+  // console.log("eete", exam);
 
-  console.log("eete", exam);
+  const fetchCategory = useCallback(async () => {
+    setLoading(true); // Start loading
+    try {
+      const response = await NetworkServices.Category.index();
 
-    const fetchCategory = useCallback(async () => {
-      setLoading(true); // Start loading
-      try {
-        const response = await NetworkServices.Category.index();
-        
-        if (response && response.status === 200) {
-          setCategories(response?.data?.data);
-        }
-      } catch (error) {
-        console.error("Fetch Category Error:", error);
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.category_name,
+            value: item.category_name,
+            ...item,
+          };
+        });
+        setCategories(result);
       }
-      setLoading(false); // End loading (handled in both success and error)
-    }, []);
-    
-      // category api fetch
-      useEffect(() => {
-        fetchCategory();
-      }, [fetchCategory]);
-      // fetch exam
-    const fetchExam = useCallback(async () => {
-      setLoading(true); // Start loading
-      try {
-        const response = await NetworkServices.Exam.index();
-        
-        if (response && response.status === 200) {
-          setExam(response?.data?.data);
-        }
-      } catch (error) {
-        console.error("Fetch Category Error:", error);
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchCategory();
+  }, []);
+  // fetch exam
+  const fetchExam = useCallback(async (categoryId) => {
+    setLoading(true); // Start loading
+    try {
+      const response = await NetworkServices.Exam.index({
+        params: { category_id: categoryId },
+      });
+
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.exam_name,
+            value: item.exam_name,
+            ...item,
+          };
+        });
+        console.log(result);
+        setExam(result);
       }
-      setLoading(false); // End loading (handled in both success and error)
-    }, []);
-    
-      // category api fetch
-      useEffect(() => {
-        fetchExam();
-      }, [fetchExam]);
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchExam(categoryId);
+  }, [categoryId]);
 
   const onSubmit = async (data) => {
     console.log("Question Saved:", data);
-     try {
-       setLoading(true)
-       const response = await NetworkServices.Question.store(data);
+    try {
+      setLoading(true);
+      const response = await NetworkServices.Question.store(data);
       //  console.log("objecttt", response);
-       if (response && response.status === 200) {
-         navigate("/dashboard/question-list");
-         return Toastify.Success("Question Created.");
-       }
-     } catch (error) {
-      
-       console.log("error", error);
-       networkErrorHandeller(error);
-     }
-      setLoading(false);
+      if (response && response.status === 200) {
+        navigate("/dashboard/question-list");
+        return Toastify.Success("Question Created.");
+      }
+    } catch (error) {
+      console.log("error", error);
+      networkErrorHandeller(error);
+    }
+    setLoading(false);
   };
 
   const propsData = {
@@ -92,89 +114,74 @@ export const CreateQuestion = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Exam Name</label>
-          {/* <select
-            type="text"
-            {...register("examName", { required: "Exam Name is required" })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          /> */}
-          <select
-            {...register("exam_id", { required: "Category is required" })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          >
-            <option value="">Select a Exam</option>
-            {exam.map((aexam) => (
-              <option key={aexam?.exam_id} value={aexam?.exam_id}>
-                {aexam?.exam_name}
-              </option>
-            ))}
-          </select>
-          {errors.examName && (
-            <p className="text-red-500 text-sm">{errors.examName.message}</p>
-          )}
-        </div>
-
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">
-            Question Name
-          </label>
-          <input
-            type="text"
-            {...register("question", { required: "Question Name is required" })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
+          <SingleSelect
+            name="singleSelect"
+            control={control}
+            options={categories}
+            rules={{ required: "Category selection is required" }}
+            onSelected={(selected) =>
+              setValue("category_id", selected?.category_id)
+            }
+            placeholder="Select a category *"
+            error={errors.singleSelect?.message}
+            label="Choose a category"
+            // error={errors} // Pass an error message if validation fails
           />
-          {errors.name && (
-            <p className="text-red-500 text-sm">{errors.name.message}</p>
-          )}
+        </div>
+        <div className="mb-4">
+          <SingleSelect
+            name="singleSelects"
+            control={control}
+            options={exam}
+            rules={{ required: "Exam   selection is required" }}
+            onSelected={(selected) => setValue("exam_id", selected?.exam_id)}
+            placeholder="Select a Exam *"
+            error={errors.singleSelects?.message}
+            label="Choose a exam *"
+            disabled={!categoryId}
+          />
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Category</label>
-          <select
-            {...register("category_id", { required: "Category is required" })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          >
-            <option value="">Select a category</option>
-            {categories.map((category) => (
-              <option key={category?.category_id} value={category?.category_id}>
-                {category?.category_name}
-              </option>
-            ))}
-          </select>
-          {errors.category && (
-            <p className="text-red-500 text-sm">{errors.category.message}</p>
-          )}
+          <TextInput
+            name="question"
+            control={control}
+            label="Question Name *"
+            placeholder="Enter your Question name"
+            rules={{ required: "Question Name is required" }} // Validation rule
+            error={errors?.question?.message} // Show error message
+          />
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            {...register("q_description", {
-              required: "Description is required",
-            })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-            rows="4"
-          ></textarea>
-          {errors.description && (
-            <p className="text-red-500 text-sm">{errors.description.message}</p>
-          )}
+          <TextInput
+            name="q_description"
+            control={control}
+            label="q_description Name *"
+            placeholder="Enter your q_description name"
+            rules={{ required: "q_description Name is required" }} // Validation rule
+            error={errors?.q_description?.message} // Show error message
+          />
         </div>
 
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Difficulty</label>
-          <select
-            {...register("difficulty_level", {
-              required: "Difficulty is required",
-            })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          >
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-          {errors.difficulty && (
-            <p className="text-red-500 text-sm">{errors.difficulty.message}</p>
-          )}
+          <SingleSelect
+            name="difficulty"
+            control={control}
+            options={[
+              { label: "Easy", value: "easy" },
+              { label: "Medium", value: "medium" },
+              { label: "Hard", value: "hard" },
+            ]}
+            rules={{ required: "Difficulty  selection is required" }}
+            onSelected={(selected) =>
+              setValue("difficulty_level", selected?.value)
+            }
+            placeholder="Select a Exam *"
+            error={errors.difficulty?.message}
+            label="Choose a difficulty *"
+            // disabled={!categoryId}
+          />
         </div>
         {/* Submit Button */}
         <button

@@ -1,8 +1,8 @@
 import { privateRequest } from '../config/axios.config'
 
 /* list of resource */
-export const index = async () => {
-    return await privateRequest.get('/admin/category');
+export const index = async ( ) => {
+    return await privateRequest.get(`/admin/category` );
 };
 
 /* parent category list */
