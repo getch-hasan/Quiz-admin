@@ -41,7 +41,8 @@ export const CategoryList = () => {
         setCategories(response?.data?.data || []);
       }
     } catch (error) {
-      networkErrorHandeller(error);
+      console.log(error);
+      networkErrorHandeller(error); 
     }
   }, []);
 
