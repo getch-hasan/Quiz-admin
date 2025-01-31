@@ -233,6 +233,8 @@ export const SingleSelect = (props) => {
         isClearable={props.isClearable}
         defaultValue={props.defaultvalue ? { ...props.defaultvalue } : null}
         placeholder={props.placeholder}
+        // disabled={props.disabled}
+        isDisabled={props.disabled} 
       />
     </div>
   );
