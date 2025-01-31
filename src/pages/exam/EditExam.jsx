@@ -6,6 +6,8 @@ import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { useNavigate, useParams } from "react-router-dom";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import { SkeletonForm } from "../../components/loading/skeleton-table";
 
 const EditExam = () => {
   const [categories, setCategories] = useState([]);
@@ -112,7 +114,12 @@ const EditExam = () => {
     }
     setLoading(false);
   };
-
+    if(loading){
+      return <div className="text-center"> 
+      <PageHeaderSkeleton/>
+      <SkeletonForm/>
+      </div>
+    }
   const propsData = {
     pageTitle: examId ? "Edit Exam" : "Create Exam",
     pageIcon: <IoMdCreate />,
