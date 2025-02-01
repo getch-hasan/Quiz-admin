@@ -52,7 +52,7 @@ export const CreateQuestion = () => {
   }, []);
   // fetch exam
   const fetchExam = useCallback(async (categoryId) => {
-    setLoading(true); // Start loading
+    // setLoading(true); // Start loading
     try {
       const response = await NetworkServices.Exam.index({
         params: { category_id: categoryId },
@@ -72,7 +72,7 @@ export const CreateQuestion = () => {
     } catch (error) {
       console.error("Fetch Category Error:", error);
     }
-    setLoading(false); // End loading (handled in both success and error)
+    // setLoading(false); // End loading (handled in both success and error)
   }, []);
 
   // category api fetch
