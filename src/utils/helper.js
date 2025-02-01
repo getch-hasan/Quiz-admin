@@ -1,8 +1,7 @@
 import { Toastify } from "../components/toastify";
 import Cookies from 'js-cookie';
 export const getToken = () => {
-    if (typeof window !== "undefined") {
-        console.log(Cookies.get('token'))
+    if (typeof window !== "undefined") { 
         return Cookies.get('token'); // Retrieve token from cookie
         
       }
