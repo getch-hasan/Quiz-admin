@@ -110,7 +110,7 @@ export const TextAreaInput = (props) => {
   return (
     <div>
       {props.error ? (
-        <p className="text-sm mb-1 text-danger">{props.error}</p>
+        <p className="text-sm mb-1 text-danger text-red-500">{props.error}</p>
       ) : (
         <p className="text-sm mb-1 text-gray-500">{props.label}</p>
       )}
@@ -125,7 +125,7 @@ export const TextAreaInput = (props) => {
         rows={props.rows || 4}
         className={
           props.error
-            ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border border-danger ${props.className}`
+            ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border border-red-500 ${props.className}`
             : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props.className}`
         }
       />

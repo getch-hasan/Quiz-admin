@@ -6,7 +6,9 @@ import { useCallback, useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
-import { SingleSelect, TextInput } from "../../components/input";
+import { SingleSelect, TextAreaInput, TextInput } from "../../components/input";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import { SkeletonForm } from "../../components/loading/skeleton-table";
 
 export const CreateQuestion = () => {
   const [categories, setCategories] = useState([]);
@@ -14,7 +16,6 @@ export const CreateQuestion = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const {
-    register,
     handleSubmit,
     formState: { errors },
     control,
@@ -23,11 +24,9 @@ export const CreateQuestion = () => {
   } = useForm({});
   //  i want to see category id
   const categoryId = watch("category_id");
-  // console.log(examId);
-  // console.log("eete", exam);
 
   const fetchCategory = useCallback(async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
 
@@ -53,7 +52,7 @@ export const CreateQuestion = () => {
   }, []);
   // fetch exam
   const fetchExam = useCallback(async (categoryId) => {
-    setLoading(true); // Start loading
+    // setLoading(true); // Start loading
     try {
       const response = await NetworkServices.Exam.index({
         params: { category_id: categoryId },
@@ -73,7 +72,7 @@ export const CreateQuestion = () => {
     } catch (error) {
       console.error("Fetch Category Error:", error);
     }
-    setLoading(false); // End loading (handled in both success and error)
+    // setLoading(false); // End loading (handled in both success and error)
   }, []);
 
   // category api fetch
@@ -81,12 +80,12 @@ export const CreateQuestion = () => {
     fetchExam(categoryId);
   }, [categoryId]);
 
+  // question post api
   const onSubmit = async (data) => {
     console.log("Question Saved:", data);
     try {
       setLoading(true);
       const response = await NetworkServices.Question.store(data);
-      //  console.log("objecttt", response);
       if (response && response.status === 200) {
         navigate("/dashboard/question-list");
         return Toastify.Success("Question Created.");
@@ -97,7 +96,16 @@ export const CreateQuestion = () => {
     }
     setLoading(false);
   };
-
+  if (loading) {
+    return (
+      <div className="text-center">
+        {" "}
+        <PageHeaderSkeleton />
+        <br />
+        <SkeletonForm />{" "}
+      </div>
+    ); // skeleton loading  when loading state is true  (for better user experience)  // skeletonForm is a custom component for loading form
+  }
   const propsData = {
     pageTitle: "Create New Question",
     pageIcon: <IoIosCreate />,
@@ -122,9 +130,9 @@ export const CreateQuestion = () => {
             onSelected={(selected) =>
               setValue("category_id", selected?.category_id)
             }
-            placeholder="Select a category *"
+            placeholder="Select a category "
             error={errors.singleSelect?.message}
-            label="Choose a category"
+            label="Choose a category *"
             // error={errors} // Pass an error message if validation fails
           />
         </div>
@@ -154,12 +162,12 @@ export const CreateQuestion = () => {
         </div>
 
         <div className="mb-4">
-          <TextInput
+          <TextAreaInput
             name="q_description"
             control={control}
-            label="q_description Name *"
+            label="Question Description Name *"
             placeholder="Enter your q_description name"
-            rules={{ required: "q_description Name is required" }} // Validation rule
+            rules={{ required: "Question description   is required" }} // Validation rule
             error={errors?.q_description?.message} // Show error message
           />
         </div>
