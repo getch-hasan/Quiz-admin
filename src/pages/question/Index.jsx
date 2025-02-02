@@ -1,12 +1,10 @@
 import { Link } from "react-router-dom";
-import { FaEdit, FaList, FaArrowLeft, FaArrowRight } from "react-icons/fa";
-
+import { FaEdit, FaList } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useCallback, useEffect, useState } from "react";
-import Select from "react-select";
 import { NetworkServices } from "../../network";
-import { networkErrorHandeller, responseChecker } from "../../utils/helper";
+import { networkErrorHandeller} from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import { Toastify } from "../../components/toastify";
 import DataTable from "react-data-table-component";

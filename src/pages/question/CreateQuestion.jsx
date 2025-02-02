@@ -78,7 +78,7 @@ export const CreateQuestion = () => {
   // category api fetch
   useEffect(() => {
     fetchExam(categoryId);
-  }, [categoryId]);
+  }, [categoryId, fetchExam]);
 
   // question post api
   const onSubmit = async (data) => {
@@ -104,7 +104,7 @@ export const CreateQuestion = () => {
         <br />
         <SkeletonForm />{" "}
       </div>
-    ); // skeleton loading  when loading state is true  (for better user experience)  // skeletonForm is a custom component for loading form
+    ); 
   }
   const propsData = {
     pageTitle: "Create New Question",
@@ -167,7 +167,7 @@ export const CreateQuestion = () => {
             control={control}
             label="Question Description Name *"
             placeholder="Enter your q_description name"
-            rules={{ required: "Question description   is required" }} // Validation rule
+            rules={{ required: "Question description is required" }} // Validation rule
             error={errors?.q_description?.message} // Show error message
           />
         </div>

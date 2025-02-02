@@ -15,6 +15,8 @@ export const OptionList = () => {
   const [option, setOption] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  console.log("option", option);
+
   // Fetch Options from API
   const fetchOption = useCallback(async () => {
     setLoading(true);

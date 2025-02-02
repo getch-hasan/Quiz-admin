@@ -6,6 +6,9 @@ import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import { SkeletonForm } from "../../components/loading/skeleton-table";
+import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
 
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -19,18 +22,28 @@ const CreateCategory = () => {
     formState: { errors },
     setValue,
     watch,
+    control,
   } = useForm({
     defaultValues: {
       status: 0,
     },
   });
 
+
   const fetchCategory = useCallback(async () => {
-    setLoading(true); // Start loading
+    setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
+
       if (response && response.status === 200) {
-        setCategories(response?.data?.data);
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.category_name,
+            value: item.category_name,
+            ...item,
+          };
+        });
+        setCategories(result);
       }
     } catch (error) {
       console.error("Fetch Category Error:", error);
@@ -41,27 +54,15 @@ const CreateCategory = () => {
   // category api fetch
   useEffect(() => {
     fetchCategory();
-  }, [fetchCategory]);
+  }, []);
 
   const onFormSubmit = async (data) => {
     console.log("data", data);
 
-    const formData = new FormData();
-
-    // Append form fields to FormData object
-    formData.append("category_name", data.category_name);
-    formData.append("parent_id", data.parent_id);
-    formData.append("status", data.status);
-
-    if (data.thumbnail[0]) {
-      // Assuming 'thumbnail' field is an array (from react-hook-form file input)
-      formData.append("thumbnail", data.thumbnail[0]);
-    }
-    console.log("object", formData);
 
     try {
       setLoading(true);
-      const response = await NetworkServices.Category.store(formData);
+      const response = await NetworkServices.Category.store(data);
       console.log("objecttt", response);
       if (response && response.status === 200) {
         navigate("/dashboard/category");
@@ -73,6 +74,17 @@ const CreateCategory = () => {
     }
     setLoading(false);
   };
+
+  if (loading) {
+    return (
+      <div className="text-center">
+        {" "}
+        <PageHeaderSkeleton />
+        <br />
+        <SkeletonForm />{" "}
+      </div>
+    );
+  }
   const propsData = {
     pageTitle: " Create Category ",
     pageIcon: <IoMdCreate />,
@@ -86,90 +98,60 @@ const CreateCategory = () => {
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
-        className="p-4 shadow-md rounded-md bg-white"
+        className="mx-auto p-4 border border-gray-200 rounded-lg"
       >
-        {/* Thumbnail Upload */}
         <div className="mb-4">
-          <label
-            htmlFor="thumbnail"
-            className="block text-gray-600 font-medium"
-          >
-            Thumbnail
-          </label>
-          <input
-            type="file"
-            id="thumbnail"
-            {...register("thumbnail")}
-            className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
+          <SingleSelect
+            name="singleSelect"
+            control={control}
+            options={categories}
+            rules={{ required: "Category selection is required" }}
+            onSelected={(selected) =>
+              setValue("category_id", selected?.category_id)
+            }
+            placeholder="Select a category "
+            error={errors.singleSelect?.message}
+            label="Choose a category *"
+            // error={errors} // Pass an error message if validation fails
           />
-          {errors.thumbnail && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.thumbnail.message}
-            </p>
-          )}
-        </div>
-        <div className="mb-4">
-          <label
-            htmlFor="parentCategory"
-            className="block text-gray-600 font-medium"
-          >
-            Perent Category
-          </label>
-          <select
-            id="parentCategory"
-            {...register("parent_id")}
-            className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-          >
-            <option value="">Select a category</option>
-            {categories.map((category) => (
-              <option key={category.category_id} value={category.category_id}>
-                {category.category_name}
-              </option>
-            ))}
-          </select>
-          {errors.parent_category && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.parent_category.message}
-            </p>
-          )}
         </div>
 
-        {/* Category Name */}
-        <div className="mb-4">
-          <label
-            htmlFor="categoryName"
-            className="block text-gray-600 font-medium"
-          >
-            Category Name
-          </label>
-          <input
+        {/* Total Questions */}
+        <div>
+          <TextInput
+            name="category_name"
+            control={control}
+            label="Category *"
             type="text"
-            id="categoryName"
-            {...register("category_name", {
-              required: "Category name is required",
-            })}
-            className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-            placeholder="Enter category name"
+            placeholder="Create Category"
+            rules={{ required: "Category is required" }} // Validation rule
+            error={errors.category_name?.message} // Show error message
           />
-          {errors.category_name && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.category_name.message}
-            </p>
-          )}
+        </div>
+
+        {/* Thumbnail Upload */}
+        <div className="mt-4 cursor-pointer">
+          <ImageUpload
+            name="thumbnail"
+            control={control}
+            label="Category Picture"
+            required
+            onUpload={(file) => setValue("thumbnail", file)}
+          />
         </div>
         {/* Status (Checkbox) */}
         <div className="mt-4">
           {/* <label className="flex items-center"> */}
-            <input
-              type="checkbox"
-              id="status"
-              {...register("status")}
-              className="mr-2"
-              value="1"
-              checked={watch("status") === 1}
-              onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
-            />
-            <span className="text-gray-600 font-medium">Status</span>
+          <input
+            type="checkbox"
+            id="status"
+            {...register("status")}
+            className="mr-2"
+            value="1"
+            checked={watch("status") === 1}
+            onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
+          />
+          <span className="text-gray-600 font-medium">Status</span>
           {/* </label> */}
         </div>
 
