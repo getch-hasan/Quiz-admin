@@ -1,7 +1,4 @@
-import { Link } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaEdit } from "react-icons/fa";
 import { FaPlus } from "react-icons/fa";
-
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useCallback, useEffect, useState } from "react";
@@ -38,13 +35,6 @@ export const UserList = () => {
   useEffect(() => {
     fetchCategory();
   }, [fetchCategory]);
-
-
-  // const confirmDelete = (id) => {
-  //   if (window.confirm("Are you sure you want to delete this user?")) {
-  //     setUsers(users.filter((user) => user.id !== id));
-  //   }
-  // };
 
     // Handle single user deletion
     const destroy = (id) => {
@@ -112,7 +102,7 @@ export const UserList = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      <DataTable columns={columns} data={users} />
+      <DataTable columns={columns} data={users} pagination />
     </>
   );
 };

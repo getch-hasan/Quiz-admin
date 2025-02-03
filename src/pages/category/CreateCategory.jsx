@@ -94,7 +94,7 @@ const CreateCategory = () => {
   };
   return (
     <>
-      <PageHeader propsData={propsData} />
+      <PageHeader propsData={propsData}/>
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}

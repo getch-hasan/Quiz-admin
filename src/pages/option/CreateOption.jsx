@@ -113,12 +113,12 @@ export const CreateOption = () => {
   // fetch exam
   const fetchQuestion = useCallback(
     async (examId) => {
-      // setLoading(true); // Start loading
-      console.log("eid", examId);
+      setLoading(true); // Start loading
+
       try {
-        const response = await NetworkServices.Question.index({
-          params: { exam_id: examId },
-        });
+        const response = await NetworkServices.Question.index(
+          examId 
+        );
 
         if (response && response.status === 200) {
           const result = response.data.data.map((item, index) => {
@@ -134,7 +134,7 @@ export const CreateOption = () => {
       } catch (error) {
         console.error("Fetch Category Error:", error);
       }
-      // setLoading(false); // End loading (handled in both success and error)
+      setLoading(false); // End loading (handled in both success and error)
     },
     []
   );
@@ -253,10 +253,10 @@ export const CreateOption = () => {
           ))}
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex justify-between gap-5 ">
           <button
             type="submit"
-            className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none mt-4 "
+            className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none mt-4  "
           >
             {loading ? "Loading" : "Save Options"}
           </button>
