@@ -94,7 +94,7 @@ const CreateCategory = () => {
   };
   return (
     <>
-      <PageHeader propsData={propsData}/>
+      <PageHeader propsData={propsData} />
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
@@ -112,6 +112,7 @@ const CreateCategory = () => {
             placeholder="Select a category "
             error={errors.singleSelect?.message}
             label="Choose a category *"
+            isClearable={true}
             // error={errors} // Pass an error message if validation fails
           />
         </div>

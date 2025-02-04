@@ -24,6 +24,7 @@ export const CreateQuestion = () => {
   } = useForm({});
   //  i want to see category id
   const categoryId = watch("category_id");
+  
 
   const fetchCategory = useCallback(async () => {
     setLoading(true);
@@ -34,7 +35,7 @@ export const CreateQuestion = () => {
         const result = response.data.data.map((item, index) => {
           return {
             label: item.category_name,
-            value: item.category_name,
+            value: item.category_id,
             ...item,
           };
         });
@@ -49,10 +50,12 @@ export const CreateQuestion = () => {
   // category api fetch
   useEffect(() => {
     fetchCategory();
-  }, []);
+   
+  }, [fetchCategory]);
+
   // fetch exam
   const fetchExam = useCallback(async (categoryId) => {
-    // setLoading(true); // Start loading
+    // setLoading(true); 
     try {
       const response = await NetworkServices.Exam.index({
         params: { category_id: categoryId },
@@ -72,13 +75,20 @@ export const CreateQuestion = () => {
     } catch (error) {
       console.error("Fetch Category Error:", error);
     }
-    // setLoading(false); // End loading (handled in both success and error)
+    // setLoading(false); 
   }, []);
 
-  // category api fetch
-  useEffect(() => {
-    fetchExam(categoryId);
-  }, [categoryId, fetchExam]);
+useEffect(() => {
+    if (categoryId) {
+      console.log("Category Changed:", categoryId);
+      setValue("exam_id", null);
+      setExam([]);
+      fetchExam(categoryId);
+    }
+  },
+  [categoryId, setValue, fetchExam]
+); 
+
 
   // question post api
   const onSubmit = async (data) => {
@@ -104,8 +114,9 @@ export const CreateQuestion = () => {
         <br />
         <SkeletonForm />{" "}
       </div>
-    ); 
+    );
   }
+
   const propsData = {
     pageTitle: "Create New Question",
     pageIcon: <IoIosCreate />,
@@ -133,6 +144,7 @@ export const CreateQuestion = () => {
             placeholder="Select a category "
             error={errors.singleSelect?.message}
             label="Choose a category *"
+            isClearable
             // error={errors} // Pass an error message if validation fails
           />
         </div>
@@ -142,10 +154,13 @@ export const CreateQuestion = () => {
             control={control}
             options={exam}
             rules={{ required: "Exam   selection is required" }}
-            onSelected={(selected) => setValue("exam_id", selected?.exam_id)}
+            onSelected={(selected) =>
+              setValue("exam_id", selected?.exam_id || null)
+            }
             placeholder="Select a Exam *"
             error={errors.singleSelects?.message}
             label="Choose a exam *"
+            isClearable
             disabled={!categoryId}
           />
         </div>
@@ -157,7 +172,9 @@ export const CreateQuestion = () => {
             label="Question Name *"
             placeholder="Enter your Question name"
             rules={{ required: "Question Name is required" }} // Validation rule
-            error={errors?.question?.message} // Show error message
+            error={errors?.question?.message}
+            isClearable
+            disabled={!categoryId}
           />
         </div>
 
@@ -169,6 +186,7 @@ export const CreateQuestion = () => {
             placeholder="Enter your q_description name"
             rules={{ required: "Question description is required" }} // Validation rule
             error={errors?.q_description?.message} // Show error message
+            isClearable={true}
           />
         </div>
 
@@ -188,7 +206,7 @@ export const CreateQuestion = () => {
             placeholder="Select a Exam *"
             error={errors.difficulty?.message}
             label="Choose a difficulty *"
-            // disabled={!categoryId}
+            isClearable={true}
           />
         </div>
         {/* Submit Button */}
