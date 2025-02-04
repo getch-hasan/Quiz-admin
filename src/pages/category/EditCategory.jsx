@@ -4,15 +4,10 @@ import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { MdBrowserUpdated } from "react-icons/md";
 import { NetworkServices } from "../../network";
-import {
- 
-  networkErrorHandeller,
-  responseChecker,
-} from "../../utils/helper";
+import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
 
 const EditCategory = () => {
- 
   const [parentCategories, setParentCategories] = useState([]);
   const { categoryId } = useParams();
   const navigate = useNavigate();
@@ -77,41 +72,40 @@ const EditCategory = () => {
     }
   }, [categoryId, setValue]);
   // edit category api
-const onFormSubmit = async (data) => {
-  const formData = new FormData();
+  const onFormSubmit = async (data) => {
+    const formData = new FormData();
 
-  formData.append("parent_id", data.parent_id);
-  formData.append("category_name", data.category_name);
-  formData.append("status", data.status);
-  formData.append("_method", "PUT");
+    formData.append("parent_id", data.parent_id);
+    formData.append("category_name", data.category_name);
+    formData.append("status", data.status);
+    formData.append("_method", "PUT");
 
-  if (data.thumbnail && data.thumbnail.length > 0) {
-    formData.append("thumbnail", data.thumbnail[0]); // Ensure file is uploaded
-  }
-
-  try {
-    const response = await NetworkServices.Category.update(
-      categoryId,
-      formData
-    );
-
-    if (responseChecker(response, 200)) {
-      navigate("/dashboard/category");
-      return Toastify.Success("Category Updated.");
+    if (data.thumbnail && data.thumbnail.length > 0) {
+      formData.append("thumbnail", data.thumbnail[0]); // Ensure file is uploaded
     }
-  } catch (error) {
-    networkErrorHandeller(error);
-  }
-};
 
+    try {
+      const response = await NetworkServices.Category.update(
+        categoryId,
+        formData
+      );
 
-    const handleFileChange = (event) => {
-      if (event.target.files.length > 0) {
-        setFileSelected(true); // Set to true when a file is selected
-      } else {
-        setFileSelected(false); // Set to false if no file is selected
+      if (responseChecker(response, 200)) {
+        navigate("/dashboard/category");
+        return Toastify.Success("Category Updated.");
       }
-    };
+    } catch (error) {
+      networkErrorHandeller(error);
+    }
+  };
+
+  const handleFileChange = (event) => {
+    if (event.target.files.length > 0) {
+      setFileSelected(true); // Set to true when a file is selected
+    } else {
+      setFileSelected(false); // Set to false if no file is selected
+    }
+  };
 
   const propsData = {
     pageTitle: "Update Category",
