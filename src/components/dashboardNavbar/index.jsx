@@ -2,13 +2,49 @@ import { Link, useNavigate } from "react-router-dom";
 import { removeToken } from "../../utils/helper";
 import { IoIosNotifications } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
+import { useCallback, useEffect, useState } from "react";
+import { NetworkServices } from "../../network";
+import PageHeaderSkeleton from "../loading/pageHeader-skeleton";
+import { SkeletonTable } from "../loading/skeleton-table";
 export const Header = ({ sidebarOpen, setSidebarOpen }) => {
+  const [profile, setProfile] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const logout = () => {
     removeToken();
     navigate("/");
   };
+console.log("users", profile);
+  const fetchUser = useCallback(async () => {
+    setLoading(true); // Start loading
+    try {
+      const response = await NetworkServices.Authentication.myProfile();
+      console.log("profile",response);
+
+      if (response && response.status === 200) {
+        setProfile(response?.data.data);
+      }
+    } catch (error) {
+      console.error("Fetch User Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  if (loading) {
+    return (
+      <div>
+        <PageHeaderSkeleton />
+        <br />
+        <SkeletonTable />
+      </div>
+    );
+  }
 
   const gradientStyle = {
     // background: "#E5E7E9",
@@ -98,8 +134,13 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
                   >
                     <div className="w-10 rounded-full">
                       <img
-                        alt="Tailwind CSS Navbar component"
-                        src="https://media.istockphoto.com/id/1300845620/vector/user-icon-flat-isolated-on-white-background-user-symbol-vector-illustration.jpg?s=612x612&w=0&k=20&c=yBeyba0hUkh14_jgv1OKqIH0CCSWU_4ckRkAoy2p73o="
+                        className="w-10 h-10 rounded-full border"
+                        src={
+                          profile?.profile_pic
+                            ? `${process.env.REACT_APP_API_SERVER}${profile?.profile_pic}`
+                            : "category_image"
+                        }
+                        alt="images"
                       />
                     </div>
                   </div>
@@ -108,13 +149,13 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
                     className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52"
                   >
                     <li>
-                      <a className="justify-between">
-                        Profile
-                        <span className="badge">New</span>
-                      </a>
+                      <a className="justify-between">Name :{profile?.name}</a>
                     </li>
                     <li>
-                      <a>Settings</a>
+                      <a>Email : {profile?.email}</a>
+                    </li>
+                    <li>
+                      <a>Role : {profile?.role}</a>
                     </li>
                     <li onClick={() => logout()}>
                       <a>Logout</a>
@@ -126,6 +167,6 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
           </div>
         </div>
       </div>
-</>
-);
+    </>
+  );
 };

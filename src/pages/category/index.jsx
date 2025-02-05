@@ -83,6 +83,20 @@ export const CategoryList = () => {
 
     const columns = [
       {
+        name: "Thumbnail",
+        cell: (row) => (
+          <img
+            className="w-10 h-10 rounded-full border"
+            src={
+              row?.thumbnail
+                ? `${process.env.REACT_APP_API_SERVER}${row?.thumbnail}`
+                : ""
+            }
+            alt="images"
+          />
+        ),
+      },
+      {
         name: "Category Name",
         cell: (row) => row.category_name,
       },

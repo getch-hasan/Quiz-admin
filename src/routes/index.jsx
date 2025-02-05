@@ -16,6 +16,7 @@ import ExamList from "../pages/exam"
 import CreateExam from "../pages/exam/CreateExam"
 import EditExam from "../pages/exam/EditExam"
 import { getToken } from "../utils/helper"
+import Show from "../pages/User/Show"
 
 
 
@@ -42,6 +43,7 @@ const appRoutes = [
       { path: "edit-option/:optionId", element: <EditOption /> },
       // /** User */
       { path: "user-list", element: <UserList /> },
+      { path: "user-show/:userId", element: <Show/> },
       // /** exam */
       { path: "exam-list", element: <ExamList /> },
       { path: "create-exam", element: <CreateExam/> },

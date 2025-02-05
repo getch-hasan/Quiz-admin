@@ -9,6 +9,8 @@ import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
+import { Link } from "react-router-dom";
+import { MdOutlineRemoveRedEye } from "react-icons/md";
 
 export const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -16,7 +18,7 @@ export const UserList = () => {
 
   console.log("users", users);
 
-  const fetchCategory = useCallback(async () => {
+  const fetchUser = useCallback(async () => {
     setLoading(true); // Start loading
     try {
       const response = await NetworkServices.Authentication.index();
@@ -33,71 +35,78 @@ export const UserList = () => {
 
   // category api fetch
   useEffect(() => {
-    fetchCategory();
-  }, [fetchCategory]);
+    fetchUser();
+  }, [fetchUser]);
 
-    // Handle single user deletion
-    const destroy = (id) => {
-      confirmAlert({
-        title: "Confirm Delete",
-        message: "Are you sure you want to delete this User",
-        buttons: [
-          {
-            label: "Yes",
-            onClick: async () => {
-              console.log("id",id);
-              try {
-                const response = await NetworkServices.Authentication.destroy(id);
-                if (response?.status === 200) {
-                  Toastify.Info("Category deleted successfully.");
-                  fetchCategory();
-                }
-              } catch (error) {
-                networkErrorHandeller(error);
+  // Handle single user deletion
+  const destroy = (id) => {
+    confirmAlert({
+      title: "Confirm Delete",
+      message: "Are you sure you want to delete this User",
+      buttons: [
+        {
+          label: "Yes",
+          onClick: async () => {
+            console.log("id", id);
+            try {
+              const response = await NetworkServices.Authentication.destroy(id);
+              if (response?.status === 200) {
+                Toastify.Info("User deleted successfully.");
+                fetchUser();
               }
-            },
+            } catch (error) {
+              networkErrorHandeller(error);
+            }
           },
-          {
-            label: "No",
-          },
-        ],
-      });
-    };
+        },
+        {
+          label: "No",
+        },
+      ],
+    });
+  };
 
-    const propsData = {
-      pageTitle: "User List",
-      pageIcon: <FaPlus />,
-      type: "add",
-    };
-     
-    const columns = [
-      {
-        name: "User Name",
-        cell: (row) => row?.name,
-      },
-      {
-        name: "Action",
-        cell: (row) => (
-          <div className="flex gap-2">
+  const propsData = {
+    pageTitle: "User List",
+    pageIcon: <FaPlus />,
+    type: "add",
+  };
 
-            <MdDelete
-              className="text-red-500 text-xl cursor-pointer"
-              onClick={() => destroy(row?.id)}
-            />
-          </div>
-        ),
-      },
-    ];
+  const columns = [
+    {
+      name: "User Name",
+      cell: (row) => row?.name,
+    },
+    {
+      name: "User Email",
+      cell: (row) => row?.email,
+    },
+    {
+      name: "Action",
+      cell: (row) => (
+        <div className="flex gap-2">
+          <Link to={`/dashboard/user-show/${row?.id}`}>
+            <MdOutlineRemoveRedEye className="text-primary text-xl" />
+          </Link>
 
-      if (loading) {
-        return (
-          <div>
-            <PageHeaderSkeleton/>
-            <br />
-            <SkeletonTable/>
-          </div>
-        );
-      }
+          <MdDelete
+            className="text-red-500 text-xl cursor-pointer"
+            onClick={() => destroy(row?.id)}
+          />
+        </div>
+      ),
+    },
+  ];
+
+  if (loading) {
+    return (
+      <div>
+        <PageHeaderSkeleton />
+        <br />
+        <SkeletonTable />
+      </div>
+    );
+  }
 
   return (
     <>
