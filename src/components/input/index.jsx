@@ -368,14 +368,14 @@ export const ImageUpload = (props) => {
   });
 
   const [preview, setPreview] = useState(
-    value ? URL.createObjectURL(value) : null
+    value ? URL.createObjectURL(value) : props.defaultValue || null
   );
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       onChange(file);
-      setPreview(URL.createObjectURL(file));
+      setPreview(URL.createObjectURL(file)); // Show file preview
       props.onUpload?.(file); // Callback for additional handling
     }
   };
@@ -387,7 +387,7 @@ export const ImageUpload = (props) => {
       ) : (
         <p className="text-sm mb-1 text-gray-500">{props.label}</p>
       )}
-      <div className="relative border   rounded-md w-full cursor-pointer bg-white">
+      <div className="relative border rounded-md w-full cursor-pointer bg-white">
         <input
           type="file"
           accept="image/*"
@@ -413,3 +413,4 @@ export const ImageUpload = (props) => {
     </div>
   );
 };
+

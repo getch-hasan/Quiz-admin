@@ -15,14 +15,12 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
     removeToken();
     navigate("/");
   };
-console.log("users", profile);
+
   const fetchUser = useCallback(async () => {
     setLoading(true); // Start loading
     try {
       const response = await NetworkServices.Authentication.myProfile();
-      console.log("profile",response);
-
-      if (response && response.status === 200) {
+           if (response && response.status === 200) {
         setProfile(response?.data.data);
       }
     } catch (error) {
@@ -36,15 +34,7 @@ console.log("users", profile);
     fetchUser();
   }, [fetchUser]);
 
-  if (loading) {
-    return (
-      <div>
-        <PageHeaderSkeleton />
-        <br />
-        <SkeletonTable />
-      </div>
-    );
-  }
+ 
 
   const gradientStyle = {
     // background: "#E5E7E9",

@@ -32,7 +32,7 @@ const appRoutes = [
       /** category */
       { path: "category", element: <CategoryList /> },
       { path: "create-category", element: <CreateCategory /> },
-      { path: "edit-category/:categoryId", element: <EditCategory /> },
+      { path: "edit-category/:categoryId", element: <EditCategory/> },
       // /** question */
       { path: "question-list", element: <QuestionList /> },
       { path: "create-question", element: <CreateQuestion /> },
