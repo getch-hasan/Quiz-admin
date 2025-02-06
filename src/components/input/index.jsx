@@ -462,11 +462,11 @@ export const TextCheckbox = (props) => {
         type={props?.type || "text"}
         min={0}
         checked={props.checked}
-        className={
-          props?.error
-            ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border !border-danger ${props?.className}`
-            : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props?.className}`
-        }
+        // className={
+        //   props?.error
+        //     ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border !border-danger ${props?.className}`
+        //     : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props?.className}`
+        // }
       />
         
     </div>

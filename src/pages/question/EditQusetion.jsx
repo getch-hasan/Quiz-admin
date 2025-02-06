@@ -7,52 +7,74 @@ import { NetworkServices } from "../../network";
 import { useCallback } from "react";
 import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
+import { SingleSelect } from "../../components/input";
 
 export const EditQuestion = () => {
-  const [categories] = useState(["Math", "Science", "History", "Literature"]);
   const [questionData, setQuestionData] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [parentCategories, setParentCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [exam, setExam] = useState([]);
 
   const { questionId } = useParams();
 
   console.log("qdata", questionData);
+  console.log("qdatacate", categories);
   const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     setValue,
+    control,
+    watch,
     formState: { errors },
   } = useForm();
 
+  console.log("categories", categories);
+  console.log("exam", exam);
   // Fetch categories from API
-  const fetchCategoryParent = useCallback(async () => {
+  const fetchCategory = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
-
-      if (responseChecker(response, 200)) {
-        setParentCategories(response?.data?.data || []);
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.category_name,
+            value: item.category_name,
+            ...item,
+          };
+        });
+        setCategories(result);
       }
     } catch (error) {
-      networkErrorHandeller(error);
+      console.error("Fetch Category Error:", error);
     }
+    setLoading(false);
   }, []);
 
+  // Fetch categories when the component mounts
   useEffect(() => {
-    fetchCategoryParent();
-  }, [fetchCategoryParent]);
+    fetchCategory();
+  }, [fetchCategory]);
   // Fetch exam from API
   const fetchExam = useCallback(async () => {
+    setLoading(true);
     try {
       const response = await NetworkServices.Exam.index();
-
-      if (responseChecker(response, 200)) {
-        setExam(response?.data?.data || []);
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.exam_name,
+            value: item.exam_name,
+            ...item,
+          };
+        });
+        setExam(result);
       }
     } catch (error) {
-      networkErrorHandeller(error);
+      console.error("Fetch Category Error:", error);
     }
+    setLoading(false);
   }, []);
 
   useEffect(() => {
@@ -74,7 +96,7 @@ export const EditQuestion = () => {
           setValue("exam", question?.exam_id);
           setValue("name", question?.question);
           setValue("description", question?.q_description || "");
-          setValue("category", question?.category_id);
+          setValue("category_id", question?.category_id);
           setValue("difficulty", question?.difficulty_level);
         }
       } catch (error) {
@@ -91,22 +113,8 @@ export const EditQuestion = () => {
     }
   }, [questionId, setValue]);
 
-  // useEffect(() => {
-  //   // Fetch question data based on ID (simulate API call)
-  //   const question = existingQuestions.find((q) => q.id === questionId);
-  //   if (question) {
-  //     setQuestionData(question);
-
-  //     // Set initial values in the form
-  //     Object.keys(question).forEach((key) => {
-  //       setValue(key, question[key]);
-  //     });
-  //   }
-  // }, [questionId, setValue]);
-
   const onSubmit = async (data) => {
-
-    console.log("data",data);
+    console.log("data", data);
     // update function for category
     const formData = new FormData();
     formData.append("exam_id", data.exam);
@@ -150,22 +158,26 @@ export const EditQuestion = () => {
         className="mx-auto p-4 border border-gray-200 rounded-lg"
         onSubmit={handleSubmit(onSubmit)}
       >
+       {/* Category */}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Exam Name</label>
-          <select
-            {...register("exam", { required: "Category is required" })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
-          >
-            <option value="">Select a category</option>
-            {exam.map((singleExam) => (
-              <option key={singleExam.exam_id} value={singleExam.exam_id}>
-                {singleExam.exam_name}
-              </option>
-            ))}
-          </select>
-          {errors.examName && (
-            <p className="text-red-500 text-sm">{errors.examName.message}</p>
-          )}
+          <SingleSelect
+            name="singleSelect"
+            control={control}
+            options={categories}
+            // rules={{ required: "Category selection is required" }}
+            onSelected={(selected) =>
+              setValue("category_id", selected?.category_id)
+            }
+            placeholder={
+              categories.find(
+                (item) => item?.category_id == watch("category_id")
+              )?.category_name ?? "Select Parent Category"
+            }
+            error={errors.singleSelect?.message}
+            label="Choose a category"
+            defaultValue={categories?.category_name}
+            // error={errors} // Pass an error message if validation fails
+          />
         </div>
 
         <div className="mb-4">
@@ -182,7 +194,7 @@ export const EditQuestion = () => {
           )}
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Category</label>
           <select
             {...register("category", { required: "Category is required" })}
@@ -198,7 +210,7 @@ export const EditQuestion = () => {
           {errors.category && (
             <p className="text-red-500 text-sm">{errors.category.message}</p>
           )}
-        </div>
+        </div> */}
 
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Description</label>

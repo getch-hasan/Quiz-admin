@@ -127,7 +127,7 @@ const EditCategory = () => {
         onSubmit={handleSubmit(onFormSubmit)}
         className="mx-auto p-4 border border-gray-200 rounded-lg"
       >
-        {/* Total Questions */}
+        {/* Categories */}
         <div className="mb-4">
           <SingleSelect
             name="singleSelect"
@@ -171,19 +171,31 @@ const EditCategory = () => {
           />
         </div>
         {/* Status (Checkbox) */}
-        <div className="flex items-center gap-2 mt-4">
+        {/* <div className="flex items-center gap-2 mt-4">
           <TextCheckbox
             type="checkbox"
             name="status"
-            className="w-5 h-5"
+            className=""
             control={control}
             onChange={(e) => {
               console.log(e.target.checked);
-              setValue("status", e.target.checked  );
-
+              setValue("status", e.target.checked);
             }}
             checked={watch("status")}
             defaultValue={true}
+          />
+          <label htmlFor="status" className="text-sm text-gray-700">
+            Status
+          </label>
+        </div> */}
+        <div className="flex items-center  mt-4 ">
+          <TextCheckbox
+            type="checkbox"
+            name="status"
+            className=""
+            control={control}
+            onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
+            checked={watch("status") == 1} // If status is 1, checked = true
           />
           <label htmlFor="status" className="text-sm text-gray-700">
             Status

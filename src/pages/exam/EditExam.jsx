@@ -8,19 +8,25 @@ import { networkErrorHandeller } from "../../utils/helper";
 import { useNavigate, useParams } from "react-router-dom";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonForm } from "../../components/loading/skeleton-table";
+import {
+  ImageUpload,
+  SingleSelect,
+  TextCheckbox,
+  TextInput,
+} from "../../components/input";
 
 const EditExam = () => {
   const [categories, setCategories] = useState([]);
   const [exam, setExam] = useState({});
   const [loading, setLoading] = useState(false);
-  const [fileSelected, setFileSelected] = useState(false);
   const { examId } = useParams(); // Get the examId from URL
 
   const navigate = useNavigate();
   const {
-    register,
+   
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
     watch,
   } = useForm({
@@ -29,50 +35,22 @@ const EditExam = () => {
     },
   });
 
+  console.log("categories", categories);
   console.log("exam", exam);
-
-  const handleFileChange = (event) => {
-    if (event.target.files.length > 0) {
-      setFileSelected(true); // Set to true when a file is selected
-    } else {
-      setFileSelected(false); // Set to false if no file is selected
-    }
-  };
-
-  // Fetch the exam details from the API and populate the form
-  const fetchExam = async (examId) => {
-    try {
-      const response = await NetworkServices.Exam.show(examId);
-      if (response && response.status === 200) {
-        const exam = response?.data?.data;
-        setExam(exam);
-
-        // Populate the form with the existing exam data
-        setValue("category_id", exam.category_id);
-        setValue("exam_name", exam.exam_name);
-        setValue("total_marks", exam.total_marks);
-        setValue("total_questions", exam.total_questions);
-        setValue("duration", exam.duration);
-        setValue("thumbnail", exam?.thumbnail);
-        setValue("status", exam.status);
-      }
-    } catch (error) {
-      console.error("Error fetching exam:", error);
-    }
-  };
-
-  useEffect(() => {
-    if (examId) {
-      fetchExam(examId);
-    }
-  }, [examId, setValue]);
 
   const fetchCategory = useCallback(async () => {
     setLoading(true);
     try {
       const response = await NetworkServices.Category.index();
       if (response && response.status === 200) {
-        setCategories(response?.data?.data);
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.category_name,
+            value: item.category_name,
+            ...item,
+          };
+        });
+        setCategories(result);
       }
     } catch (error) {
       console.error("Fetch Category Error:", error);
@@ -85,8 +63,37 @@ const EditExam = () => {
     fetchCategory();
   }, [fetchCategory]);
 
+  // Fetch the exam details from the API and populate the form
+  const fetchExam = async (examId) => {
+    try {
+      const response = await NetworkServices.Exam.show(examId);
+      if (response && response.status === 200) {
+        const exam = response?.data?.data;
+        setExam(exam);
+
+        // Populate the form with the existing exam data
+        setValue("category_id", exam.category_id);
+        setValue("exam_name", exam.exam_name);
+        setValue("total_marks", exam?.total_marks);
+        setValue("total_questions", exam?.total_questions);
+        setValue("duration", exam.duration);
+
+        setValue("status", exam.status);
+      }
+    } catch (error) {
+      console.error("Error fetching exam:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (examId) {
+      fetchExam(examId);
+    }
+  }, [examId]);
+
   // Update form submission
   const onFormSubmit = async (data) => {
+    console.log("data", data);
     try {
       setLoading(true);
       setLoading(true);
@@ -94,16 +101,18 @@ const EditExam = () => {
       const formData = new FormData();
       formData.append("category_id", data.category_id);
       formData.append("exam_name", data.exam_name);
-      formData.append("total_marks", data.total_marks);
-      formData.append("total_questions", data.total_questions);
+      formData.append("total_marks", data?.total_marks);
+      formData.append("total_questions", data?.total_questions);
       formData.append("duration", data.duration);
       formData.append("status", data.status);
+      formData.append("_method", "PUT");
 
-      if (data.thumbnail && data.thumbnail[0]) {
-        formData.append("thumbnail", data.thumbnail[0]);
+      if (data.thumbnail) {
+        formData.append("thumbnail", data.thumbnail); // Ensure file is uploaded
       }
-      const response = await NetworkServices.Exam.update(examId, formData);
 
+      const response = await NetworkServices.Exam.update(examId, formData);
+      console.log("response", response);
       if (response && response.status === 200) {
         navigate("/dashboard/exam-list");
         Toastify.Success(examId ? "Exam Updated." : "Exam Created.");
@@ -114,12 +123,14 @@ const EditExam = () => {
     }
     setLoading(false);
   };
-    if(loading){
-      return <div className="text-center"> 
-      <PageHeaderSkeleton/>
-      <SkeletonForm/>
+  if (loading) {
+    return (
+      <div className="text-center">
+        <PageHeaderSkeleton />
+        <SkeletonForm />
       </div>
-    }
+    );
+  }
   const propsData = {
     pageTitle: examId ? "Edit Exam" : "Create Exam",
     pageIcon: <IoMdCreate />,
@@ -138,194 +149,96 @@ const EditExam = () => {
       >
         {/* Category */}
         <div className="mb-4">
-          <label htmlFor="category" className="block text-gray-600 font-medium">
-            Category
-          </label>
-          <select
-            id="category"
-            {...register("category_id")}
-            className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-          >
-            <option value="">Select a category</option>
-            {categories.map((category) => (
-              <option key={category.category_id} value={category.category_id}>
-                {category.category_name}
-              </option>
-            ))}
-          </select>
-          {errors.category_id && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.category_id.message}
-            </p>
-          )}
+          <SingleSelect
+            name="singleSelect"
+            control={control}
+            options={categories}
+            // rules={{ required: "Category selection is required" }}
+            onSelected={(selected) =>
+              setValue("category_id", selected?.category_id)
+            }
+            placeholder={
+              categories.find(
+                (item) => item?.category_id == watch("category_id")
+              )?.category_name ?? "Select Parent Category"
+            }
+            error={errors.singleSelect?.message}
+            label="Choose a category"
+            defaultValue={categories?.category_name}
+            // error={errors} // Pass an error message if validation fails
+          />
         </div>
 
         {/* Exam Name */}
-        <div className="mb-4">
-          <label
-            htmlFor="exam_name"
-            className="block text-gray-600 font-medium"
-          >
-            Exam Name
-          </label>
-          <input
-            type="text"
-            id="exam_name"
-            {...register("exam_name", { required: "Exam name is required" })}
-            className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-            placeholder="Enter exam name"
-          />
-          {errors.exam_name && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.exam_name.message}
-            </p>
-          )}
-        </div>
+
+        <TextInput
+          name="exam_name"
+          control={control}
+          label="Exam Name *"
+          type="text"
+          placeholder="Exam"
+          // rules={{ required: "Category is required" }} // Validation rule
+          error={errors.exam_name?.message} // Show error message
+        />
 
         {/* Grid Layout for Additional Fields */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Total Marks */}
-          <div>
-            <label
-              htmlFor="total_marks"
-              className="block text-gray-600 font-medium"
-            >
-              Total Marks
-            </label>
-            <input
-              type="number"
-              id="total_marks"
-              {...register("total_marks", {
-                required: "Total marks are required",
-              })}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-              placeholder="Enter total marks"
-            />
-            {errors.total_marks && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.total_marks.message}
-              </p>
-            )}
-          </div>
+          <TextInput
+            name="total_marks"
+            control={control}
+            label="Total Mark *"
+            type="text"
+            placeholder="total mark"
+            // rules={{ required: "Category is required" }} // Validation rule
+            error={errors.total_marks?.message} // Show error message
+          />
 
           {/* Total Questions */}
-          <div>
-            <label
-              htmlFor="total_questions"
-              className="block text-gray-600 font-medium"
-            >
-              Total Questions
-            </label>
-            <input
-              type="number"
-              id="total_questions"
-              {...register("total_questions", {
-                required: "Total questions are required",
-              })}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-              placeholder="Enter total questions"
-            />
-            {errors.total_questions && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.total_questions.message}
-              </p>
-            )}
-          </div>
+          <TextInput
+            name="total_questions"
+            control={control}
+            label="Total Question *"
+            type="number"
+            placeholder="total question"
+            error={errors.total_questions?.message} // Show error message
+          />
 
           {/* Duration */}
-          <div>
-            <label
-              htmlFor="duration"
-              className="block text-gray-600 font-medium"
-            >
-              Duration (minutes)
-            </label>
-            <input
-              type="number"
-              id="duration"
-              {...register("duration", { required: "Duration is required" })}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
-              placeholder="Enter exam duration in minutes"
-            />
-            {errors.duration && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.duration.message}
-              </p>
-            )}
-          </div>
+          <TextInput
+            name="duration"
+            control={control}
+            label="Duration *"
+            type="number"
+            placeholder="total question"
+            error={errors.duration?.message} // Show error message
+          />
 
           {/* Thumbnail Upload */}
-          {/* <div>
-            <label
-              htmlFor="thumbnail"
-              className="block text-gray-600 font-medium"
-            >
-              Thumbnail
-            </label>
-            <input
-              type="file"
-              id="thumbnail"
-              {...register("thumbnail")}
-              className="w-full p-2 mt-2 border border-gray-300 rounded-md focus:outline-none"
+          <div className="mt-4 cursor-pointer">
+            <ImageUpload
+              name="thumbnail"
+              control={control}
+              label="Category Picture"
+              onUpload={(file) => setValue("thumbnail", file)}
+              imgUrl={exam?.thumbnail}
             />
-            {errors.thumbnail && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.thumbnail.message}
-              </p>
-            )}
-          </div> */}
-          <div>
-            <div className="flex gap-2">
-              <label
-                htmlFor="thumbnail"
-                className="block text-gray-600 font-medium"
-              >
-                Thumbnail
-              </label>
-
-              {/* If exam has a current thumbnail, show it */}
-              {!fileSelected && exam.thumbnail && (
-                <div className="mb-2">
-                  <img
-                    src={`${process.env.REACT_APP_API_SERVER}/${exam?.thumbnail}`} // Replace with actual thumbnail URL from exam data
-                    alt="Current Thumbnail"
-                    className="w-6 h-6 object-cover"
-                  />
-                </div>
-              )}
-            </div>
-
-            {/* File input for uploading new thumbnail */}
-            <input
-              type="file"
-              id="thumbnail"
-              {...register("thumbnail")}
-              onChange={handleFileChange}
-              className="w-full p-2  border border-gray-300 rounded-md focus:outline-none"
-            />
-
-            {errors.thumbnail && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.thumbnail.message}
-              </p>
-            )}
           </div>
         </div>
 
         {/* Status (Checkbox) */}
-        <div className="mt-4">
-          {/* <label className="flex items-center"> */}
-            <input
-              type="checkbox"
-              id="status"
-              {...register("status")}
-              className="mr-2"
-              value="1"
-              checked={watch("status") === 1}
-              onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
-            />
-            <span className="text-gray-600 font-medium">Status</span>
-          {/* </label> */}
+        <div className="flex items-center  mt-4 ">
+          <TextCheckbox
+            type="checkbox"
+            name="status"
+            className=""
+            control={control}
+            onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
+            checked={watch("status") == 1} // If status is 1, checked = true
+          />
+          <label htmlFor="status" className="text-sm text-gray-700">
+            Status
+          </label>
         </div>
 
         {/* Submit Button */}
