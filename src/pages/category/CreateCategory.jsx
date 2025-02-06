@@ -14,7 +14,6 @@ const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("categories", categories);
   const navigate = useNavigate();
   const {
     register,
@@ -28,7 +27,6 @@ const CreateCategory = () => {
       status: 0,
     },
   });
-
 
   const fetchCategory = useCallback(async () => {
     setLoading(true);
@@ -57,12 +55,12 @@ const CreateCategory = () => {
   }, []);
 
   const onFormSubmit = async (data) => {
-    console.log("data", data);
-
-
+    const result = data?.status ? "1" : "0";
+    const newObj = { ...data, status: result };
+    console.log("object", newObj);
     try {
       setLoading(true);
-      const response = await NetworkServices.Category.store(data);
+      const response = await NetworkServices.Category.store(newObj);
       console.log("objecttt", response);
       if (response && response.status === 200) {
         navigate("/dashboard/category");
@@ -105,13 +103,13 @@ const CreateCategory = () => {
             name="singleSelect"
             control={control}
             options={categories}
-            rules={{ required: "Category selection is required" }}
+            // rules={{ required: "Category selection is required" }}
             onSelected={(selected) =>
               setValue("category_id", selected?.category_id)
             }
             placeholder="Select a category "
             error={errors.singleSelect?.message}
-            label="Choose a category *"
+            label="Choose Parent category *"
             isClearable={true}
             // error={errors} // Pass an error message if validation fails
           />
@@ -136,24 +134,23 @@ const CreateCategory = () => {
             name="thumbnail"
             control={control}
             label="Category Picture"
-            required
+            // required
             onUpload={(file) => setValue("thumbnail", file)}
           />
         </div>
-        {/* Status (Checkbox) */}
-        <div className="mt-4">
-          {/* <label className="flex items-center"> */}
-          <input
+
+        <div className="flex items-center gap-2 mt-4">
+          <TextInput
             type="checkbox"
-            id="status"
-            {...register("status")}
-            className="mr-2"
-            value="1"
-            checked={watch("status") === 1}
+            name="status"
+            className="w-5 h-5"
+            control={control}
             onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
+            checked={watch("status") === 1}
           />
-          <span className="text-gray-600 font-medium">Status</span>
-          {/* </label> */}
+          <label htmlFor="status" className="text-sm text-gray-700">
+            Status
+          </label>
         </div>
 
         {/* Submit Button */}

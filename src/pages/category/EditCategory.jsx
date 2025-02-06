@@ -6,29 +6,55 @@ import { MdBrowserUpdated } from "react-icons/md";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
-import { ImageUpload, TextInput } from "../../components/input";
+import { ImageUpload, SingleSelect, TextCheckbox, TextInput } from "../../components/input";
 
 const EditCategory = () => {
-  
   const { categoryId } = useParams();
   const navigate = useNavigate();
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [fileSelected, setFileSelected] = useState(false);
   // console.log("objectid", categoryId);
- 
+  const [category, setCategory] = useState({});
+
+  console.log("categorycategory", category);
 
   const {
-    register,
+    
     handleSubmit,
     setValue,
     formState: { errors },
-    getValues,
     watch,
     control,
-  } = useForm();
-  console.log(getValues());
+  } = useForm({
+    defaultValues: {
+      status: 0,
+    },
+  });
+  const fetchCategorys = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await NetworkServices.Category.index();
 
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.category_name,
+            value: item.category_name,
+            ...item,
+          };
+        });
+        setCategories(result);
+      }
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
 
+  // category api fetch
+  useEffect(() => {
+    fetchCategorys();
+  }, []);
   // Fetch the category details from the API and populate the form
   const fetchCategory = async (categoryId) => {
     setLoading(true);
@@ -37,11 +63,11 @@ const EditCategory = () => {
       console.log("response", response.data.data);
       if (responseChecker(response, 200)) {
         const category = response?.data?.data;
-        console.log("category", category);
-        // setCategories([category]); // Assume categories is an array
+        setCategory(category);
+
         setValue("category_name", category.category_name);
-        setValue("thumbnail", category?.thumbnail);
-        setValue("status", category?.status);
+        setValue("parent_id", category.parent_id)
+        setValue("status", category?.status=== 1 ? true : false);
       }
     } catch (error) {
       // console.error("Error fetching category:", error);
@@ -54,18 +80,19 @@ const EditCategory = () => {
     if (categoryId) {
       fetchCategory(categoryId);
     }
-  }, [categoryId, setValue]);
+  }, [categoryId]);
   // edit category api
   const onFormSubmit = async (data) => {
+    const result = data?.status ? "1" : "0";
     const formData = new FormData();
-
-    formData.append("parent_id", data.parent_id);
+    console.log("object", data);
+    data.parent_id && formData.append("parent_id", data.parent_id);
     formData.append("category_name", data.category_name);
-    formData.append("status", data.status);
+    formData.append("status",  result);
     formData.append("_method", "PUT");
 
-    if (data.thumbnail && data.thumbnail.length > 0) {
-      formData.append("thumbnail", data.thumbnail[0]); // Ensure file is uploaded
+    if (data.thumbnail) {
+      formData.append("thumbnail", data.thumbnail); // Ensure file is uploaded
     }
 
     try {
@@ -73,6 +100,7 @@ const EditCategory = () => {
         categoryId,
         formData
       );
+      console.log("responseresponse", response);
 
       if (responseChecker(response, 200)) {
         navigate("/dashboard/category");
@@ -80,14 +108,6 @@ const EditCategory = () => {
       }
     } catch (error) {
       networkErrorHandeller(error);
-    }
-  };
-
-  const handleFileChange = (event) => {
-    if (event.target.files.length > 0) {
-      setFileSelected(true); // Set to true when a file is selected
-    } else {
-      setFileSelected(false); // Set to false if no file is selected
     }
   };
 
@@ -103,11 +123,31 @@ const EditCategory = () => {
     <>
       <PageHeader propsData={propsData} />
 
-     <form
+      <form
         onSubmit={handleSubmit(onFormSubmit)}
         className="mx-auto p-4 border border-gray-200 rounded-lg"
       >
         {/* Total Questions */}
+        <div className="mb-4">
+          <SingleSelect
+            name="singleSelect"
+            control={control}
+            options={categories}
+            // rules={{ required: "Category selection is required" }}
+            onSelected={(selected) =>
+              setValue("parent_id", selected?.category_id)
+            }
+            placeholder={
+              categories.find((item) => item?.category_id == category.parent_id)
+                ?.category_name ?? "select parent Category"
+            }
+            error={errors.singleSelect?.message}
+            label="Choose parent category *"
+            isClearable={true}
+            // defaultValue="malek "
+            // error={errors} // Pass an error message if validation fails
+          />
+        </div>
         <div>
           <TextInput
             name="category_name"
@@ -126,24 +166,28 @@ const EditCategory = () => {
             name="thumbnail"
             control={control}
             label="Category Picture"
-            required
             onUpload={(file) => setValue("thumbnail", file)}
+            imgUrl={category?.thumbnail}
           />
         </div>
         {/* Status (Checkbox) */}
-        <div className="mt-4">
-          {/* <label className="flex items-center"> */}
-          <input
+        <div className="flex items-center gap-2 mt-4">
+          <TextCheckbox
             type="checkbox"
-            id="status"
-            {...register("status")}
-            className="mr-2"
-            value="1"
-            checked={watch("status") === 1}
-            onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
+            name="status"
+            className="w-5 h-5"
+            control={control}
+            onChange={(e) => {
+              console.log(e.target.checked);
+              setValue("status", e.target.checked  );
+
+            }}
+            checked={watch("status")}
+            defaultValue={true}
           />
-          <span className="text-gray-600 font-medium">Status</span>
-          {/* </label> */}
+          <label htmlFor="status" className="text-sm text-gray-700">
+            Status
+          </label>
         </div>
 
         {/* Submit Button */}
