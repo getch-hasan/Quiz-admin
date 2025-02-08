@@ -184,7 +184,6 @@ useEffect(() => {
             control={control}
             label="Question Description Name *"
             placeholder="Enter your q_description name"
-            rules={{ required: "Question description is required" }} // Validation rule
             error={errors?.q_description?.message} // Show error message
             isClearable={true}
           />
@@ -199,7 +198,6 @@ useEffect(() => {
               { label: "Medium", value: "medium" },
               { label: "Hard", value: "hard" },
             ]}
-            rules={{ required: "Difficulty  selection is required" }}
             onSelected={(selected) =>
               setValue("difficulty_level", selected?.value)
             }
