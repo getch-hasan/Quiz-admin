@@ -201,12 +201,14 @@ const customStyles = (error) => {
 export const SingleSelect = (props) => {
   const {
     field: { onChange, onBlur, value },
+   
   } = useController({
     name: props.name,
     control: props.control,
     rules: { ...props.rules },
     defaultValue: props.defaultvalue,
   });
+  // console.log("value",value)
 
   const handleSelect = (event) => {
     onChange(event);

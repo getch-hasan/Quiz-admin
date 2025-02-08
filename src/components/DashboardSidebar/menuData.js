@@ -3,6 +3,7 @@ import { RiProductHuntLine } from "react-icons/ri";
 import { HiBars3 } from "react-icons/hi2";
 import { PiExam } from "react-icons/pi";
 import { MdSettingsAccessibility } from "react-icons/md";
+import { FaNoteSticky } from "react-icons/fa6";
 export const menuData = [
   {
     title: "Dashboard",
@@ -15,6 +16,11 @@ export const menuData = [
     path: "/dashboard/category",
   },
   {
+    title: "Exam",
+    icon: <PiExam />,
+    path: "/dashboard/exam-list",
+  },
+  {
     title: "Question",
     icon: <RiProductHuntLine />,
     path: "/dashboard/question-list",
@@ -24,10 +30,11 @@ export const menuData = [
     icon: <MdSettingsAccessibility />,
     path: "/dashboard/option-list",
   },
+
   {
-    title: "Exam",
-    icon: <PiExam />,
-    path: "/dashboard/exam-list",
+    title: "Testimonial",
+    icon: <FaNoteSticky />,
+    path: "/dashboard/testimonial-list",
   },
   {
     title: "User",

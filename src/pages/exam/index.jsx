@@ -67,13 +67,7 @@ const ExamList = () => {
     type: "add",
   };
   const columns = [
-    // {
-    //   name: "Exam ID",
-    //   cell: (row) => (
-    //     <Link to={`/dashboard/exam/${row.value}`}>{row.exam_id}</Link>
-    //   ),
-    // },
-    // image
+
     {
       name: "Thumbnail",
       cell: (row) => (

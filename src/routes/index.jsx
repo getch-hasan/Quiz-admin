@@ -17,6 +17,9 @@ import CreateExam from "../pages/exam/CreateExam"
 import EditExam from "../pages/exam/EditExam"
 import { getToken } from "../utils/helper"
 import Show from "../pages/User/Show"
+import Testimonial from "../pages/testimonial"
+import EditTestimonial from "../pages/testimonial/EditTestimonial"
+import CreateTestimonial from "../pages/testimonial/CreateTestimonial"
 
 
 
@@ -48,6 +51,10 @@ const appRoutes = [
       { path: "exam-list", element: <ExamList /> },
       { path: "create-exam", element: <CreateExam/> },
       { path: "edit-exam/:examId", element: <EditExam/> },
+      // testimonial
+      { path: "testimonial-list", element: <Testimonial/> },
+      { path: "create-testimonial", element: <CreateTestimonial/> },
+      { path: "edit-testimonial/:id", element: <EditTestimonial/> },
     ],
   },
 ]; 

@@ -1,48 +1,42 @@
 import { useForm } from "react-hook-form";
 import { IoIosCreate } from "react-icons/io";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useNavigate, useParams } from "react-router-dom";
+import { SingleSelect } from "../../components/input";
+import { NetworkServices } from "../../network";
 
 export const EditOption = () => {
   const [options, setOptions] = useState([
-    { name: "", is_correct: false },
-    { name: "", is_correct: false },
-    { name: "", is_correct: false },
-    { name: "", is_correct: false },
+    { name: "", is_correct: 0 },
+    { name: "", is_correct: 0 },
+    { name: "", is_correct: 0 },
+    { name: "", is_correct: 0 },
   ]);
+  const [question, setQuestion] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [exam, setExam] = useState([]);
+  const [option, setOption] = useState([]);
 
-  const { id } = useParams(); // Get question ID from URL
+  const { optionId } = useParams(); // Get question ID from URL
   const navigate = useNavigate();
 
+  console.log("categories",categories)
+  console.log("exam",exam)
+  console.log("question",question)
+  console.log("option",option)
+
   const {
-    register,
     handleSubmit,
     setValue,
+    control,
     formState: { errors },
+    watch,
   } = useForm();
 
-  // Simulate existing question data
-  const existingQuestion = {
-    id: "1",
-    question_id: "1",
-    options: [
-      { name: "Option 1", is_correct: true },
-      { name: "Option 2", is_correct: false },
-      { name: "Option 3", is_correct: false },
-      { name: "Option 4", is_correct: false },
-    ],
-  };
-
-  useEffect(() => {
-    if (id) {
-      // If editing an existing question, load its data
-      if (existingQuestion.id === id) {
-        setOptions(existingQuestion.options);
-        setValue("question_id", existingQuestion.question_id);
-      }
-    }
-  }, [id, setValue]);
+  const categoryId = watch("category_id");
+  const examId = watch("exam_id");
 
   const handleOptionChange = (index, e) => {
     const updatedOptions = [...options];
@@ -52,9 +46,121 @@ export const EditOption = () => {
 
   const handleCheckboxChange = (index, e) => {
     const updatedOptions = [...options];
-    updatedOptions[index].is_correct = e.target.checked;
+    updatedOptions[index].is_correct = e.target.checked ? 1 : 0;
     setOptions(updatedOptions);
   };
+
+  const addMoreOption = () => {
+    if (options.length < 6) {
+      setOptions([...options, { name: "", is_correct: 0 }]);
+    }
+  };
+
+  // Fetch categories
+  const fetchCategory = useCallback(async () => {
+    setLoading(true);
+    try {
+      const response = await NetworkServices.Category.index();
+      if (response?.status === 200) {
+        const result = response.data.data.map((item) => ({
+          label: item.category_name,
+          value: item.category_id, // Change to category_id
+          ...item,
+        }));
+        setCategories(result);
+      }
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false);
+  }, []);
+
+  useEffect(() => {
+    fetchCategory();
+  }, [fetchCategory]);
+
+   // Fetch exam based on category
+   const fetchExam = useCallback(async (categoryId) => {
+    try {
+      const response = await NetworkServices.Exam.index({
+        params: { category_id: categoryId },
+      });
+      if (response?.status === 200) {
+        const result = response.data.data.map((item) => ({
+          label: item.exam_name,
+          value: item.exam_id, // Change to exam_id
+          ...item,
+        }));
+        setExam(result);
+      }
+    } catch (error) {
+      console.error("Fetch Exam Error:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (categoryId) {
+      setExam([]); // Reset exam list when category changes
+      fetchExam(categoryId);
+    }
+  }, [categoryId, fetchExam]);
+
+  // fetch exam
+  const fetchQuestion = useCallback(async (examId) => {
+    setLoading(true); // Start loading
+
+    try {
+      const response = await NetworkServices.Question.index(examId);
+
+      if (response && response.status === 200) {
+        const result = response.data.data.map((item, index) => {
+          return {
+            label: item.question,
+            value: item.question,
+            ...item,
+          };
+        });
+        console.log(result);
+        setQuestion(result);
+      }
+    } catch (error) {
+      console.error("Fetch Category Error:", error);
+    }
+    setLoading(false); // End loading (handled in both success and error)
+  }, []);
+
+  // category api fetch
+  useEffect(() => {
+    fetchQuestion(examId);
+  }, [examId, fetchQuestion]);
+
+    // Fetch Question Details
+    const fetchOption = useCallback(async (optionId) => {
+      try {
+        setLoading(true);
+        const response = await NetworkServices.Option.show(optionId);
+        if (response?.status === 200) {
+          const option = response.data.data;
+          setOption(option);
+  
+          // Set form values
+          setValue("exam_id", option?.exam_id || null);
+          setValue("name", option?.question || "");
+          setValue("q_description", question?.q_description || "");          
+          setValue("difficulty_level", question?.difficulty_level || "");
+          setValue("category_id", question?.category_id || null);
+        }
+      } catch (error) {
+        console.error("Error fetching question:", error);
+      }
+      setLoading(false);
+    }, [setValue]);
+  
+    useEffect(() => {
+      if (optionId) {
+        fetchOption(optionId);
+      }
+    }, [optionId, fetchOption]);
 
   const onSubmit = (data) => {
     const payload = {
@@ -67,11 +173,11 @@ export const EditOption = () => {
   };
 
   const propsData = {
-    pageTitle: id ? "Edit Options" : "Create Options",
+    pageTitle: "Edit Options",
     pageIcon: <IoIosCreate />,
-    buttonName: "Back to Questions",
-    buttonUrl: "/dashboard/questions",
-    type: id ? "edit" : "create",
+    buttonName: "Option List",
+    buttonUrl: "/dashboard/option-list",
+    type: "add",
   };
 
   return (
@@ -82,34 +188,72 @@ export const EditOption = () => {
         onSubmit={handleSubmit(onSubmit)}
       >
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Question ID</label>
-          <input
-            type="text"
-            {...register("question_id", { required: "Question ID is required" })}
-            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
+          <SingleSelect
+            name="category_id"
+            control={control}
+            options={categories}
+            onSelected={(selected) =>
+              setValue("category_id", selected?.value || null)
+            }
+            placeholder={
+              categories.find((item) => item.value === watch("category_id"))
+                ?.label ?? "Select Category"
+            }
+            error={errors.category_id?.message}
+            label="Choose a Category *"
+            isClearable
           />
-          {errors.question_id && (
-            <p className="text-red-500 text-sm">{errors.question_id.message}</p>
-          )}
+        </div>
+
+        <div className="mb-4">
+          <SingleSelect
+            name="singleSelects"
+            control={control}
+            options={exam}
+            rules={{ required: "Exam   selection is required" }}
+            onSelected={(selected) => setValue("exam_id", selected?.exam_id)}
+            placeholder="Select a Exam *"
+            error={errors.singleSelects?.message}
+            label="Choose a exam *"
+            disabled={!categoryId}
+          />
+        </div>
+
+        <div className="mb-4">
+          <SingleSelect
+            name="singleSelectss"
+            control={control}
+            options={question}
+            rules={{ required: "Question selection is required" }}
+            onSelected={(selected) =>
+              setValue("question_id", selected?.question_id)
+            }
+            placeholder="Select a Question *"
+            error={errors.singleSelectss?.message}
+            label="Choose a question *"
+            disabled={!examId}
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {options.map((option, index) => (
             <div key={index}>
-              <label className="block text-sm font-medium mb-1">{`Option ${index + 1}`}</label>
-              <div className="flex items-center space-x-4">
+              <label className="text-sm  text-gray-500">{`Option ${
+                index + 1
+              }`}</label>
+              <div className="flex items-center space-x-4 mt-1">
                 <div className="flex-1">
                   <input
                     type="text"
                     value={option.name}
                     onChange={(e) => handleOptionChange(index, e)}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none"
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none text-sm mb-1 text-gray-500"
                     placeholder={`Option ${index + 1}`}
                   />
                 </div>
                 <div className="w-auto flex items-center">
                   <input
                     type="checkbox"
-                    checked={option.is_correct}
+                    checked={option.is_correct === 1}
                     onChange={(e) => handleCheckboxChange(index, e)}
                     className="mr-2"
                   />
@@ -120,15 +264,24 @@ export const EditOption = () => {
           ))}
         </div>
 
-        <button
-          type="submit"
-          className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none mt-4"
-        >
-          {id ? "Update Options" : "Create Options"}
-        </button>
+        <div className="flex justify-between gap-5 ">
+          <button
+            type="submit"
+            className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 focus:outline-none mt-4  "
+          >
+            {loading ? "Loading" : "Update Options"}
+          </button>
+          {options.length < 6 && (
+            <button
+              type="button"
+              onClick={addMoreOption}
+              className="bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 focus:outline-none mt-4  "
+            >
+              Add More Option
+            </button>
+          )}
+        </div>
       </form>
     </>
   );
 };
-
-
