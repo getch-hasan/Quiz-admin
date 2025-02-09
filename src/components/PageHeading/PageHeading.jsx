@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import { IoAddCircleSharp, IoListCircleSharp } from "react-icons/io5";
 import { MdDownloadForOffline } from "react-icons/md";
+import { IoIosList } from "react-icons/io";
+import { FaRegEdit } from "react-icons/fa";
 
 export const PageHeader = ({ propsData }) => {
 
@@ -9,9 +11,9 @@ export const PageHeader = ({ propsData }) => {
       case "add":
         return <IoAddCircleSharp className="text-lg" />;
       case "list":
-        return <IoListCircleSharp className="text-lg" />;
-      case "download":
-        return <MdDownloadForOffline className="text-lg" />;
+        return <IoIosList className="text-lg" />;
+      case "edit":
+        return <FaRegEdit className="text-lg" />;
       default:
         return null;
     }

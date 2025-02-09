@@ -1,10 +1,10 @@
 import { useForm } from "react-hook-form";
-import { IoIosCreate } from "react-icons/io";
 import { useState, useEffect, useCallback } from "react";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useNavigate, useParams } from "react-router-dom";
 import { SingleSelect } from "../../components/input";
 import { NetworkServices } from "../../network";
+import { FaRegEdit } from "react-icons/fa";
 
 export const EditOption = () => {
   const [options, setOptions] = useState([
@@ -174,10 +174,10 @@ export const EditOption = () => {
 
   const propsData = {
     pageTitle: "Edit Options",
-    pageIcon: <IoIosCreate />,
+    pageIcon: <FaRegEdit />,
     buttonName: "Option List",
     buttonUrl: "/dashboard/option-list",
-    type: "add",
+    type: "list",
   };
 
   return (

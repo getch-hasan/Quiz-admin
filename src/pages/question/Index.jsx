@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaEdit, FaList } from "react-icons/fa";
+import { FaEdit} from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useCallback, useEffect, useState } from "react";
@@ -10,6 +10,7 @@ import { Toastify } from "../../components/toastify";
 import DataTable from "react-data-table-component";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
+import { IoIosList } from "react-icons/io";
 
 export const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
@@ -63,7 +64,7 @@ export const QuestionList = () => {
 
   const propsData = {
     pageTitle: "Question List",
-    pageIcon: <FaList />,
+    pageIcon: <IoIosList />,
     buttonName: "Create New Question",
     buttonUrl: "/dashboard/create-question",
     type: "add",

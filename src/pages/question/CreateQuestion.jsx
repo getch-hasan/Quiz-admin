@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import { IoIosCreate } from "react-icons/io";
+import { IoMdCreate } from "react-icons/io";
 import { useCallback, useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
@@ -119,10 +119,10 @@ useEffect(() => {
 
   const propsData = {
     pageTitle: "Create New Question",
-    pageIcon: <IoIosCreate />,
+    pageIcon: <IoMdCreate />,
     buttonName: "Questions List",
     buttonUrl: "/dashboard/question-list",
-    type: "add",
+    type: "list",
   };
 
   return (

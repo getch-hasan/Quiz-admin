@@ -8,9 +8,11 @@ import {
 } from "../../components/input";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
+import { PageHeader } from "../../components/PageHeading/PageHeading";
+import { IoMdCreate } from "react-icons/io";
 
 const CreateTestimonial = () => {
   const [loading, setLoading] = useState(false);
@@ -53,9 +55,17 @@ const CreateTestimonial = () => {
     }
     setLoading(false);
   };
+    const propsData = {
+      pageTitle: " Create Testimonial ",
+      pageIcon: <IoMdCreate />,
+      buttonName: "Testimonial List",
+      buttonUrl: "/dashboard/testimonial-list",
+      type: "list", // This indicates the page type for the button
+    };
   
   return (
     <div>
+        <PageHeader propsData={propsData} />
       <form
         onSubmit={handleSubmit(onFormSubmit)}
         className="p-4 shadow-md rounded-md bg-white"

@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { FaEdit, FaList, FaArrowLeft, FaArrowRight } from "react-icons/fa";
+import { FaEdit} from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { Link } from "react-router-dom";
@@ -10,6 +10,7 @@ import Confirmation from "../../components/Confirmation/Confirmation";
 import DataTable from "react-data-table-component";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import { IoIosList } from "react-icons/io";
 
 export const OptionList = () => {
   const [option, setOption] = useState([]);
@@ -64,7 +65,7 @@ export const OptionList = () => {
   }
   const propsData = {
     pageTitle: "Option List",
-    pageIcon: <FaList />,
+    pageIcon: <IoIosList />,
     buttonName: "Create New Option",
     buttonUrl: "/dashboard/create-option",
     type: "add",

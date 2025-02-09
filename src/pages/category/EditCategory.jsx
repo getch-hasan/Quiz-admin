@@ -2,18 +2,16 @@ import React, { useCallback, useEffect, useState } from "react";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { MdBrowserUpdated } from "react-icons/md";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
 import { ImageUpload, SingleSelect, TextCheckbox, TextInput } from "../../components/input";
-
+import { FaRegEdit } from "react-icons/fa";
 const EditCategory = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  // console.log("objectid", categoryId);
   const [category, setCategory] = useState({});
 
   console.log("categorycategory", category);
@@ -54,7 +52,7 @@ const EditCategory = () => {
   // category api fetch
   useEffect(() => {
     fetchCategorys();
-  }, []);
+  }, [fetchCategorys]);
   // Fetch the category details from the API and populate the form
   const fetchCategory = async (categoryId) => {
     setLoading(true);
@@ -113,10 +111,10 @@ const EditCategory = () => {
 
   const propsData = {
     pageTitle: "Update Category",
-    pageIcon: <MdBrowserUpdated />,
+    pageIcon: <FaRegEdit />,
     buttonName: "Category List",
     buttonUrl: "/dashboard/category",
-    type: "add",
+    type: "list",
   };
 
   return (
@@ -171,23 +169,7 @@ const EditCategory = () => {
           />
         </div>
         {/* Status (Checkbox) */}
-        {/* <div className="flex items-center gap-2 mt-4">
-          <TextCheckbox
-            type="checkbox"
-            name="status"
-            className=""
-            control={control}
-            onChange={(e) => {
-              console.log(e.target.checked);
-              setValue("status", e.target.checked);
-            }}
-            checked={watch("status")}
-            defaultValue={true}
-          />
-          <label htmlFor="status" className="text-sm text-gray-700">
-            Status
-          </label>
-        </div> */}
+
         <div className="flex items-center  mt-4 ">
           <TextCheckbox
             type="checkbox"
@@ -212,7 +194,7 @@ const EditCategory = () => {
           }`}
           disabled={loading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Category"}
+          {loading ? "Loading..." : "Update Category"}
         </button>
       </form>
     </>

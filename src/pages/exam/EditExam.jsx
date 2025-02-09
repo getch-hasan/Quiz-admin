@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
@@ -14,6 +13,7 @@ import {
   TextCheckbox,
   TextInput,
 } from "../../components/input";
+import { FaRegEdit } from "react-icons/fa";
 
 const EditExam = () => {
   const [categories, setCategories] = useState([]);
@@ -133,10 +133,10 @@ const EditExam = () => {
   }
   const propsData = {
     pageTitle: examId ? "Edit Exam" : "Create Exam",
-    pageIcon: <IoMdCreate />,
+    pageIcon: <FaRegEdit />,
     buttonName: "Exam List",
     buttonUrl: "/dashboard/exam-list",
-    type: examId ? "edit" : "add", // Change type based on whether we're editing or adding
+    type: "list", // Change type based on whether we're editing or adding
   };
 
   return (

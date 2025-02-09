@@ -11,6 +11,7 @@ import DataTable from "react-data-table-component";
 import { Link } from "react-router-dom";
 import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
+import { IoIosList } from "react-icons/io";
 
 const Testimonial = () => {
   const [testimonial, setTestimonial] = useState([]);
@@ -47,7 +48,7 @@ const Testimonial = () => {
 
     const propsData = {
       pageTitle: "Testimonial List",
-      pageIcon: <FaPlus />,
+      pageIcon: <IoIosList />,
       buttonName: "Create New Testimonial",
       buttonUrl: "/dashboard/create-testimonial",
       type: "add",
@@ -59,7 +60,7 @@ const Testimonial = () => {
           message: "Are you sure you want to delete this category?",
           onConfirm: async () => {
             try {
-              const response = await NetworkServices.Exam.destroy(id);
+              const response = await NetworkServices.Testimonial.destroy(id);
               if (response?.status === 200) {
                 Toastify.Info("Exam deleted successfully.");
                 fetchTestimonial();

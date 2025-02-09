@@ -18,7 +18,8 @@ export const show = async(id) => {
 
 /* reosurce update */
 export const update = async(id, data) => {
-    return await privateRequest.post(`admin/testimonial/${id}`, data)
+    console.log("object",id,data)
+    return await privateRequest.post(`/admin/testimonial/${id}`, data)
 }
 
 /* resource destory */

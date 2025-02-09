@@ -1,15 +1,15 @@
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
-import { IoIosCreate } from "react-icons/io";
 import { useEffect, useState, useCallback } from "react";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
 import { SingleSelect, TextAreaInput } from "../../components/input";
+import { FaRegEdit } from "react-icons/fa";
 
 export const EditQuestion = () => {
-  const [questionData, setQuestionData] = useState(null);
+  // const [questionData, setQuestionData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [exam, setExam] = useState([]);
@@ -18,7 +18,7 @@ export const EditQuestion = () => {
   const navigate = useNavigate();
 
   const {
-    register,
+   
     handleSubmit,
     setValue,
     control,
@@ -27,7 +27,7 @@ export const EditQuestion = () => {
   } = useForm();
 
   const categoryId = watch("category_id");
-  const examId = watch("exam_id");
+ 
 
   // Fetch categories
   const fetchCategory = useCallback(async () => {
@@ -85,7 +85,7 @@ export const EditQuestion = () => {
       const response = await NetworkServices.Question.show(questionId);
       if (response?.status === 200) {
         const question = response.data.data;
-        setQuestionData(question);
+        // setQuestionData(question);
 
         // Set form values
         setValue("exam_id", question?.exam_id || null);
@@ -129,10 +129,10 @@ export const EditQuestion = () => {
 
   const propsData = {
     pageTitle: "Edit Question",
-    pageIcon: <IoIosCreate />,
+    pageIcon: <FaRegEdit />,
     buttonName: "Questions List",
     buttonUrl: "/dashboard/question-list",
-    type: "edit",
+    type: "list",
   };
 
   return (

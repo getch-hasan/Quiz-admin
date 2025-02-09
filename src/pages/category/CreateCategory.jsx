@@ -16,7 +16,6 @@ const CreateCategory = () => {
 
   const navigate = useNavigate();
   const {
-    register,
     handleSubmit,
     formState: { errors },
     setValue,
@@ -52,11 +51,11 @@ const CreateCategory = () => {
   // category api fetch
   useEffect(() => {
     fetchCategory();
-  }, []);
+  }, [fetchCategory]);
 
   const onFormSubmit = async (data) => {
     const result = data?.status ? "1" : "0";
-    const newObj = { ...data, status: result };
+    const newObj = { ...data, status: result,parent_id:data?.singleSelect?.category_id};
     console.log("object", newObj);
     try {
       setLoading(true);
@@ -88,7 +87,7 @@ const CreateCategory = () => {
     pageIcon: <IoMdCreate />,
     buttonName: "Category List",
     buttonUrl: "/dashboard/category",
-    type: "add", // This indicates the page type for the button
+    type: "list", // This indicates the page type for the button
   };
   return (
     <>

@@ -17,7 +17,7 @@ export const TextInput = (props) => {
     defaultValue: props.defaultvalue,
   });
 
-  console.log("value", value);
+  // console.log("value", value);
 
   return (
     <div>

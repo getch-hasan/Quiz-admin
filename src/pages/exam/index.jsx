@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaArrowLeft, FaArrowRight, FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit} from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { NetworkServices } from "../../network";
@@ -12,6 +12,7 @@ import category_image from "../../assets/images/exam_category.png";
 import DataTable from "react-data-table-component";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
+import { IoIosList } from "react-icons/io";
 const ExamList = () => {
   const [exam, setExam] = useState([]); 
   const [loading, setLoading] = useState(false);   
@@ -61,7 +62,7 @@ const ExamList = () => {
   }
   const propsData = {
     pageTitle: "Exam List",
-    pageIcon: <FaPlus />,
+    pageIcon: <IoIosList />,
     buttonName: "Create New Exam",
     buttonUrl: "/dashboard/create-exam",
     type: "add",

@@ -1,4 +1,3 @@
-import { FaPlus } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useCallback, useEffect, useState } from "react";
@@ -11,6 +10,7 @@ import { networkErrorHandeller } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import { Link } from "react-router-dom";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
+import { IoIosList } from "react-icons/io";
 
 export const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -68,7 +68,7 @@ export const UserList = () => {
 
   const propsData = {
     pageTitle: "User List",
-    pageIcon: <FaPlus />,
+    pageIcon:  <IoIosList />,
     type: "add",
   };
 

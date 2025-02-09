@@ -4,6 +4,7 @@ import { HiBars3 } from "react-icons/hi2";
 import { PiExam } from "react-icons/pi";
 import { MdSettingsAccessibility } from "react-icons/md";
 import { FaNoteSticky } from "react-icons/fa6";
+import { IoOptions } from "react-icons/io5";
 export const menuData = [
   {
     title: "Dashboard",
@@ -27,7 +28,7 @@ export const menuData = [
   },
   {
     title: "Option",
-    icon: <MdSettingsAccessibility />,
+    icon: <IoOptions />,
     path: "/dashboard/option-list",
   },
 

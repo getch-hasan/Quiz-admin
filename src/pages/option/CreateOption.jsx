@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { IoIosCreate } from "react-icons/io";
+import { IoMdCreate } from "react-icons/io";
 import { useCallback, useEffect, useState } from "react";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { NetworkServices } from "../../network";
@@ -164,10 +164,10 @@ export const CreateOption = () => {
 
   const propsData = {
     pageTitle: "Create New Options",
-    pageIcon: <IoIosCreate />,
+    pageIcon: <IoMdCreate />,
     buttonName: "Option List",
     buttonUrl: "/dashboard/option-list",
-    type: "add",
+    type: "list",
   };
 
   return (

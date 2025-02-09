@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaEdit, FaPlus } from "react-icons/fa";
+import { FaEdit} from "react-icons/fa";
+import { IoIosList } from "react-icons/io";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { NetworkServices } from "../../network";
@@ -75,7 +76,7 @@ export const CategoryList = () => {
 
   const propsData = {
     pageTitle: "Category List",
-    pageIcon: <FaPlus />,
+    pageIcon: <IoIosList />,
     buttonName: "Create New Category",
     buttonUrl: "/dashboard/create-category",
     type: "add",

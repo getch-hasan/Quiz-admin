@@ -6,9 +6,9 @@ import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helper";
 import { useNavigate } from "react-router-dom";
 import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
-import { MdList } from "react-icons/md";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import { IoMdCreate } from "react-icons/io";
 
 const CreateExam = () => {
   const [categories, setCategories] = useState([]);
@@ -77,7 +77,7 @@ const CreateExam = () => {
   };
   const propsData = {
     pageTitle: " Create Exam ",
-    pageIcon: <MdList />,
+    pageIcon: <IoMdCreate />,
     buttonName: "Exam List",
     buttonUrl: "/dashboard/exam-list",
     type: "list", // This indicates the page type for the button
