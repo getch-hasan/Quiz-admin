@@ -171,7 +171,7 @@ const CreateExam = () => {
             name="thumbnail"
             control={control}
             label="Category Picture"
-            required
+           
             onUpload={(file) => setValue("thumbnail", file)}
           />
         </div>

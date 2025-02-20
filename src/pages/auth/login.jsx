@@ -24,6 +24,7 @@ export const Login = () => {
   const onSubmit = async (data) => {
     console.log("data", data);
     
+    
     try {
         setLoading(true)
         const response = await NetworkServices.Authentication.login(data)

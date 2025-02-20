@@ -63,7 +63,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
       {/* <!-- SIDEBAR HEADER --> */}
       <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
         <NavLink to="/" className="w-full flex justify-center py-2">
-          <img src={Logo} alt="Logo" className="h-16 w-[77px] " />
+          <img src={Logo} alt="Logo" className="h-16 w-16 rounded-full" />
         </NavLink>
         <button
           ref={trigger}

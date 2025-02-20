@@ -5,7 +5,7 @@ import { IoMdCreate } from "react-icons/io";
 import { useCallback, useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-import { networkErrorHandeller } from "../../utils/helper";
+import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { SingleSelect, TextAreaInput, TextInput } from "../../components/input";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonForm } from "../../components/loading/skeleton-table";
@@ -15,6 +15,24 @@ export const CreateQuestion = () => {
   const [exam, setExam] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [options, setOptions] = useState([
+    { name: "", is_correct: 0 },
+    { name: "", is_correct: 0 },
+    { name: "", is_correct: 0 },
+    { name: "", is_correct: 0 },
+  ]);
+
+  const handleOptionChange = (index, e) => {
+    const updatedOptions = [...options];
+    updatedOptions[index].name = e.target.value;
+    setOptions(updatedOptions);
+  };
+
+  const handleCheckboxChange = (index, e) => {
+    const updatedOptions = [...options];
+    updatedOptions[index].is_correct = e.target.checked ? 1 : 0;
+    setOptions(updatedOptions);
+  };
   const {
     handleSubmit,
     formState: { errors },
@@ -24,7 +42,6 @@ export const CreateQuestion = () => {
   } = useForm({});
   //  i want to see category id
   const categoryId = watch("category_id");
-  
 
   const fetchCategory = useCallback(async () => {
     setLoading(true);
@@ -50,12 +67,11 @@ export const CreateQuestion = () => {
   // category api fetch
   useEffect(() => {
     fetchCategory();
-   
   }, [fetchCategory]);
 
   // fetch exam
   const fetchExam = useCallback(async (categoryId) => {
-    // setLoading(true); 
+    // setLoading(true);
     try {
       const response = await NetworkServices.Exam.index({
         params: { category_id: categoryId },
@@ -75,36 +91,44 @@ export const CreateQuestion = () => {
     } catch (error) {
       console.error("Fetch Category Error:", error);
     }
-    // setLoading(false); 
+    // setLoading(false);
   }, []);
 
-useEffect(() => {
+  useEffect(() => {
     if (categoryId) {
       console.log("Category Changed:", categoryId);
       setValue("exam_id", null);
       setExam([]);
       fetchExam(categoryId);
     }
-  },
-  [categoryId, setValue, fetchExam]
-); 
-
+  }, [categoryId, setValue, fetchExam]);
 
   // question post api
   const onSubmit = async (data) => {
     console.log("Question Saved:", data);
+
     try {
       setLoading(true);
       const response = await NetworkServices.Question.store(data);
+      console.log(response?.data?.data?.question_id, "---------------");
       if (response && response.status === 200) {
         navigate("/dashboard/question-list");
-        return Toastify.Success("Question Created.");
+        Toastify.Success("Question Created.");
+      }
+      const newobj = {
+        question_id: response?.data?.data?.question_id,
+        option: options,
+      };
+      const result = await NetworkServices.Option.store(newobj);
+      // console.log("response", response);
+      if (responseChecker(result, 200)) {
+
       }
     } catch (error) {
       console.log("error", error);
       networkErrorHandeller(error);
     }
-    setLoading(false);
+    setLoading(false); 
   };
   if (loading) {
     return (
@@ -134,7 +158,7 @@ useEffect(() => {
       >
         <div className="mb-4">
           <SingleSelect
-            name="singleSelect"
+            name="category"
             control={control}
             options={categories}
             rules={{ required: "Category selection is required" }}
@@ -142,7 +166,7 @@ useEffect(() => {
               setValue("category_id", selected?.category_id)
             }
             placeholder="Select a category "
-            error={errors.singleSelect?.message}
+            error={errors.category?.message}
             label="Choose a category *"
             isClearable
             // error={errors} // Pass an error message if validation fails
@@ -150,7 +174,7 @@ useEffect(() => {
         </div>
         <div className="mb-4">
           <SingleSelect
-            name="singleSelects"
+            name="exam"
             control={control}
             options={exam}
             rules={{ required: "Exam   selection is required" }}
@@ -158,7 +182,7 @@ useEffect(() => {
               setValue("exam_id", selected?.exam_id || null)
             }
             placeholder="Select a Exam *"
-            error={errors.singleSelects?.message}
+            error={errors.exam?.message}
             label="Choose a exam *"
             isClearable
             disabled={!categoryId}
@@ -207,10 +231,40 @@ useEffect(() => {
             isClearable={true}
           />
         </div>
+        {/* option area */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {options.map((option, index) => (
+            <div key={index}>
+              <label className="text-sm  text-gray-500">{`Option ${
+                index + 1
+              }`}</label>
+              <div className="flex items-center space-x-4 mt-1">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={option.name}
+                    onChange={(e) => handleOptionChange(index, e)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none text-sm mb-1 text-gray-500"
+                    placeholder={`Option ${index + 1}`}
+                  />
+                </div>
+                <div className="w-auto flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={option.is_correct === 1}
+                    onChange={(e) => handleCheckboxChange(index, e)}
+                    className="mr-2"
+                  />
+                  <span className="text-sm">Correct Option</span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
         {/* Submit Button */}
         <button
           type="submit"
-          className={`px-4 py-2 text-white rounded-md transition ${
+          className={`mt-4 px-4 py-2 text-white rounded-md transition ${
             loading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"

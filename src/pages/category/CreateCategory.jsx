@@ -135,6 +135,7 @@ const CreateCategory = () => {
             label="Category Picture"
             // required
             onUpload={(file) => setValue("thumbnail", file)}
+            error={errors.thumbnail?.message}
           />
         </div>
 

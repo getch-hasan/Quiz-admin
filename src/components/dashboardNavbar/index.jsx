@@ -4,8 +4,8 @@ import { IoIosNotifications } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { useCallback, useEffect, useState } from "react";
 import { NetworkServices } from "../../network";
-import PageHeaderSkeleton from "../loading/pageHeader-skeleton";
-import { SkeletonTable } from "../loading/skeleton-table";
+import userIcon from "../../assets/icon/user.png";
+
 export const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -88,14 +88,14 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
                       <div class="relative flex items-center justify-center    ">
                         <div class="relative w-10 h-10 rounded-full   text-white flex items-center justify-center  ">
                           <div class="absolute top-0 right-0 flex items-center justify-center"></div>
-                          <div class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 bg-blue-500 text-white text-xs font-bold rounded-full z-10">
+                          {/* <div class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 bg-blue-500 text-white text-xs font-bold rounded-full z-10">
                             <span class="animate-wave absolute inline-flex w-5 h-5 rounded-full bg-blue-500 opacity-75"></span>
                             <span class="animate-wave absolute inline-flex w-5 h-5 rounded-full bg-blue-500 opacity-50"></span>
                             <span class="absolute inline-flex w-5 h-5 rounded-full bg-blue-500"></span>
                             <span class="absolute text-white font-bold text-[11px]">
                               9
                             </span>
-                          </div>
+                          </div> */}
 
                           {/* <span class="text-lg font-bold">🔔</span> */}
                           <IoIosNotifications className="text-xl text-gray-600" />
@@ -128,9 +128,9 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
                         src={
                           profile?.profile_pic
                             ? `${process.env.REACT_APP_API_SERVER}${profile?.profile_pic}`
-                            : "category_image"
+                            : userIcon
                         }
-                        alt="images"
+                        alt="i"
                       />
                     </div>
                   </div>
