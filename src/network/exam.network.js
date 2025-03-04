@@ -12,7 +12,7 @@ export const parentList = async () => {
 
 /* resource store */
 export const store = async (data) => {
-  console.log("object", data);
+  
   return await privateRequest.post("/admin/exam", data);
 };
 

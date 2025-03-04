@@ -2,7 +2,7 @@ import { privateRequest } from "../config/axios.config";
 
 /* list of resource */
 export const index = async ( examId ) => {
-  console.log("examidddd",examId);
+
   if (examId){
     return await privateRequest.get(`/admin/question?exam_id=${examId}`);
   }

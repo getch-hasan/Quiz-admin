@@ -7,7 +7,7 @@ export const index = async ( ) => {
 
 /* resource store */
 export const store = async(data) => {
-    console.log("object",data);
+  
     return await privateRequest.post('/admin/testimonial', data)
 }
 
@@ -18,7 +18,7 @@ export const show = async(id) => {
 
 /* reosurce update */
 export const update = async(id, data) => {
-    console.log("object",id,data)
+ 
     return await privateRequest.post(`/admin/testimonial/${id}`, data)
 }
 

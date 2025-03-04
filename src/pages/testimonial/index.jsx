@@ -17,13 +17,10 @@ const Testimonial = () => {
   const [testimonial, setTestimonial] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("response", testimonial);
-
   const fetchTestimonial = useCallback(async () => {
     try {
       setLoading(true);
       const response = await NetworkServices.Testimonial.index();
-      console.log("response", response);
       if (response?.status === 200) {
         setTestimonial(response?.data?.data || []);
       }

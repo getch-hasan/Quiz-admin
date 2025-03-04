@@ -16,14 +16,14 @@ import DataTable from "react-data-table-component";
 export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log("categories", categories);
+ 
 
   // Fetch categories from API
   const fetchCategory = useCallback(async () => {
     setLoading(true)
     try {
       const response = await NetworkServices.Category.index();
-      console.log(response);
+     
       if (responseChecker(response, 200)) {
         setCategories(response?.data?.data || []);
       }

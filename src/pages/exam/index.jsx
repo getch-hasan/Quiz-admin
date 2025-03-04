@@ -21,7 +21,7 @@ const ExamList = () => {
     try {
       setLoading(true)
       const response = await NetworkServices.Exam.index();
-      console.log("response", response);
+    
       if (response?.status === 200) {
         setExam(response?.data?.data || []);
       }
@@ -114,15 +114,7 @@ const ExamList = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      {/* <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search Exams"
-          className="border w-full border-gray-300 focus:border-blue-400 focus:border-[3px] p-2 rounded outline-none h-[38px]"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </div> */}
+
       <DataTable
         columns={columns}
         data={exam}

@@ -16,14 +16,11 @@ export const OptionList = () => {
   const [option, setOption] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  console.log("option", option);
-
   // Fetch Options from API
   const fetchOption = useCallback(async () => {
     setLoading(true);
     try {
       const response = await NetworkServices.Option.index();
-      console.log(response);
       if (responseChecker(response, 200)) {
         setOption(response?.data?.data || []);
       }

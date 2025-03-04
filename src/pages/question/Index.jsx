@@ -20,7 +20,7 @@ export const QuestionList = () => {
     try {
       setLoading(true);
       const response = await NetworkServices.Question.index();
-      console.log("question", response);
+
       if (response?.status === 200) {
         setQuestions(response?.data?.data || []);
       }

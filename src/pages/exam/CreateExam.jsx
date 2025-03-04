@@ -42,7 +42,7 @@ const CreateExam = () => {
         setCategories(categories);
       }
     } catch (error) {
-      console.error("Fetch Category Error:", error);
+      networkErrorHandeller(error);
     }
     setLoading(false); // End loading (handled in both success and error)
   }, []);
