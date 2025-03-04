@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { NetworkServices } from "../../network/index";
 import { PrimaryButton } from "../../components/button";
 import adminIcon from "../../assets/icon/ZanIcon.jpg";
@@ -13,7 +13,7 @@ const inputStyle =
 export const Login = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
- 
+  const location=useLocation()
 
   const {
     register,
@@ -23,35 +23,39 @@ export const Login = () => {
 
   const onSubmit = async (data) => {
     console.log("data", data);
-    
-    
+
     try {
-        setLoading(true)
-        const response = await NetworkServices.Authentication.login(data)
-        if (response.status === 200) {
-            setToken(response.data.data.token);
-            navigate("/dashboard");
-            setLoading(false)
-            Toastify.Success("Login successfully done");
+      setLoading(true);
+      const response = await NetworkServices.Authentication.login(data);
+      const queryParams = new URLSearchParams(location.search);
+    const redirectFrom = queryParams.get("redirectFrom") || "/dashboard";
+    
+
+      if (response.status === 200) {
+        if (response?.data?.data?.user?.role == "admin") {
+          setToken(response?.data?.data?.token);
+          navigate(redirectFrom);
+          Toastify.Success("Login successfully done");
+        }else{
+          Toastify.Error("Invalid user role");
         }
+        setLoading(false);
+      }
     } catch (error) {
-        setLoading(false)
-        networkErrorHandeller(error)
+      setLoading(false);
+      networkErrorHandeller(error);
     }
   };
 
   useEffect(() => {
-      if (getToken()) {
-          navigate("/dashboard");
-      }
+    if (getToken()) {
+      navigate("/dashboard");
+    }
   }, [navigate]);
 
   return (
     <section className="flex items-center justify-center h-screen">
-      <div
-        className="border rounded-lg"
-        style={{ width: "350px" }}
-      >
+      <div className="border rounded-lg" style={{ width: "350px" }}>
         <img
           height={60}
           width={60}
@@ -70,12 +74,12 @@ export const Login = () => {
                 type="email"
                 name="email"
                 {...register("email", {
-                    required: "Email is required",
-                    pattern: {
-                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: "Enter a valid email address",
-                    },
-                  })}
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                    message: "Enter a valid email address",
+                  },
+                })}
                 className={inputStyle}
                 placeholder="you@example.com"
               />
@@ -96,12 +100,12 @@ export const Login = () => {
                 type="password"
                 name="password"
                 {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters long",
-                    },
-                  })}
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Password must be at least 6 characters long",
+                  },
+                })}
                 className={inputStyle}
                 placeholder="11111111"
               />

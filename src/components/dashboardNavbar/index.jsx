@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { removeToken } from "../../utils/helper";
 import { IoIosNotifications } from "react-icons/io";
 import { GiHamburgerMenu } from "react-icons/gi";
@@ -10,11 +10,16 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
   const [profile, setProfile] = useState([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location=useLocation()
 
   const logout = () => {
+    navigate(`/login?redirectFrom=${window.location.pathname}`);
     removeToken();
-    navigate("/");
+  
+    // navigate(`/login?redirectFrom=${location.pathname}`);
+    console.log(location.pathname)
   };
+
 
   const fetchUser = useCallback(async () => {
     setLoading(true); // Start loading
@@ -85,19 +90,19 @@ export const Header = ({ sidebarOpen, setSidebarOpen }) => {
                     <div className="indicator">
                       {/* <IoIosNotifications className="text-xl" />
                       <span className="badge badge-sm indicator-item ">8</span> */}
-                      <div class="relative flex items-center justify-center    ">
-                        <div class="relative w-10 h-10 rounded-full   text-white flex items-center justify-center  ">
-                          <div class="absolute top-0 right-0 flex items-center justify-center"></div>
-                          {/* <div class="absolute top-0 right-0 flex items-center justify-center w-5 h-5 bg-blue-500 text-white text-xs font-bold rounded-full z-10">
-                            <span class="animate-wave absolute inline-flex w-5 h-5 rounded-full bg-blue-500 opacity-75"></span>
-                            <span class="animate-wave absolute inline-flex w-5 h-5 rounded-full bg-blue-500 opacity-50"></span>
-                            <span class="absolute inline-flex w-5 h-5 rounded-full bg-blue-500"></span>
-                            <span class="absolute text-white font-bold text-[11px]">
+                      <div className="relative flex items-center justify-center    ">
+                        <div className="relative w-10 h-10 rounded-full   text-white flex items-center justify-center  ">
+                          <div className="absolute top-0 right-0 flex items-center justify-center"></div>
+                          {/* <div className="absolute top-0 right-0 flex items-center justify-center w-5 h-5 bg-blue-500 text-white text-xs font-bold rounded-full z-10">
+                            <span className="animate-wave absolute inline-flex w-5 h-5 rounded-full bg-blue-500 opacity-75"></span>
+                            <span className="animate-wave absolute inline-flex w-5 h-5 rounded-full bg-blue-500 opacity-50"></span>
+                            <span className="absolute inline-flex w-5 h-5 rounded-full bg-blue-500"></span>
+                            <span className="absolute text-white font-bold text-[11px]">
                               9
                             </span>
                           </div> */}
 
-                          {/* <span class="text-lg font-bold">🔔</span> */}
+                          {/* <span className="text-lg font-bold">🔔</span> */}
                           <IoIosNotifications className="text-xl text-gray-600" />
                         </div>
                       </div>

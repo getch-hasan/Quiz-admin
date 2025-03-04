@@ -12,8 +12,7 @@ const Show = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const { userId } = useParams();
-
-  console.log("user", user);
+ 
 
   // Fetch user details
   const fetchUser = async () => {

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { PageHeader } from "../../components/PageHeading/PageHeading"; 
+import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
@@ -52,25 +52,25 @@ const CreateExam = () => {
     fetchCategory();
   }, [fetchCategory]);
 
-  const onFormSubmit = async (data) => { 
+  const onFormSubmit = async (data) => {
     try {
-      setBtnLoading(true); 
+      setBtnLoading(true);
       const formData = new FormData();
       formData.append("category_id", data.category_id);
       formData.append("exam_name", data.exam_name);
       formData.append("total_marks", data.total_marks);
       formData.append("total_questions", data.total_questions);
       formData.append("duration", data.duration);
-      formData.append("status", data.status); 
+      formData.append("status", data.status);
       if (data.thumbnail && data.thumbnail) {
         formData.append("thumbnail", data.thumbnail);
-      } 
-      const response = await NetworkServices.Exam.store(formData); 
+      }
+      const response = await NetworkServices.Exam.store(formData);
       if (response && response.status === 200) {
         navigate("/dashboard/exam-list");
         return Toastify.Success("Category Created.");
       }
-    } catch (error) { 
+    } catch (error) {
       networkErrorHandeller(error);
     }
     setBtnLoading(false);
@@ -82,12 +82,14 @@ const CreateExam = () => {
     buttonUrl: "/dashboard/exam-list",
     type: "list", // This indicates the page type for the button
   };
-  if(loading){
-    return <>
-    <PageHeaderSkeleton/>
-    <br/>
-    <CategoryFormSkeleton/>
-    </>
+  if (loading) {
+    return (
+      <>
+        <PageHeaderSkeleton />
+        <br />
+        <CategoryFormSkeleton />
+      </>
+    );
   }
   return (
     <>
@@ -171,7 +173,6 @@ const CreateExam = () => {
             name="thumbnail"
             control={control}
             label="Category Picture"
-           
             onUpload={(file) => setValue("thumbnail", file)}
           />
         </div>

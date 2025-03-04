@@ -15,15 +15,10 @@ import { IoIosList } from "react-icons/io";
 export const UserList = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(false);
-
-  console.log("users", users);
-
   const fetchUser = useCallback(async () => {
     setLoading(true); // Start loading
     try {
       const response = await NetworkServices.Authentication.index();
-      console.log(response);
-
       if (response && response.status === 200) {
         setUsers(response?.data.data);
       }
@@ -68,7 +63,7 @@ export const UserList = () => {
 
   const propsData = {
     pageTitle: "User List",
-    pageIcon:  <IoIosList />,
+    pageIcon: <IoIosList />,
     type: "add",
   };
 

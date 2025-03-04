@@ -5,7 +5,7 @@ import { useEffect, useState, useCallback } from "react";
 import { NetworkServices } from "../../network";
 import { networkErrorHandeller } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
-import { SingleSelect, TextAreaInput } from "../../components/input";
+import { SingleSelect, TextAreaInput, TextInput } from "../../components/input";
 import { FaRegEdit } from "react-icons/fa";
 
 export const EditQuestion = () => {
@@ -18,7 +18,6 @@ export const EditQuestion = () => {
   const navigate = useNavigate();
 
   const {
-   
     handleSubmit,
     setValue,
     control,
@@ -27,7 +26,6 @@ export const EditQuestion = () => {
   } = useForm();
 
   const categoryId = watch("category_id");
- 
 
   // Fetch categories
   const fetchCategory = useCallback(async () => {
@@ -79,26 +77,29 @@ export const EditQuestion = () => {
   }, [categoryId, fetchExam]);
 
   // Fetch Question Details
-  const fetchQuestion = useCallback(async (questionId) => {
-    try {
-      setLoading(true);
-      const response = await NetworkServices.Question.show(questionId);
-      if (response?.status === 200) {
-        const question = response.data.data;
-        // setQuestionData(question);
+  const fetchQuestion = useCallback(
+    async (questionId) => {
+      try {
+        setLoading(true);
+        const response = await NetworkServices.Question.show(questionId);
+        if (response?.status === 200) {
+          const question = response.data.data;
+          // setQuestionData(question);
 
-        // Set form values
-        setValue("exam_id", question?.exam_id || null);
-        setValue("name", question?.question || "");
-        setValue("q_description", question?.q_description || "");
-        setValue("category_id", question?.category_id || null);
-        setValue("difficulty_level", question?.difficulty_level || "");
+          // Set form values
+          setValue("exam_id", question?.exam_id || null);
+          setValue("name", question?.question || "");
+          setValue("q_description", question?.q_description || "");
+          setValue("category_id", question?.category_id || null);
+          setValue("difficulty_level", question?.difficulty_level || "");
+        }
+      } catch (error) {
+        console.error("Error fetching question:", error);
       }
-    } catch (error) {
-      console.error("Error fetching question:", error);
-    }
-    setLoading(false);
-  }, [setValue]);
+      setLoading(false);
+    },
+    [setValue]
+  );
 
   useEffect(() => {
     if (questionId) {
@@ -117,7 +118,10 @@ export const EditQuestion = () => {
     formData.append("_method", "PUT");
 
     try {
-      const response = await NetworkServices.Question.update(questionId, formData);
+      const response = await NetworkServices.Question.update(
+        questionId,
+        formData
+      );
       if (response?.status === 200) {
         navigate("/dashboard/question-list");
         Toastify.Success("Question Updated Successfully.");
@@ -138,16 +142,23 @@ export const EditQuestion = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      <form className="mx-auto p-4 border border-gray-200 rounded-lg" onSubmit={handleSubmit(onSubmit)}>
-        
+      <form
+        className="mx-auto p-4 border border-gray-200 rounded-lg"
+        onSubmit={handleSubmit(onSubmit)}
+      >
         {/* Category Selection */}
         <div className="mb-4">
           <SingleSelect
             name="category_id"
             control={control}
             options={categories}
-            onSelected={(selected) => setValue("category_id", selected?.value || null)}
-            placeholder={categories.find((item) => item.value === watch("category_id"))?.label ?? "Select Category"}
+            onSelected={(selected) =>
+              setValue("category_id", selected?.value || null)
+            }
+            placeholder={
+              categories.find((item) => item.value === watch("category_id"))
+                ?.label ?? "Select Category"
+            }
             error={errors.category_id?.message}
             label="Choose a Category *"
             isClearable
@@ -160,11 +171,28 @@ export const EditQuestion = () => {
             name="exam_id"
             control={control}
             options={exam}
-            onSelected={(selected) => setValue("exam_id", selected?.value || null)}
-            placeholder={exam.find((item) => item.value === watch("exam_id"))?.label ?? "Select an Exam"}
+            onSelected={(selected) =>
+              setValue("exam_id", selected?.value || null)
+            }
+            placeholder={
+              exam.find((item) => item.value === watch("exam_id"))?.label ??
+              "Select an Exam"
+            }
             error={errors.exam_id?.message}
             label="Choose an Exam *"
             isClearable
+          />
+        </div>
+        {/* question name */}
+        <div className="mb-4">
+          <TextInput
+            name="name"
+            control={control}
+            label="Question Name *"
+            type="text"
+            placeholder="Question"
+            // rules={{ required: "Category is required" }} // Validation rule
+            error={errors.name?.message} // Show error message
           />
         </div>
 
@@ -190,7 +218,9 @@ export const EditQuestion = () => {
               { label: "Medium", value: "medium" },
               { label: "Hard", value: "hard" },
             ]}
-            onSelected={(selected) => setValue("difficulty_level", selected?.value || null)}
+            onSelected={(selected) =>
+              setValue("difficulty_level", selected?.value || null)
+            }
             placeholder={watch("difficulty_level") || "Select Difficulty"}
             error={errors.difficulty_level?.message}
             label="Choose Difficulty *"
@@ -201,7 +231,11 @@ export const EditQuestion = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`px-4 py-2 text-white rounded-md transition ${loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}
+          className={`px-4 py-2 text-white rounded-md transition ${
+            loading
+              ? "bg-gray-500 cursor-not-allowed"
+              : "bg-blue-600 hover:bg-blue-700"
+          }`}
           disabled={loading}
         >
           {loading ? "Updating..." : "Update Question"}

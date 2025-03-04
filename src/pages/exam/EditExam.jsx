@@ -215,7 +215,7 @@ const EditExam = () => {
           />
 
           {/* Thumbnail Upload */}
-          <div className="mt-4 cursor-pointer">
+          <div className=" cursor-pointer">
             <ImageUpload
               name="thumbnail"
               control={control}
