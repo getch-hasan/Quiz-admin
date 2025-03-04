@@ -112,7 +112,7 @@ export const CreateQuestion = () => {
       const response = await NetworkServices.Question.store(data);
       console.log(response?.data?.data?.question_id, "---------------");
       if (response && response.status === 200) {
-        navigate("/dashboard/question-list");
+        // navigate("/dashboard/question-list");
         Toastify.Success("Question Created.");
       }
       const newobj = {
@@ -122,6 +122,7 @@ export const CreateQuestion = () => {
       const result = await NetworkServices.Option.store(newobj);
       // console.log("response", response);
       if (responseChecker(result, 200)) {
+        Toastify.Success("Option Created.");
 
       }
     } catch (error) {

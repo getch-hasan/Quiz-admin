@@ -41,32 +41,32 @@ export const SkeletonTable = () => {
 export const SkeletonForm = () => {
     return <>
         <section className="my-5">
-            <div class="h-5 bg-slate-200 rounded col-span-1 w-96"></div>
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="h-5 bg-slate-200 rounded col-span-1 w-96"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
 
-            <div class="grid grid-cols-3 gap-4 my-5">
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
-                <div class="h-5 bg-slate-200 rounded col-span-1"></div>
+            <div className="grid grid-cols-3 gap-4 my-5">
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
+                <div className="h-5 bg-slate-200 rounded col-span-1"></div>
             </div>
             <div className='text-center'>
-                <button class="h-7 bg-slate-200 w-32 rounded col-span-1"></button>
+                <button className="h-7 bg-slate-200 w-32 rounded col-span-1"></button>
             </div>
         </section>
     </>
