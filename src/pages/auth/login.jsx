@@ -27,11 +27,13 @@ export const Login = () => {
     try {
       setLoading(true);
       const response = await NetworkServices.Authentication.login(data);
+      console.log("response",response)
       const queryParams = new URLSearchParams(location.search);
     const redirectFrom = queryParams.get("redirectFrom") || "/dashboard";
     
 
       if (response.status === 200) {
+        
         if (response?.data?.data?.user?.role == "admin") {
           setToken(response?.data?.data?.token);
           navigate(redirectFrom);

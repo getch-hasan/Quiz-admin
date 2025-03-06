@@ -2,20 +2,20 @@ import { Toastify } from "../components/toastify";
 import Cookies from 'js-cookie';
 export const getToken = () => {
     if (typeof window !== "undefined") { 
-        return Cookies.get('token'); // Retrieve token from cookie
+        return Cookies.get('mocktest-token'); // Retrieve token from cookie
         
       }
 }
 
 /* set token */
 export const setToken = (token) => {
-    Cookies.set('token', token, { expires: 7, path: '/' }); // Set token with expiration (7 days) and path
+    Cookies.set('mocktest-token', token, { expires: 7, path: '/' }); // Set token with expiration (7 days) and path
     return true;
 }
 
 /* remove token */
 export const removeToken = () => {
-    return  Cookies.remove('token');
+    return  Cookies.remove('mocktest-token');
 };
 
 /* Global network error handeller */
