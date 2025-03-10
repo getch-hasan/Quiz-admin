@@ -81,6 +81,7 @@ const EditCategory = () => {
   }, [categoryId]);
   // edit category api
   const onFormSubmit = async (data) => {
+    
     const result = data?.status ? "1" : "0";
     const formData = new FormData();
     console.log("object", data);
@@ -94,6 +95,7 @@ const EditCategory = () => {
     }
 
     try {
+      setLoading(true);
       const response = await NetworkServices.Category.update(
         categoryId,
         formData
@@ -107,6 +109,7 @@ const EditCategory = () => {
     } catch (error) {
       networkErrorHandeller(error);
     }
+    setLoading(false);
   };
 
   const propsData = {

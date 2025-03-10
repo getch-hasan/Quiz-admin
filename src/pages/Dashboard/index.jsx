@@ -12,9 +12,7 @@ export const Dashboard = () => {
 };
 
 const TotalOrders = () => {
-  const [totalSales, setTotalSales] = useState(15000);
-  const [totalOrderAmount, setTotalOrderAmount] = useState(30000);
-  const [averageOrderValue, setAverageOrderValue] = useState(0);
+
 
   // Calculate average order value
   // useEffect(() => {

@@ -2,7 +2,9 @@
 import { permittedRoutes } from "./routes";
 import { Login } from "./pages/auth/login";
 import { ToastContainer } from "react-toastify";
-import { Navigate, useRoutes } from "react-router-dom";
+import { Navigate, useNavigate, useRoutes } from "react-router-dom";
+import { useEffect } from "react";
+import { getToken } from "./utils/helper";
  
 
 export const App = () => {
@@ -18,12 +20,12 @@ export const App = () => {
   };
 
   const routing = useRoutes([mainRoutes, ...permittedRoutes()]);
-  // const navigate = useNavigate();
-  // useEffect(() => {
-  //   if (!getToken()) {
-  //     navigate("/login");   
-  //   }
-  // }, [navigate]);
+  const navigate = useNavigate();
+  useEffect(() => {
+    if (!getToken()) {
+      navigate("/login");   
+    }
+  }, [navigate]);
   return (
     <>
       {routing}
