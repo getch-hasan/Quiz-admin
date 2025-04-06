@@ -114,7 +114,7 @@ const EditExam = () => {
       const response = await NetworkServices.Exam.update(examId, formData);
       console.log("response", response);
       if (response && response.status === 200) {
-        navigate("/dashboard/exam-list");
+        // navigate("/dashboard/exam-list");
         Toastify.Success(examId ? "Exam Updated." : "Exam Created.");
       }
     } catch (error) {

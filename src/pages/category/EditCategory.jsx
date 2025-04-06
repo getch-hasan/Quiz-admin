@@ -103,7 +103,7 @@ const EditCategory = () => {
       console.log("responseresponse", response);
 
       if (responseChecker(response, 200)) {
-        navigate("/dashboard/category");
+        // navigate("/dashboard/category");
         return Toastify.Success("Category Updated.");
       }
     } catch (error) {

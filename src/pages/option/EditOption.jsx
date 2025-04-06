@@ -169,7 +169,7 @@ export const EditOption = () => {
     };
     console.log("Options Saved:", payload);
     alert("Options Updated Successfully!");
-    navigate("/dashboard/questions");
+    // navigate("/dashboard/questions");
   };
 
   const propsData = {

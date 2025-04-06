@@ -62,7 +62,7 @@ const CreateCategory = () => {
       const response = await NetworkServices.Category.store(newObj);
       console.log("objecttt", response);
       if (response && response.status === 200) {
-        navigate("/dashboard/category");
+        // navigate("/dashboard/category");
         return Toastify.Success("Category Created.");
       }
     } catch (error) {

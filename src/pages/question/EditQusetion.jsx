@@ -123,7 +123,7 @@ export const EditQuestion = () => {
         formData
       );
       if (response?.status === 200) {
-        navigate("/dashboard/question-list");
+        // navigate("/dashboard/question-list");
         Toastify.Success("Question Updated Successfully.");
       }
     } catch (error) {

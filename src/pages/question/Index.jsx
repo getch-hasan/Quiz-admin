@@ -47,7 +47,7 @@ export const QuestionList = () => {
             try {
               const response = await NetworkServices.Question.destroy(id);
               if (response?.status === 200) {
-                Toastify.Info("Category deleted successfully.");
+                Toastify.Info("Question deleted successfully.");
                 fetchQuestion();
               }
             } catch (error) {

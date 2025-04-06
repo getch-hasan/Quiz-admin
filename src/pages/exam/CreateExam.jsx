@@ -67,7 +67,7 @@ const CreateExam = () => {
       }
       const response = await NetworkServices.Exam.store(formData);
       if (response && response.status === 200) {
-        navigate("/dashboard/exam-list");
+        // navigate("/dashboard/exam-list");
         return Toastify.Success("Category Created.");
       }
     } catch (error) {

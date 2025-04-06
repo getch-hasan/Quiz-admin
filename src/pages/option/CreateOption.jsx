@@ -154,7 +154,7 @@ export const CreateOption = () => {
       const response = await NetworkServices.Option.store(newobj);
       console.log("response", response);
       if (responseChecker(response, 200)) {
-        navigate("/dashboard/option-list");
+        // navigate("/dashboard/option-list");
         return Toastify.Success("Options Created Successfully!");
       }
     } catch (error) {
