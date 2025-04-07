@@ -163,7 +163,7 @@ export const CreateOption = () => {
   };
 
   const propsData = {
-    pageTitle: "Create New Options",
+    // pageTitle: "Create New Options",
     pageIcon: <IoMdCreate />,
     buttonName: "Option List",
     buttonUrl: "/dashboard/option-list",

@@ -63,8 +63,8 @@ export const OptionList = () => {
   const propsData = {
     pageTitle: "Option List",
     pageIcon: <IoIosList />,
-    buttonName: "Create New Option",
-    buttonUrl: "/dashboard/create-option",
+  //  buttonName: "Create New Option", 
+    // buttonUrl: "/dashboard/create-option",
     type: "add",
   };
   const columns = [

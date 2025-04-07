@@ -207,7 +207,7 @@ export const CreateQuestion = () => {
           <TextAreaInput
             name="q_description"
             control={control}
-            label="Question Description Name *"
+            label="Question Description Name "
             placeholder="Enter your q_description name"
             error={errors?.q_description?.message} // Show error message
             isClearable={true}
