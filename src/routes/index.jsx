@@ -41,9 +41,9 @@ const appRoutes = [
       { path: "create-question", element: <CreateQuestion /> },
       { path: "edit-question/:questionId", element: <EditQuestion /> },
       // /** option */
-      { path: "option-list", element: <OptionList /> },
-      { path: "create-option", element: <CreateOption /> },
-      { path: "edit-option/:optionId", element: <EditOption /> },
+      // { path: "option-list", element: <OptionList /> },
+      // { path: "create-option", element: <CreateOption /> },
+      // { path: "edit-option/:optionId", element: <EditOption /> },
       // /** User */
       { path: "user-list", element: <UserList /> },
       { path: "user-show/:userId", element: <Show/> },

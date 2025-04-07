@@ -26,11 +26,11 @@ export const menuData = [
     icon: <RiProductHuntLine />,
     path: "/dashboard/question-list",
   },
-  {
-    title: "Option",
-    icon: <IoOptions />,
-    path: "/dashboard/option-list",
-  },
+  // {
+  //   title: "Option",
+  //   icon: <IoOptions />,
+  //   path: "/dashboard/option-list",
+  // },
 
   {
     title: "Testimonial",

@@ -16,6 +16,8 @@ import DataTable from "react-data-table-component";
 export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  console.log("categories",categories)
  
 
   // Fetch categories from API
@@ -96,6 +98,10 @@ export const CategoryList = () => {
             alt="images"
           />
         ),
+      },
+      {
+        name: "Category Id",
+        cell: (row) => row.category_id,
       },
       {
         name: "Category Name",
