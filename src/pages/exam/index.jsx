@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaEdit} from "react-icons/fa";
+import { FaEdit } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { NetworkServices } from "../../network";
@@ -13,15 +13,16 @@ import DataTable from "react-data-table-component";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { IoIosList } from "react-icons/io";
+import { FaRegFileExcel } from "react-icons/fa";
 const ExamList = () => {
-  const [exam, setExam] = useState([]); 
-  const [loading, setLoading] = useState(false);   
+  const [exam, setExam] = useState([]);
+  const [loading, setLoading] = useState(false);
   // Fetch categories from API
   const fetchExam = useCallback(async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const response = await NetworkServices.Exam.index();
-    
+
       if (response?.status === 200) {
         setExam(response?.data?.data || []);
       }
@@ -34,7 +35,9 @@ const ExamList = () => {
   useEffect(() => {
     fetchExam();
   }, []);
- 
+
+  console.log("exam", exam);
+
   const destroy = (id) => {
     const dialog = Confirmation({
       title: "Confirm Delete",
@@ -54,11 +57,13 @@ const ExamList = () => {
 
     dialog.showDialog();
   };
-  if(loading){
-    return <div className="space-y-5"> 
-      <PageHeaderSkeleton/>
-      <SkeletonTable/>
-    </div>
+  if (loading) {
+    return (
+      <div className="space-y-5">
+        <PageHeaderSkeleton />
+        <SkeletonTable />
+      </div>
+    );
   }
   const propsData = {
     pageTitle: "Exam List",
@@ -68,7 +73,6 @@ const ExamList = () => {
     type: "add",
   };
   const columns = [
-
     {
       name: "Thumbnail",
       cell: (row) => (
@@ -85,7 +89,7 @@ const ExamList = () => {
     },
     {
       name: "Exam Name",
-      
+
       cell: (row) => <span>{row?.exam_name}</span>,
     },
     {
@@ -107,10 +111,16 @@ const ExamList = () => {
             className="text-red-500 text-xl cursor-pointer"
             onClick={() => destroy(row?.exam_id)}
           />
+          {!exam.exam?
+            <Link to={`/dashboard/create-excel-exam/${row?.exam_id}`}>
+              <FaRegFileExcel className="text-blue-500 text-xl cursor-pointer" />
+            </Link>
+            :""
+          }
         </div>
       ),
     },
-  ]; 
+  ];
   return (
     <>
       <PageHeader propsData={propsData} />
@@ -126,7 +136,6 @@ const ExamList = () => {
         // }}
         pagination
       />
-     
     </>
   );
 };

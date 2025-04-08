@@ -474,3 +474,67 @@ export const TextCheckbox = (props) => {
     </div>
   );
 };
+
+
+
+export const ExcelUpload = (props) => {
+  const {
+    field: { onChange, onBlur, value },
+    fieldState: { error },
+  } = useController({
+    name: props.name,
+    control: props.control,
+    rules: {
+      required: props.required ? "File is required" : false,
+      validate: (file) => {
+        if (!file && props.required) return "File is required";
+        const allowedTypes = [
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", // .xlsx
+          "application/vnd.ms-excel", // .xls
+          "text/csv", // .csv
+        ];
+        if (file && !allowedTypes.includes(file.type)) {
+          return "Only Excel or CSV files are allowed";
+        }
+        return !file || file.size < 5 * 1024 * 1024 || "File must be less than 5MB";
+      },
+    },
+    defaultValue: null,
+  });
+
+  const [fileName, setFileName] = useState(value ? value.name : "");
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      onChange(file);
+      setFileName(file.name);
+      props.onUpload?.(file); // Optional callback
+    }
+  };
+
+  return (
+    <div className="flex flex-col space-y-2">
+      <span className="text-sm mb-1 text-gray-500 flex gap-1">
+        {props?.label}{" "}
+        <span className="text-red-500">{props?.required ? "*" : ""}</span>
+      </span>
+      <div className="relative border rounded-md w-full cursor-pointer bg-white px-4 py-2">
+        <input
+          type="file"
+          accept=".xlsx,.xls,.csv"
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          onBlur={onBlur}
+          onChange={handleFileChange}
+        />
+        <div className="flex items-center justify-between">
+          <span className="text-gray-700 truncate w-5/6">
+            {fileName || "Click to upload Excel/CSV file"}
+          </span>
+          <span className="text-blue-500 font-medium">📁</span>
+        </div>
+      </div>
+      {error && <p className="text-xs text-red-500 pl-3.5">{error.message}</p>}
+    </div>
+  );
+};

@@ -203,7 +203,6 @@ export const EditQuestion = () => {
             control={control}
             label="Question Description *"
             placeholder="Enter question description"
-            rules={{ required: "Question description is required" }}
             error={errors.q_description?.message}
           />
         </div>

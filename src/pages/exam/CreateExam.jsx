@@ -66,6 +66,7 @@ const CreateExam = () => {
         formData.append("thumbnail", data.thumbnail);
       }
       const response = await NetworkServices.Exam.store(formData);
+      console.log("response",response)
       if (response && response.status === 200) {
         // navigate("/dashboard/exam-list");
         return Toastify.Success("Category Created.");

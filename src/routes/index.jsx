@@ -20,6 +20,7 @@ import Show from "../pages/User/Show"
 import Testimonial from "../pages/testimonial"
 import EditTestimonial from "../pages/testimonial/EditTestimonial"
 import CreateTestimonial from "../pages/testimonial/CreateTestimonial"
+import CreateExamExcel from "../pages/exam/CreateExamExcel"
 
 
 
@@ -51,6 +52,7 @@ const appRoutes = [
       { path: "exam-list", element: <ExamList /> },
       { path: "create-exam", element: <CreateExam/> },
       { path: "edit-exam/:examId", element: <EditExam/> },
+      { path: "create-excel-exam/:id", element: <CreateExamExcel/>},
       // testimonial
       { path: "testimonial-list", element: <Testimonial/> },
       { path: "create-testimonial", element: <CreateTestimonial/> },
