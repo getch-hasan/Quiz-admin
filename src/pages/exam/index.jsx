@@ -107,12 +107,12 @@ const ExamList = () => {
             className="text-red-500 text-xl cursor-pointer"
             onClick={() => destroy(row?.exam_id)}
           />
-          {row?.exam==0?
+          
             <Link to={`/dashboard/create-excel-exam/${row?.exam_id}`}>
               <FaRegFileExcel className="text-blue-500 text-xl cursor-pointer" />
             </Link>
-            :""
-          }
+            
+          
         </div>
       ),
     },
