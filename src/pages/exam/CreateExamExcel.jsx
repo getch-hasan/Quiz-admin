@@ -17,11 +17,9 @@ const CreateExamExcel = () => {
   console.log("id", id);
 
   const {
-    register,
+ 
     handleSubmit,
     formState: { errors },
-    setValue,
-    watch,
     control,
   } = useForm({
     defaultValues: {
@@ -31,11 +29,10 @@ const CreateExamExcel = () => {
 
   const onFormSubmit = async (data) => {
     try {
-        setLoading(true);
+      setLoading(true);
       const formData = new FormData();
       formData.append("exam_id", id);
       formData.append("question_file", data.file);
-
 
       const response = await NetworkServices.Question.store(formData);
       if (response && response.status === 200) {
@@ -44,8 +41,9 @@ const CreateExamExcel = () => {
       }
     } catch (error) {
       networkErrorHandeller(error);
+    } finally {
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   const propsData = {
@@ -88,7 +86,7 @@ const CreateExamExcel = () => {
           }`}
           disabled={loading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Exam"}
+          {loading ? "Loading..." : "Create Question"}
         </button>
       </form>
     </div>

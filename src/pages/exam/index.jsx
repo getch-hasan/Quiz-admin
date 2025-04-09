@@ -78,11 +78,7 @@ const ExamList = () => {
       cell: (row) => (
         <img
           className="w-10 h-10 rounded-full border"
-          src={
-            row?.thumbnail
-              ? `${process.env.REACT_APP_API_SERVER}${row?.thumbnail}`
-              : category_image
-          }
+          src={`${process.env.REACT_APP_API_SERVER}${row?.thumbnail}`}  
           alt="images"
         />
       ),
@@ -111,7 +107,7 @@ const ExamList = () => {
             className="text-red-500 text-xl cursor-pointer"
             onClick={() => destroy(row?.exam_id)}
           />
-          {!exam.exam?
+          {row?.exam==0?
             <Link to={`/dashboard/create-excel-exam/${row?.exam_id}`}>
               <FaRegFileExcel className="text-blue-500 text-xl cursor-pointer" />
             </Link>

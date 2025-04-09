@@ -53,6 +53,7 @@ const CreateExam = () => {
   }, [fetchCategory]);
 
   const onFormSubmit = async (data) => {
+    console.log("formData",data)
     try {
       setBtnLoading(true);
       const formData = new FormData();
@@ -65,16 +66,21 @@ const CreateExam = () => {
       if (data.thumbnail && data.thumbnail) {
         formData.append("thumbnail", data.thumbnail);
       }
+      
       const response = await NetworkServices.Exam.store(formData);
       console.log("response",response)
       if (response && response.status === 200) {
-        // navigate("/dashboard/exam-list");
+        const examId = response.data?.data?.exam_id;
+        navigate(`/dashboard/create-excel-exam/${examId}`);
         return Toastify.Success("Category Created.");
+       
       }
     } catch (error) {
       networkErrorHandeller(error);
     }
-    setBtnLoading(false);
+    finally {
+      setBtnLoading(false); // Always runs
+    }
   };
   const propsData = {
     pageTitle: " Create Exam ",

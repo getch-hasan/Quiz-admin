@@ -65,8 +65,6 @@ export const QuestionList = () => {
   const propsData = {
     pageTitle: "Question List",
     pageIcon: <IoIosList />,
-    buttonName: "Create New Question",
-    buttonUrl: "/dashboard/create-question",
     type: "add",
   };
   if(loading){

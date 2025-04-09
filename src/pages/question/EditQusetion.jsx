@@ -13,9 +13,26 @@ export const EditQuestion = () => {
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [exam, setExam] = useState([]);
-
   const { questionId } = useParams();
   const navigate = useNavigate();
+  const [options, setOptions] = useState([
+    { option: "", is_correct: 0 },
+    { option: "", is_correct: 0 },
+    { option: "", is_correct: 0 },
+    { option: "", is_correct: 0 },
+  ]);
+
+  const handleOptionChange = (index, e) => {
+    const updatedOptions = [...options];
+    updatedOptions[index].option = e.target.value;
+    setOptions(updatedOptions);
+  };
+
+  const handleCheckboxChange = (index, e) => {
+    const updatedOptions = [...options];
+    updatedOptions[index].is_correct = e.target.checked ? 1 : 0;
+    setOptions(updatedOptions);
+  };
 
   const {
     handleSubmit,
@@ -84,6 +101,9 @@ export const EditQuestion = () => {
         const response = await NetworkServices.Question.show(questionId);
         if (response?.status === 200) {
           const question = response.data.data;
+          setOptions(question?.option);
+
+          console.log("question,,", question);
           // setQuestionData(question);
 
           // Set form values
@@ -109,19 +129,32 @@ export const EditQuestion = () => {
 
   // Submit function
   const onSubmit = async (data) => {
+
     const formData = new FormData();
     formData.append("exam_id", data.exam_id);
     formData.append("question", data.name);
     formData.append("q_description", data.q_description);
     formData.append("category_id", data.category_id);
     formData.append("difficulty_level", data.difficulty_level);
+    formData.append("question_id", questionId);
+    formData.append("options", JSON.stringify(options));
+    
     formData.append("_method", "PUT");
 
+
+  
+    
+    // const obj = {
+    //   exam_id: 23,
+    //   question: data.name,
+    //   q_description: data.q_description,
+    //   category_id: data.category_id,
+    //   difficulty_level: data.difficulty_level,
+    //   options: options,
+    // };
+
     try {
-      const response = await NetworkServices.Question.update(
-        questionId,
-        formData
-      );
+      const response = await NetworkServices.Question.update(questionId, formData);
       if (response?.status === 200) {
         // navigate("/dashboard/question-list");
         Toastify.Success("Question Updated Successfully.");
@@ -225,6 +258,36 @@ export const EditQuestion = () => {
             label="Choose Difficulty *"
             isClearable
           />
+        </div>
+        {/* option area */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+          {options.map((option, index) => (
+            <div key={index}>
+              <label className="text-sm  text-gray-500">{`Option ${
+                index + 1
+              }`}</label>
+              <div className="flex items-center space-x-4 mt-1">
+                <div className="flex-1">
+                  <input
+                    type="text"
+                    value={option?.option}
+                    onChange={(e) => handleOptionChange(index, e)}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none text-sm mb-1 text-gray-500"
+                    placeholder={`Option ${index + 1}`}
+                  />
+                </div>
+                <div className="w-auto flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={option.is_correct === 1}
+                    onChange={(e) => handleCheckboxChange(index, e)}
+                    className="mr-2"
+                  />
+                  <span className="text-sm">Correct Option</span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Submit Button */}
