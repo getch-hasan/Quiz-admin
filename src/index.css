@@ -64,6 +64,16 @@ body {
 .dark .rdt_TableRow:hover {
   @apply bg-darkCard text-darkTitle ;  
 }
+
+.dark .rdt_Pagination{
+  @apply bg-darkCard text-darkTitle
+}
+.dark #pagination-last-page,
+.dark #pagination-next-page,
+.dark #pagination-previous-page,
+.dark #pagination-first-page {
+  fill: white;
+}
  
 .rdt_Table,
 .rdt_TableHead,
