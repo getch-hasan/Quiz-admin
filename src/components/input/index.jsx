@@ -38,7 +38,7 @@ export const TextInput = (props) => {
         className={
           props.error
             ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border border-red-500 ${props.className}`
-            : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props.className}`
+            : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border  border-gray-300 ${props.className}`
         }
       />
     </div>
@@ -180,7 +180,7 @@ export const DateInput = (props) => {
 
 const customStyles = (error) => {
   const myStyles = {
-    control: (provided, state) => ({
+    control: (provided, ) => ({
       ...provided,
       minHeight: 50,
       fontSize: 14,
@@ -392,11 +392,11 @@ export const ImageUpload = (props) => {
         {props?.label}{" "}
         <span className="text-white">{props?.rules?.required ? "*" : ""}</span>
       </span>
-      <div className="relative border rounded-md w-full cursor-pointer bg-white">
+      <div className="relative  rounded-md w-full cursor-pointer bg-white border  border-gray-300">
         <input
           type="file"
           accept="image/*"
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer "
           onBlur={onBlur}
           onChange={handleFileChange}
         />
@@ -411,7 +411,7 @@ export const ImageUpload = (props) => {
             <div className="h-12 w-12 flex items-center justify-center bg-gray-200 rounded-md cursor-pointer">
               {props?.imgUrl ? (
                 <img
-                  src={`${process.env.REACT_APP_API_SERVER}${props?.imgUrl}`}
+                  src={`${import.meta.env.VITE_API_SERVER}${props?.imgUrl}`}
                   alt="loading"
                   className="h-12 w-12 object-cover rounded-md cursor-pointer"
                 />
@@ -470,7 +470,6 @@ export const TextCheckbox = (props) => {
             : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props?.className}`
         }
       />
-        
     </div>
   );
 };

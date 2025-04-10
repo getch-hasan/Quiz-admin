@@ -4,7 +4,7 @@ import { IoMdCreate } from "react-icons/io";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-import { networkErrorHandeller } from "../../utils/helper";
+import { networkErrorHandeller } from "../../utils/helpers/index";
 import { useNavigate } from "react-router-dom";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonForm } from "../../components/loading/skeleton-table";
@@ -33,7 +33,7 @@ const CreateCategory = () => {
       const response = await NetworkServices.Category.index();
 
       if (response && response.status === 200) {
-        const result = response.data.data.map((item, index) => {
+        const result = response.data.data.map((item) => {
           return {
             label: item.category_name,
             value: item.category_name,
@@ -55,7 +55,11 @@ const CreateCategory = () => {
 
   const onFormSubmit = async (data) => {
     const result = data?.status ? "1" : "0";
-    const newObj = { ...data, status: result,parent_id:data?.singleSelect?.category_id};
+    const newObj = {
+      ...data,
+      status: result,
+      parent_id: data?.singleSelect?.category_id,
+    };
     console.log("object", newObj);
     try {
       setLoading(true);
@@ -68,8 +72,9 @@ const CreateCategory = () => {
     } catch (error) {
       console.log("error", error);
       networkErrorHandeller(error);
+    } finally {
+      setLoading(false); // End loading (handled in both success and error)
     }
-    setLoading(false);
   };
 
   if (loading) {

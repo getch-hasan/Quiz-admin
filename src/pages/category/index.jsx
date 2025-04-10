@@ -6,12 +6,12 @@ import { MdDelete } from "react-icons/md";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
-import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import DataTable from "react-data-table-component";
+import { networkErrorHandeller, responseChecker } from "../../utils/helpers";
 
 export const CategoryList = () => {
   const [categories, setCategories] = useState([]);
@@ -89,10 +89,10 @@ export const CategoryList = () => {
         name: "Thumbnail",
         cell: (row) => (
           <img
-            className="w-10 h-10 rounded-full border"
+            className="w-10 h-10 rounded-full border  border-gray-300"
             src={
               row?.thumbnail
-                ? `${process.env.REACT_APP_API_SERVER}${row?.thumbnail}`
+                ? `${import.meta.env.VITE_API_SERVER}${row?.thumbnail}`
                 : ""
             }
             alt="images"

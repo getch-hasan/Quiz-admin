@@ -1,34 +1,39 @@
 import React, { useState, useRef } from "react";
-import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
-import { NetworkServices } from "../../network";
-import {  networkErrorHandeller, setToken } from "../../utils/helpers";
-import { Toastify } from "../../components/toastify";
+import { FaEye, FaEyeSlash, FaRegUser } from "react-icons/fa"; // Import Icons
+import { MdOutlineEmail } from "react-icons/md";
+import { useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
   const [focusField, setFocusField] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [inputValues, setInputValues] = useState({
+    username: "",
     email: "",
     password: "",
   });
-  const [errors, setErrors] = useState({ email: "", password: "" });
-  const passwordRef = useRef(null);
+  const [errors, setErrors] = useState({
+    username: "",
+    email: "",
+    password: "",
+  }); // Error state
+  const passwordRef = useRef(null); // Create ref for password input
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
-
-  console.log("inputValues",inputValues)
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-    passwordRef.current.focus();
+    passwordRef.current.focus(); // Focus the input when clicking the button
   };
 
+  // Validate fields
   const validateFields = () => {
-    const newErrors = { email: "", password: "" };
+    const newErrors = { username: "", email: "", password: "" };
+    if (!inputValues.username) {
+      newErrors.username = "Username is required.";
+    }
     if (!inputValues.email) {
       newErrors.email = "email is required.";
     }
+
     if (!inputValues.password) {
       newErrors.password = "Password is required.";
     }
@@ -36,53 +41,71 @@ const Login = () => {
     return Object.values(newErrors).every((error) => error === "");
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!validateFields()) return;
-
-    try {
-      setLoading(true);
-      const response = await NetworkServices.Authentication.login(inputValues);
-      const queryParams = new URLSearchParams(location.search);
-      const redirectFrom = queryParams.get("redirectFrom") || "/dashboard";
-
-      if (response.status === 200) {
-        
-        if (response?.data?.data?.user?.role == "admin") {
-          setToken(response?.data?.data?.token);
-          navigate(redirectFrom);
-          Toastify.Success("Login successfully done");
-        }else{
-          Toastify.Error("Invalid user role");
-        }
-        setLoading(false);
-      }
-    } catch (error) {
-      setLoading(false);
-      networkErrorHandeller(error);
+    if (validateFields()) {
+      // Proceed with the login logic
+      navigate("/");
+      alert("registration successful");
+      console.log("inputValues", inputValues);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-200 to-gray-900">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-600">
       <div
         className="absolute inset-0 bg-cover bg-center opacity-20"
         style={{ backgroundImage: "url('/image/bg/starry-night.webp')" }}
       ></div>
-      <div className="relative w-96 p-8 bg-white/30 rounded-lg shadow-lg text-white border border-white">
-        <h2 className="text-center text-2xl font-bold mb-4">Login</h2>
+      <div className="relative w-96 p-8 bg-white/30 rounded-lg  text-white border border-white">
+        <h2 className="text-center text-2xl font-bold mb-4">Registration</h2>
         <div className="space-y-6">
-          {/* email Input */}
+          {/* Username Input */}
+          <div className="relative">
+            <label
+              htmlFor="username"
+              className={`absolute left-3 text-sm text-white transition-all cursor-pointer  ${
+                focusField === "username" || inputValues.username
+                  ? "-top-3 left-3  text-white"
+                  : "top-6"
+              }`}
+            >
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={inputValues.username}
+              className="w-full p-3 pr-10 text-white outline-none border-b-2  bg-transparent"
+              onFocus={() => setFocusField("username")}
+              onBlur={() => setFocusField("")}
+              onChange={(e) => {
+                setInputValues({ ...inputValues, username: e.target.value });
+                if (errors.username) {
+                  setErrors({ ...errors, username: "" });
+                }
+              }}
+            />
+            <span className="absolute right-3 top-6 text-white">
+              <FaRegUser />
+            </span>
+            {errors.username && (
+              <label className="text-red-500 text-xs mt-1">
+                {errors.username}
+              </label>
+            )}
+          </div>
+          {/* Username Input */}
           <div className="relative">
             <label
               htmlFor="email"
-              className={`absolute left-3 text-sm transition-all cursor-pointer ${
+              className={`absolute left-3 text-sm text-white transition-all cursor-pointer ${
                 focusField === "email" || inputValues.email
                   ? "-top-3 left-3  text-white"
-                  : "top-6 text-white"
+                  : "top-6"
               }`}
             >
-              email
+              Email
             </label>
             <input
               id="email"
@@ -99,7 +122,7 @@ const Login = () => {
               }}
             />
             <span className="absolute right-3 top-6 text-white">
-              <FaRegUser />
+              <MdOutlineEmail />
             </span>
             {errors.email && (
               <label className="text-red-500 text-xs mt-1">
@@ -112,17 +135,17 @@ const Login = () => {
           <div className="relative">
             <label
               htmlFor="pass"
-              className={`absolute left-3 text-sm transition-all cursor-pointer ${
+              className={`absolute left-3 text-sm text-white transition-all cursor-pointer ${
                 focusField === "password" || inputValues.password
                   ? "-top-3 left-3  text-white"
-                  : "top-6 text-white"
+                  : "top-6"
               }`}
             >
               Password
             </label>
             <input
               id="pass"
-              ref={passwordRef}
+              ref={passwordRef} // Assign ref to password input
               type={showPassword ? "text" : "password"}
               value={inputValues.password}
               className="w-full p-3 pr-10 text-white outline-none border-b-2 bg-transparent"
@@ -135,6 +158,7 @@ const Login = () => {
                 }
               }}
             />
+            {/* Show/Hide Password Button */}
             <button
               type="button"
               className="absolute right-3 top-6 text-white focus:outline-none cursor-pointer"
@@ -162,22 +186,14 @@ const Login = () => {
           {/* Login Button */}
           <button
             className="w-full bg-white text-gray-600 py-2 rounded-lg font-bold transition cursor-pointer"
-            onClick={handleSubmit}
+            onClick={handleSubmit} // Trigger validation and login
           >
-            Login
+            SignUp
           </button>
-
-          {/* Register Link */}
-          <p className="text-center text-sm">
-            Don’t have an account?{" "}
-            <Link to="register" className="font-bold hover:underline">
-              Register
-            </Link>
-          </p>
         </div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

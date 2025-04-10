@@ -1,8 +1,13 @@
 import axios from "axios";
-import { getToken } from "../utils/helper";
+import { getToken } from "../utils/helpers";
+
 
 // const apiUrl =  process.env.REACT_APP_API_ENDPOINT;
-const apiUrl = process.env.REACT_APP_API_ENDPOINT;
+
+const apiUrl = import.meta.env.VITE_API_ENDPOINT;
+
+
+console.log(apiUrl)
 
 /* Publica/Common request config */
 axios.defaults.headers.post["Content-Type"] = "application/json";

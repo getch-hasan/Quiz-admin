@@ -3,10 +3,10 @@ import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useForm } from "react-hook-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { NetworkServices } from "../../network";
-import { networkErrorHandeller, responseChecker } from "../../utils/helper";
 import { Toastify } from "../../components/toastify";
 import { ImageUpload, SingleSelect, TextCheckbox, TextInput } from "../../components/input";
 import { FaRegEdit } from "react-icons/fa";
+import { networkErrorHandeller, responseChecker } from "../../utils/helpers";
 const EditCategory = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
