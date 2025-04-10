@@ -62,6 +62,8 @@ const CreateCategory = () => {
     };
     console.log("object", newObj);
     try {
+
+      
       setLoading(true);
       const response = await NetworkServices.Category.store(newObj);
       console.log("objecttt", response);
