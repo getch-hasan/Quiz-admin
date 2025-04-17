@@ -56,6 +56,7 @@ const Header = ({ toggleSidebar, menuOpen, setMenuStyle, menuStyle,setMenuPositi
   // };
   const toggleTheme = (selectedTheme) => {
     if (theme !== selectedTheme) {
+      window.dispatchEvent(new CustomEvent("localStorageUpdated", { detail: selectedTheme }));
       setTheme(selectedTheme);
       setCheck(selectedTheme);
     }

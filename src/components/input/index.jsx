@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Select from "react-select";
 import AsyncSelect from "react-select/async";
 import ReactDatePicker from "react-datepicker";
@@ -37,8 +37,8 @@ export const TextInput = (props) => {
         min={0}
         className={
           props.error
-            ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border border-red-500 ${props.className}`
-            : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border  border-gray-300 ${props.className}`
+            ? `w-full text-sm bg-lightCard dark:bg-darkCard disabled:bg-gray-300 rounded-md outline-none p-[14px] border border-red-500 ${props.className}`
+            : `w-full text-sm bg-lightCard dark:bg-darkCard text-lightTitle dark:text-darkTitle disabled:bg-gray-300 rounded-md outline-none p-[14px] border  border-gray-300 ${props.className}`
         }
       />
     </div>
@@ -178,20 +178,42 @@ export const DateInput = (props) => {
 
 /* ------------------------ Single Select field -------------------- */
 
-const customStyles = (error) => {
+const customStyles = (error,value) => {
+  // const value = localStorage.getItem("theme")
   const myStyles = {
-    control: (provided, ) => ({
+    control: (provided) => ({
       ...provided,
       minHeight: 50,
       fontSize: 14,
-      color: "#000",
-      background: "#fff",
+      // color: theme==="light"? "black" :"red",
+      color:"black",
+      background:  value=='light'?'#FFFFFF':"#1E293B",
       boxShadow: "none",
       "&:hover": { borderColor: "1px solid #fff" },
       border: error ? "1px solid red" : "1px solid #dfdfdf",
       borderRadius: 6,
-      // cursor pointer make
       cursor: "pointer",
+      
+     
+    }),
+    option: (provided, state,theme) => ({
+      ...provided,
+      backgroundColor: state.isSelected
+        ? 'blue'
+        : state.isFocused
+        ? '#D1E7FD'
+        : '',
+        color:
+        state.isSelected || state.isFocused
+          ? theme === 'light'
+            ? 'red'
+            : '#fff'
+          : '',
+      
+    }),
+    singleValue: (provided,theme) => ({
+      ...provided,
+      color: theme === 'light' ? 'black' : 'white', 
     }),
   };
   return myStyles;
@@ -215,23 +237,40 @@ export const SingleSelect = (props) => {
     props.onSelected?.(event);
   };
 
+  // mode added 
+  const [theme, setTheme] = useState(localStorage.getItem("theme")||"light");
+
+  // Optional: Listen for theme changes across tabs
+  useEffect(() => {
+    const handleStorageChange = (event) => {
+      setTheme(event.detail); // Update the state with the new theme from the event
+    };
+
+    window.addEventListener("localStorageUpdated", handleStorageChange);
+
+    return () => {
+      window.removeEventListener("localStorageUpdated", handleStorageChange);
+    };
+  }, []);
+  
   return (
     <div className="cursor-pointer">
       {props.error ? (
         <p className="text-sm mb-1 text-danger text-red-500">{props.error}</p>
       ) : (
-        <p className="text-sm mb-1 text-gray-500">{props.label}</p>
+        <p className="text-sm mb-1 text-gray-500 ">{props.label}</p>
       )}
       <Select
         classNamePrefix={`custom-select`}
         onBlur={onBlur} // notify when input is touched/blur
         value={value} // input value
         name={props.name} // send down the input name
-        styles={customStyles(props.error)}
+        styles={customStyles(props.error,theme) }
         components={{
           DropdownIndicator: () => null,
           IndicatorSeparator: () => null,
         }}
+       
         options={props.options}
         onChange={handleSelect}
         isClearable={props.isClearable}

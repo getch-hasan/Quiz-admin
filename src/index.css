@@ -74,7 +74,22 @@ body {
 .dark #pagination-first-page {
   fill: white;
 }
- 
+
+.dark .css-1dg3e3x-control{
+  @apply bg-darkCard text-darkTitle ; 
+} 
+
+.dark .css-uguckl-control{
+  @apply bg-darkCard text-darkTitle ; 
+}
+  
+.dark .css-1nmdiq5-menu{
+  @apply bg-darkCard text-darkTitle ; 
+}
+.dark .css-fmqkmq-control{
+  @apply bg-darkCard text-darkTitle ; 
+}
+  
 .rdt_Table,
 .rdt_TableHead,
 .rdt_TableRow {
@@ -88,3 +103,6 @@ body {
   width: 100%  ;
   border-radius:8px;
 }
+
+/* e.g., in your index.css or a component-level CSS file */
+ 

@@ -69,8 +69,8 @@ const ExamList = () => {
   const propsData = {
     pageTitle: "Exam List",
     pageIcon: <IoIosList />,
-    // buttonName: "Create New Exam",
-    // buttonUrl: "/dashboard/create-exam",
+    buttonName: "Create New Exam",
+    buttonUrl: "/dashboard/create-exam",
     type: "add",
   };
   const columns = [
