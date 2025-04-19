@@ -11,6 +11,7 @@ import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { IoIosList } from "react-icons/io";
 import { networkErrorHandeller } from "../../utils/helpers";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
@@ -69,13 +70,16 @@ export const QuestionList = () => {
     pageIcon: <IoIosList />,
     type: "add",
   };
-  if(loading){
-    return <div>
-      <PageHeaderSkeleton/>
-      <br/>
-      <SkeletonTable/>
-    </div>
-  }
+  // if(loading){
+  //   return <div>
+  //     <PageHeaderSkeleton/>
+  //     <br/>
+  //     <SkeletonTable/>
+  //   </div>
+  // }
+
+
+
   const getDifficultyColor = (difficulty) => {
     switch (difficulty) {
       case "easy":
@@ -132,9 +136,21 @@ export const QuestionList = () => {
   ];
   return (
     <>
+{
+  loading ? (
+    <ListSkeleton />
+  ) : (
+    <>
       <PageHeader propsData={propsData} />
-      <DataTable columns={columns} data={questions} pagination  
-		 />
+      <DataTable 
+        columns={columns} 
+        data={questions} 
+        pagination 
+      />
+    </>
+  )
+}
+
     </>
   );
 };

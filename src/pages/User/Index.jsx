@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { IoIosList } from "react-icons/io";
 import { networkErrorHandeller } from "../../utils/helpers";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 export const UserList = () => {
   const [users, setUsers] = useState([]);
@@ -93,20 +94,17 @@ export const UserList = () => {
     },
   ];
 
-  if (loading) {
-    return (
-      <div>
-        <PageHeaderSkeleton />
-        <br />
-        <SkeletonTable />
-      </div>
-    );
-  }
-
   return (
     <>
+      {loading ? (
+        <ListSkeleton />
+      ) : (
+        <>
       <PageHeader propsData={propsData} />
       <DataTable columns={columns} data={users} pagination />
+        </>
+      )}
+
     </>
   );
 };

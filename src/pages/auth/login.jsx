@@ -64,6 +64,9 @@ const Login = () => {
     }
   };
 
+
+
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-200 to-gray-900">
       <div
@@ -74,7 +77,7 @@ const Login = () => {
         <h2 className="text-center text-2xl font-bold mb-4">Login</h2>
         <div className="space-y-6">
           {/* email Input */}
-          <div className="relative">
+          <div className="relative ">
             <label
               htmlFor="email"
               className={`absolute left-3 text-sm transition-all cursor-pointer ${
@@ -89,15 +92,20 @@ const Login = () => {
               id="email"
               type="text"
               value={inputValues.email}
-              className="w-full p-3 pr-10 text-white outline-none border-b-2 bg-transparent"
+              className="w-full p-3 pr-10 text-white outline-none border-b-2 bg-transparent noselect"
               onFocus={() => setFocusField("email")}
               onBlur={() => setFocusField("")}
+              onDrag="return false"
               onChange={(e) => {
                 setInputValues({ ...inputValues, email: e.target.value });
                 if (errors.email) {
                   setErrors({ ...errors, email: "" });
                 }
               }}
+              onPaste={(e) => e.preventDefault()}
+              onDrop={(e) => e.preventDefault()}
+              onDragStart={(e) => e.preventDefault()}
+
             />
             <span className="absolute right-3 top-6 text-white">
               <FaRegUser />

@@ -7,10 +7,13 @@ import { Toastify } from "../../components/toastify";
 import { SingleSelect, TextAreaInput, TextInput } from "../../components/input";
 import { FaRegEdit } from "react-icons/fa";
 import { networkErrorHandeller } from "../../utils/helpers";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 export const EditQuestion = () => {
   // const [questionData, setQuestionData] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [exam, setExam] = useState([]);
   const { questionId } = useParams();
@@ -154,13 +157,17 @@ export const EditQuestion = () => {
     // };
 
     try {
+      setBtnLoading(true)
       const response = await NetworkServices.Question.update(questionId, formData);
       if (response?.status === 200) {
-        // navigate("/dashboard/question-list");
+        navigate("/dashboard/question-list");
         Toastify.Success("Question Updated Successfully.");
       }
     } catch (error) {
       networkErrorHandeller(error);
+    }
+    finally{
+      setBtnLoading(false)
     }
   };
 
@@ -171,6 +178,16 @@ export const EditQuestion = () => {
     buttonUrl: "/dashboard/question-list",
     type: "list",
   };
+
+  if (loading) {
+    return (
+      <>
+        <PageHeaderSkeleton />
+        <br />
+        <CategoryFormSkeleton />
+      </>
+    );
+  }
 
   return (
     <>
@@ -293,14 +310,14 @@ export const EditQuestion = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`px-4 py-2 text-white rounded-md transition ${
-            loading
+          className={`px-4 py-2 text-white rounded-md transition cursor-pointer ${
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading}
+          disabled={btnloading}
         >
-          {loading ? "Updating..." : "Update Question"}
+          {btnloading ? "Updating..." : "Update Question"}
         </button>
       </form>
     </>

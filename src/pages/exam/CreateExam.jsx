@@ -203,7 +203,7 @@ const CreateExam = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`mt-4 px-4 py-2 text-white rounded-md transition ${
+          className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
             btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"

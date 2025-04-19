@@ -7,11 +7,14 @@ import { Toastify } from "../../components/toastify";
 import { ImageUpload, SingleSelect, TextCheckbox, TextInput } from "../../components/input";
 import { FaRegEdit } from "react-icons/fa";
 import { networkErrorHandeller, responseChecker } from "../../utils/helpers";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 const EditCategory = () => {
   const { categoryId } = useParams();
   const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const [category, setCategory] = useState({});
 
   console.log("categorycategory", category);
@@ -34,7 +37,7 @@ const EditCategory = () => {
       const response = await NetworkServices.Category.index();
 
       if (response && response.status === 200) {
-        const result = response.data.data.map((item, index) => {
+        const result = response.data.data.map((item) => {
           return {
             label: item.category_name,
             value: item.category_name,
@@ -95,7 +98,7 @@ const EditCategory = () => {
     }
 
     try {
-      setLoading(true);
+      setBtnLoading(true);
       const response = await NetworkServices.Category.update(
         categoryId,
         formData
@@ -103,13 +106,15 @@ const EditCategory = () => {
       console.log("responseresponse", response);
 
       if (responseChecker(response, 200)) {
-        // navigate("/dashboard/category");
+        navigate("/dashboard/category");
         return Toastify.Success("Category Updated.");
       }
     } catch (error) {
       networkErrorHandeller(error);
+    }finally{
+      setBtnLoading(false);
     }
-    setLoading(false);
+    
   };
 
   const propsData = {
@@ -119,6 +124,15 @@ const EditCategory = () => {
     buttonUrl: "/dashboard/category",
     type: "list",
   };
+  if (loading) {
+    return (
+      <>
+        <PageHeaderSkeleton />
+        <br />
+        <CategoryFormSkeleton />
+      </>
+    );
+  }
 
   return (
     <>
@@ -143,7 +157,7 @@ const EditCategory = () => {
                 ?.category_name ?? "select parent Category"
             }
             error={errors.singleSelect?.message}
-            label="Choose parent category *"
+            label="Choose parent category "
             isClearable={true}
             // defaultValue="malek "
             // error={errors} // Pass an error message if validation fails
@@ -190,14 +204,14 @@ const EditCategory = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+          className={`px-4 py-2 text-white rounded-md transition mt-4 cursor-pointer ${
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Update Category"}
+          {btnloading ? "Loading..." : "Update Category"}
         </button>
       </form>
     </>

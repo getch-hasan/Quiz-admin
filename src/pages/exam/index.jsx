@@ -15,6 +15,7 @@ import { SkeletonTable } from "../../components/loading/skeleton-table";
 import { IoIosList } from "react-icons/io";
 import { FaRegFileExcel } from "react-icons/fa";
 import { networkErrorHandeller } from "../../utils/helpers";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 const ExamList = () => {
   const [exam, setExam] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -58,14 +59,14 @@ const ExamList = () => {
 
     dialog.showDialog();
   };
-  if (loading) {
-    return (
-      <div className="space-y-5">
-        <PageHeaderSkeleton />
-        <SkeletonTable />
-      </div>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <div className="space-y-5">
+  //       <PageHeaderSkeleton />
+  //       <SkeletonTable />
+  //     </div>
+  //   );
+  // }
   const propsData = {
     pageTitle: "Exam List",
     pageIcon: <IoIosList />,
@@ -79,7 +80,7 @@ const ExamList = () => {
       cell: (row) => (
         <img
           className="w-10 h-10 rounded-full border"
-          src={`${import.meta.env.VITE_API_SERVER}${row?.thumbnail}`}  
+          src={`${import.meta.env.VITE_API_SERVER}${row?.thumbnail}`}
           alt="images"
         />
       ),
@@ -108,31 +109,26 @@ const ExamList = () => {
             className="text-red-500 text-xl cursor-pointer"
             onClick={() => destroy(row?.exam_id)}
           />
-          
-            <Link to={`/dashboard/create-excel-exam/${row?.exam_id}`}>
-              <FaRegFileExcel className="text-blue-500 text-xl cursor-pointer" />
-            </Link>
-            
-          
+
+          <Link to={`/dashboard/create-excel-exam/${row?.exam_id}`}>
+            <FaRegFileExcel className="text-blue-500 text-xl cursor-pointer" />
+          </Link>
         </div>
       ),
     },
   ];
   return (
     <>
-      <PageHeader propsData={propsData} />
 
-      <DataTable
-        columns={columns}
-        data={exam}
-        // selectableRows
-        // selectableRowsComponent="input"
-        // onSelectedRowsChange={({ selectedRows }) => {
-        //   console.log(selectedRows);
-        //   setExamSelected(selectedRows)
-        // }}
-        pagination
-      />
+      {loading ? (
+        <ListSkeleton />
+      ) : (
+        <>
+          <PageHeader propsData={propsData} />
+
+          <DataTable columns={columns} data={exam} pagination />
+        </>
+      )}
     </>
   );
 };

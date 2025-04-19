@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { IoMdCreate } from "react-icons/io";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
@@ -12,7 +12,7 @@ import { networkErrorHandeller } from "../../utils/helpers";
 
 
 const CreateExamExcel = () => {
-  const [excelExam, setExcelExam] = useState([]);
+
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   console.log("id", id);
@@ -27,6 +27,7 @@ const CreateExamExcel = () => {
       status: 0,
     },
   });
+  const navigate = useNavigate();
 
   const onFormSubmit = async (data) => {
     try {
@@ -37,7 +38,7 @@ const CreateExamExcel = () => {
 
       const response = await NetworkServices.Question.store(formData);
       if (response && response.status === 200) {
-        // navigate("/dashboard/exam-list");
+        navigate("/dashboard/exam-list");
         return Toastify.Success("Question Created.");
       }
     } catch (error) {
@@ -80,7 +81,7 @@ const CreateExamExcel = () => {
         />
         <button
           type="submit"
-          className={`mt-4 px-4 py-2 text-white rounded-md transition ${
+          className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
             loading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"

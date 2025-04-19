@@ -3,10 +3,12 @@ import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { useForm } from "react-hook-form";
 import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
 
 import { useNavigate, useParams } from "react-router-dom";
-import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
-import { SkeletonForm } from "../../components/loading/skeleton-table";
+
+
 import {
   ImageUpload,
   SingleSelect,
@@ -20,6 +22,7 @@ const EditExam = () => {
   const [categories, setCategories] = useState([]);
   const [exam, setExam] = useState({});
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const { examId } = useParams(); // Get the examId from URL
 
   const navigate = useNavigate();
@@ -44,7 +47,7 @@ const EditExam = () => {
     try {
       const response = await NetworkServices.Category.index();
       if (response && response.status === 200) {
-        const result = response.data.data.map((item, index) => {
+        const result = response.data.data.map((item) => {
           return {
             label: item.category_name,
             value: item.category_name,
@@ -96,8 +99,8 @@ const EditExam = () => {
   const onFormSubmit = async (data) => {
     console.log("data", data);
     try {
-      setLoading(true);
-      setLoading(true);
+      setBtnLoading(true);
+ 
 
       const formData = new FormData();
       formData.append("category_id", data.category_id);
@@ -115,21 +118,25 @@ const EditExam = () => {
       const response = await NetworkServices.Exam.update(examId, formData);
       console.log("response", response);
       if (response && response.status === 200) {
-        // navigate("/dashboard/exam-list");
+        navigate("/dashboard/exam-list");
         Toastify.Success(examId ? "Exam Updated." : "Exam Created.");
       }
     } catch (error) {
       console.log("Error:", error);
       networkErrorHandeller(error);
+    }finally{
+      setBtnLoading(false);
     }
-    setLoading(false);
+    
+    
   };
   if (loading) {
     return (
-      <div className="text-center">
+      <>
         <PageHeaderSkeleton />
-        <SkeletonForm />
-      </div>
+        <br />
+        <CategoryFormSkeleton />
+      </>
     );
   }
   const propsData = {
@@ -245,14 +252,14 @@ const EditExam = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`mt-4 px-4 py-2 text-white rounded-md transition ${
-            loading
+          className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading}
+          disabled={btnloading}
         >
-          {loading ? "Loading..." : examId ? "Update Exam" : "Create Exam"}
+          {btnloading ? "Loading..." : examId ? "Update Exam" : "Create Exam"}
         </button>
       </form>
     </>

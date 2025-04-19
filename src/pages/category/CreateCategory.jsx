@@ -6,13 +6,14 @@ import { NetworkServices } from "../../network";
 import { Toastify } from "../../components/toastify";
 import { networkErrorHandeller } from "../../utils/helpers/index";
 import { useNavigate } from "react-router-dom";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
-import { SkeletonForm } from "../../components/loading/skeleton-table";
 import { ImageUpload, SingleSelect, TextInput } from "../../components/input";
 
 const CreateCategory = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
 
   const navigate = useNavigate();
   const {
@@ -64,29 +65,28 @@ const CreateCategory = () => {
     try {
 
       
-      setLoading(true);
+      setBtnLoading(true);
       const response = await NetworkServices.Category.store(newObj);
       console.log("objecttt", response);
       if (response && response.status === 200) {
-        // navigate("/dashboard/category");
+        navigate("/dashboard/category");
         return Toastify.Success("Category Created.");
       }
     } catch (error) {
       console.log("error", error);
       networkErrorHandeller(error);
     } finally {
-      setLoading(false); // End loading (handled in both success and error)
+      setBtnLoading(false); // End loading (handled in both success and error)
     }
   };
 
   if (loading) {
     return (
-      <div className="text-center">
-        {" "}
+      <>
         <PageHeaderSkeleton />
         <br />
-        <SkeletonForm />{" "}
-      </div>
+        <CategoryFormSkeleton />
+      </>
     );
   }
   const propsData = {
@@ -115,7 +115,7 @@ const CreateCategory = () => {
             }
             placeholder="Select a category "
             error={errors.singleSelect?.message}
-            label="Choose Parent category *"
+            label="Choose Parent category "
             isClearable={true}
             // error={errors} // Pass an error message if validation fails
           />
@@ -163,14 +163,14 @@ const CreateCategory = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`px-4 py-2 text-white rounded-md transition mt-4 ${
-            loading
+          className={`px-4 py-2 text-white rounded-md transition mt-4 cursor-pointer ${
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Category"}
+          {btnloading ? "Loading..." : "Create Category"}
         </button>
       </form>
     </>

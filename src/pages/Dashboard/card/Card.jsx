@@ -8,7 +8,7 @@ import { AreaChart, Area, ResponsiveContainer } from "recharts";
 
 const stats = [
   {
-    title: "Total Sales",
+    title: "Total Exam",
     value: "34,945",
     percentage: "1.56%",
     icon: <FaShoppingBag className="text-white" />,
@@ -27,7 +27,7 @@ const stats = [
     ],
   },
   {
-    title: "Total Income",
+    title: "Total Exam Done",
     value: "$37,802",
     percentage: "-1.56%",
     icon: <FaDollarSign className="text-white" />,
@@ -46,7 +46,7 @@ const stats = [
     ],
   },
   {
-    title: "Orders Paid",
+    title: "Incomplete Exam",
     value: "34,945",
     percentage: "0.00%",
     icon: <FaFileInvoice className="text-white" />,
@@ -65,7 +65,7 @@ const stats = [
     ],
   },
   {
-    title: "Total Visitor",
+    title: "Users Completed Exam",
     value: "34,945",
     percentage: "1.56%",
     icon: <FaUsers className="text-white" />,

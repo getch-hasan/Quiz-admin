@@ -14,9 +14,12 @@ import { Toastify } from "../../components/toastify";
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { IoMdCreate } from "react-icons/io";
 import { networkErrorHandeller } from "../../utils/helpers";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const CreateTestimonial = () => {
-  const [loading, setLoading] = useState(false);
+
+  const [btnloading, setBtnLoading] = useState(false);
   const navigate = useNavigate();
   const {
     handleSubmit,
@@ -32,7 +35,7 @@ const CreateTestimonial = () => {
 
   const onFormSubmit = async (data) => {
     try {
-      setLoading(true);
+      setBtnLoading(true);
   
       
       const formData = {
@@ -53,8 +56,10 @@ const CreateTestimonial = () => {
       }
     } catch (error) {
       networkErrorHandeller(error);
+    }finally{
+      setBtnLoading(false)
     }
-    setLoading(false);
+   
   };
     const propsData = {
       pageTitle: " Create Testimonial ",
@@ -63,6 +68,8 @@ const CreateTestimonial = () => {
       buttonUrl: "/dashboard/testimonial-list",
       type: "list", // This indicates the page type for the button
     };
+
+
   
   return (
     <div>
@@ -149,7 +156,7 @@ const CreateTestimonial = () => {
           />
         </div>
         {/* Status (Checkbox) */}
-        <div className="flex items-center  mt-4 ">
+        <div className="flex items-center  mt-4  ">
           <TextCheckbox
             type="checkbox"
             name="status"
@@ -158,7 +165,7 @@ const CreateTestimonial = () => {
             onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
             checked={watch("status") == 1} // If status is 1, checked = true
           />
-          <label htmlFor="status" className="text-sm text-gray-700">
+          <label htmlFor="status" className="text-sm text-gray-700 ml-3">
             Status
           </label>
         </div>
@@ -166,14 +173,14 @@ const CreateTestimonial = () => {
         {/* Submit Button */}
         <button
           type="submit"
-          className={`mt-4 px-4 py-2 text-white rounded-md transition ${
-            loading
+          className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Testimonal"}
+          {btnloading ? "Loading..." : "Create Testimonal"}
         </button>
       </form>
     </div>

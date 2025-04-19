@@ -11,6 +11,7 @@ import { networkErrorHandeller } from "../../utils/helpers";
 const EditTestimonial = () => {
   const [testimonial, setTestimonial] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [btnloading, setBtnLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -50,18 +51,21 @@ const EditTestimonial = () => {
 
   const fetchTestimonial = async (id) => {
     try {
+      setLoading(true)
       const response = await NetworkServices.Testimonial.show(id);
       if (response && response.status === 200) {
         setTestimonial(response.data.data);
       }
     } catch (error) {
       console.error("Error fetching testimonial:", error);
+    }finally{
+      setLoading(false)
     }
   };
 
   const onFormSubmit = async (data) => {
     try {
-      setLoading(true);
+      setBtnLoading(true);
 
       const formData = new FormData();
       formData.append("name", data.name);
@@ -82,8 +86,10 @@ const EditTestimonial = () => {
     } catch (error) {
       console.error("Error:", error);
       networkErrorHandeller(error);
+    }finally{
+      setBtnLoading(false)
     }
-    setLoading(false);
+    
   };
   const propsData = {
     pageTitle: "Update Testimonial",
@@ -92,7 +98,15 @@ const EditTestimonial = () => {
     buttonUrl: "/dashboard/testimonial-list",
     type: "list",
   };
-
+  if (loading) {
+    return (
+      <>
+        <PageHeaderSkeleton />
+        <br />
+        <CategoryFormSkeleton />
+      </>
+    );
+  }
   return (
     <>
     <PageHeader propsData={propsData} />
@@ -170,12 +184,12 @@ const EditTestimonial = () => {
 
       <button
         type="submit"
-        className={`mt-4 px-4 py-2 text-white rounded-md transition ${
-          loading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
+        className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
+          btnloading ? "bg-gray-500 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"
         }`}
-        disabled={loading}
+        disabled={btnloading}
       >
-        {loading ? "Loading..." : "Update Testimonial"}
+        {btnloading ? "Loading..." : "Update Testimonial"}
       </button>
     </form>
     </>
