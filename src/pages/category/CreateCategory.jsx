@@ -102,7 +102,7 @@ const CreateCategory = () => {
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
-        className="mx-auto p-4 border border-gray-200 rounded-lg"
+        className="mx-auto p-4 border border-lightBorder dark:border-darkBorder rounded-lg"
       >
         <div className="mb-4">
           <SingleSelect

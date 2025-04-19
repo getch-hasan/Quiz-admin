@@ -7,6 +7,8 @@ import { ImageUpload, SingleSelect, TextAreaInput, TextCheckbox, TextInput } fro
 import { PageHeader } from "../../components/PageHeading/PageHeading";
 import { FaRegEdit } from "react-icons/fa";
 import { networkErrorHandeller } from "../../utils/helpers";
+import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
+import CategoryFormSkeleton from "../../components/loading/exam-skeleton/examForm-skeleton";
 
 const EditTestimonial = () => {
   const [testimonial, setTestimonial] = useState(null);

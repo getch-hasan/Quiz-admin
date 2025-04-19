@@ -68,6 +68,9 @@ body {
 .dark .rdt_Pagination{
   @apply bg-darkCard text-darkTitle
 }
+.dark .css-yqyng-control{
+  @apply border border-darkBorder
+}
 .dark #pagination-last-page,
 .dark #pagination-next-page,
 .dark #pagination-previous-page,
@@ -104,22 +107,3 @@ body {
   border-radius:8px;
 }
 
-  /* index.css বা global.css এ যোগ করো */
-  .custom-input {
-    -webkit-text-fill-color: white;
-    background-color: transparent;
-    caret-color: white;
-  }
-  
-  .custom-input:-webkit-autofill {
-    -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
-    -webkit-text-fill-color: transparent !important;
-  }
-  
-  /* Optional: Remove formatting when pasting styled text */
-  .custom-input::-webkit-paste {
-    all: unset;
-  }
-  .noselect {
-    user-select: none;
-  }

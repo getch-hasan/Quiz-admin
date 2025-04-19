@@ -37,8 +37,8 @@ export const TextInput = (props) => {
         min={0}
         className={
           props.error
-            ? `w-full text-sm bg-lightCard dark:bg-darkCard disabled:bg-gray-300 rounded-md outline-none p-[14px] border border-red-500 ${props.className}`
-            : `w-full text-sm bg-lightCard dark:bg-darkCard text-lightTitle dark:text-darkTitle disabled:bg-gray-300 rounded-md outline-none p-[14px] border  border-gray-300 ${props.className}`
+            ? `w-full text-sm bg-lightCard dark:bg-darkCard disabled:bg-gray-300 rounded-md outline-none p-[14px] border  dark:text-darkTitle border-red-500 ${props.className}`
+            : `w-full text-sm bg-lightCard dark:bg-darkCard text-lightTitle dark:text-darkTitle disabled:bg-gray-300 rounded-md outline-none p-[14px] border   border-lightBorder  dark:border-darkBorder ${props.className}`
         }
       />
     </div>
@@ -178,46 +178,91 @@ export const DateInput = (props) => {
 
 /* ------------------------ Single Select field -------------------- */
 
-const customStyles = (error,value) => {
-  // const value = localStorage.getItem("theme")
+// const customStyles = (error,value,theme) => {
+//   console.log("first",value)
+//   // const value = localStorage.getItem("theme")
+//   const myStyles = {
+//     control: (provided) => ({
+//       ...provided,
+//       minHeight: 50,
+//       fontSize: 14,
+//       // color: theme==="light"? "black" :"red",
+//       color:"black",
+//       background:  value=='light'?'#FFFFFF':"#1E293B",
+//       boxShadow: "none",
+//       "&:hover": { borderColor: "1px solid #fff" },
+//       border: error ? "1px solid red" : "1px solid #dfdfdf",
+//       borderRadius: 6,
+//       cursor: "pointer",
+      
+     
+//     }),
+//     option: (provided, state,theme) => ({
+//       ...provided,
+//       backgroundColor: state.isSelected
+//         ? 'blue'
+//         : state.isFocused
+//         ? '#D1E7FD'
+//         : '',
+//         color:
+//         state.isSelected || state.isFocused
+//           ? theme === 'light'
+//             ? 'red'
+//             : '#fff'
+//           : '',
+      
+//     }),
+//     singleValue: (provided, value) => ({
+
+      
+//       ...provided,
+//       color: value == 'light' ? 'black' : 'red',
+//     }),
+    
+//   };
+//   return myStyles;
+// };
+const customStyles = (error, themeValue) => {
+  console.log("themeValue:", themeValue);
+
   const myStyles = {
     control: (provided) => ({
       ...provided,
       minHeight: 50,
       fontSize: 14,
-      // color: theme==="light"? "black" :"red",
-      color:"black",
-      background:  value=='light'?'#FFFFFF':"#1E293B",
+      color: "black",
+      background: themeValue === 'light' ? '#FFFFFF' : "#1E293B",
       boxShadow: "none",
       "&:hover": { borderColor: "1px solid #fff" },
       border: error ? "1px solid red" : "1px solid #dfdfdf",
       borderRadius: 6,
       cursor: "pointer",
-      
-     
     }),
-    option: (provided, state,theme) => ({
+
+    option: (provided, state) => ({
       ...provided,
       backgroundColor: state.isSelected
         ? 'blue'
         : state.isFocused
-        ? '#D1E7FD'
+        ? '#7FB3F0'
         : '',
-        color:
+      color:
         state.isSelected || state.isFocused
-          ? theme === 'light'
-            ? 'red'
+          ? themeValue === 'light'
+            ? 'black'
             : '#fff'
           : '',
-      
     }),
-    singleValue: (provided,theme) => ({
+
+    singleValue: (provided) => ({
       ...provided,
-      color: theme === 'light' ? 'black' : 'white', 
+      color: themeValue === 'light' ? 'black' : 'white',
     }),
   };
+
   return myStyles;
 };
+
 
 /* Single select field */
 export const SingleSelect = (props) => {
@@ -238,7 +283,10 @@ export const SingleSelect = (props) => {
   };
 
   // mode added 
-  const [theme, setTheme] = useState(localStorage.getItem("theme")||"light");
+  // ||"light"
+  const [theme, setTheme] = useState(localStorage.getItem("theme"));
+
+console.log("theme1",theme)
 
   // Optional: Listen for theme changes across tabs
   useEffect(() => {
@@ -431,7 +479,7 @@ export const ImageUpload = (props) => {
         {props?.label}{" "}
         <span className="text-white">{props?.rules?.required ? "*" : ""}</span>
       </span>
-      <div className="relative  rounded-md w-full cursor-pointer bg-white border  border-gray-300">
+      <div className="relative  rounded-md w-full cursor-pointer  border bg-lightCard dark:bg-darkCard border-lightBorder  dark:border-darkBorder">
         <input
           type="file"
           accept="image/*"
@@ -444,26 +492,26 @@ export const ImageUpload = (props) => {
             <img
               src={preview}
               alt="Preview"
-              className="h-12 w-12 object-cover rounded-md cursor-pointer"
+              className="h-12 w-12 object-cover rounded-md cursor-pointer "
             />
           ) : (
-            <div className="h-12 w-12 flex items-center justify-center bg-gray-200 rounded-md cursor-pointer">
+            <div className="h-12 w-12 flex items-center justify-center  rounded-md cursor-pointer bg-gray-200 dark:bg-black  ">
               {props?.imgUrl ? (
                 <img
                   src={`${import.meta.env.VITE_API_SERVER}${props?.imgUrl}`}
                   alt="loading"
-                  className="h-12 w-12 object-cover rounded-md cursor-pointer"
+                  className="h-12 w-12 object-cover rounded-md cursor-pointer "
                 />
               ) : (
                 "📷"
               )}
             </div>
           )}
-          <span className="text-gray-700">Click to upload</span>
+          <span className="text-gray-700 dark:text-gray-300 ">Click to upload</span>
         </div>
       </div>
       {props?.error && (
-        <p className="text-xs text-red-500 pl-3.5">{props?.error}</p>
+        <p className="text-xs text-red-500 pl-3.5 ">{props?.error}</p>
       )}
     </div>
   );
