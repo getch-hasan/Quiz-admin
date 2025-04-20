@@ -17,6 +17,8 @@ export const QuestionList = () => {
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  console.log("questions",questions)
+
   
   // Fetch question from API
   const fetchQuestion = useCallback(async () => {
@@ -106,6 +108,24 @@ export const QuestionList = () => {
       name: "Description",
       cell: (row) => row.q_description,
     },
+    {
+      name: "Options",
+      cell: (row) => (
+        <div className="flex flex-col gap-">
+          {row.option?.map((opt, index) => (
+            <span
+              key={index}
+              className=" py-1 rounded text-xs"
+            >
+              {index +1 }: { opt.option}
+              
+             
+            </span>
+          ))}
+        </div>
+      ),
+    },
+    
 
     {
       name: "Difficulty Level", 

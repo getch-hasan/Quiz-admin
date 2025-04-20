@@ -98,6 +98,16 @@ body {
 .dark .css-fmqkmq-control{
   @apply bg-darkCard text-darkTitle ; 
 }
+.dark .rbc-btn-group{
+  @apply bg-gray-300; 
+}
+.dark .rbc-off-range-bg{
+  @apply bg-black; 
+}
+.dark .rbc-today{
+  @apply bg-gray-600; 
+}
+
   
 .rdt_Table,
 .rdt_TableHead,

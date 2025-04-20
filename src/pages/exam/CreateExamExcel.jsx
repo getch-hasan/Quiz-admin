@@ -69,7 +69,7 @@ const CreateExamExcel = () => {
       <PageHeader propsData={propsData} />
       <form
         onSubmit={handleSubmit(onFormSubmit)}
-        className="p-4 shadow-md rounded-md bg-white"
+        className="p-4 shadow-md rounded-md bg-lightCard dark:bg-darkCard"
       >
         <ExcelUpload
           name="file"

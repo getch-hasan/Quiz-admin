@@ -72,7 +72,7 @@ const Testimonial = () => {
       name: "Thumbnail",
       cell: (row) => (
         <img
-          className="w-10 h-10 rounded-full border"
+          className="w-10 h-10 rounded-full border  border-lightBorder dark:border-darkBorder"
           src={row?.pic ? `${import.meta.env.VITE_API_SERVER}${row?.pic}` : ""}
           alt="images"
         />

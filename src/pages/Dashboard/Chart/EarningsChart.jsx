@@ -1,44 +1,43 @@
-import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  Legend,
+} from 'recharts';
 
-const data = [
-  { name: 'Jan', Revenue: 12000, Profit: 9000 },
-  { name: 'Feb', Revenue: 15000, Profit: 11000 },
-  { name: 'Mar', Revenue: 7000, Profit: 5000 },
-  { name: 'Apr', Revenue: 11000, Profit: 8500 },
-  { name: 'May', Revenue: 16000, Profit: 12500 },
-  { name: 'Jun', Revenue: 14000, Profit: 11000 },
-  { name: 'Jul', Revenue: 5000, Profit: 4000 },
-  { name: 'Aug', Revenue: 10000, Profit: 7500 },
+const monthlyExamData = [
+  { month_name: "January", total_exams: 12 },
+  { month_name: "February", total_exams: 8 },
+  { month_name: "March", total_exams: 19 },
+  { month_name: "April", total_exams: 24 },
+  { month_name: "May", total_exams: 17 },
+  { month_name: "June", total_exams: 29 },
+  { month_name: "July", total_exams: 14 },
+  { month_name: "August", total_exams: 21 },
+  { month_name: "September", total_exams: 10 },
+  { month_name: "October", total_exams: 26 },
+  { month_name: "November", total_exams: 7 },
+  { month_name: "December", total_exams: 30 },
 ];
 
-export default function EarningsChart() {
+export default function EarningsChart({dashboard}) {
   return (
     <div className="h-[450px] p-3 shadow-md rounded-md dark:bg-darkCard bg-lightCard text-lightTitle dark:text-darkTitle">
-      <h2 className="text-lg font-semibold mb-2">Earnings</h2>
-      <div className="flex justify-between items-center ">
-        <div>
-          <span className="text-sm text-gray-500">Revenue</span>
-          <h3 className="text-xl font-bold">$37,802</h3>
-          <span className="text-green-500 text-sm">▲ 0.56%</span>
-        </div>
-        <div>
-          <span className="text-sm text-gray-500">Profit</span>
-          <h3 className="text-xl font-bold">$28,305</h3>
-          <span className="text-green-500 text-sm">▲ 0.56%</span>
-        </div>
-      </div>
+      <h2 className="text-lg font-semibold mb-4">Monthly Exam Overview</h2>
 
-      {/* Earnings Bar Chart */}
-      <ResponsiveContainer width="100%" height={320}>
-        <BarChart data={data}>
-          <XAxis dataKey="name" stroke="#ccc" />
+      <ResponsiveContainer width="100%" >
+        <BarChart data={dashboard.latest_exam}>
+          <XAxis dataKey="month_name" stroke="#ccc" />
           <YAxis stroke="#ccc" />
-          <Tooltip />
+          {/* <Tooltip /> */}
           <Legend />
-          <Bar dataKey="Revenue" fill="#3b82f6" />
-          <Bar dataKey="Profit" fill="#93c5fd" />
+          <Bar dataKey="total_exams" fill="#3b82f6" name="Total Exams" />
         </BarChart>
       </ResponsiveContainer>
     </div>
   );
 }
+

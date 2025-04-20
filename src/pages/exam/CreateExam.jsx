@@ -54,7 +54,7 @@ const CreateExam = () => {
   }, [fetchCategory]);
 
   const onFormSubmit = async (data) => {
-    console.log("formData",data)
+    console.log("formData", data);
     try {
       setBtnLoading(true);
       const formData = new FormData();
@@ -67,19 +67,17 @@ const CreateExam = () => {
       if (data.thumbnail && data.thumbnail) {
         formData.append("thumbnail", data.thumbnail);
       }
-      
+
       const response = await NetworkServices.Exam.store(formData);
-      console.log("response",response)
+      console.log("response", response);
       if (response && response.status === 200) {
         const examId = response.data?.data?.exam_id;
         navigate(`/dashboard/create-excel-exam/${examId}`);
         return Toastify.Success("Create Exam Successfully");
-       
       }
     } catch (error) {
       networkErrorHandeller(error);
-    }
-    finally {
+    } finally {
       setBtnLoading(false); // Always runs
     }
   };
@@ -102,117 +100,119 @@ const CreateExam = () => {
   return (
     <>
       <PageHeader propsData={propsData} />
-      <form
-        onSubmit={handleSubmit(onFormSubmit)}
-        className="p-4 shadow-md rounded-md bg-white"
-      >
-        {/* Category */}
-        <div className="mb-4">
-          <SingleSelect
-            name="singleSelect"
-            control={control}
-            options={categories}
-            rules={{ required: "Category selection is required" }}
-            onSelected={(selected) =>
-              setValue("category_id", selected?.category_id)
-            }
-            placeholder="Select a category *"
-            error={errors.singleSelect?.message}
-            label="Choose a category"
-            // error={errors} // Pass an error message if validation fails
-          />
-        </div>
-
-        {/* Exam Name */}
-        <div className="mb-4">
-          <TextInput
-            name="exam_name"
-            control={control}
-            label="Exam Name *"
-            placeholder="Enter your exam name"
-            rules={{ required: "Exam Name is required" }} // Validation rule
-            error={errors?.exam_name?.message} // Show error message
-          />
-        </div>
-
-        {/* Grid Layout for Additional Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Total Marks */}
-          <div>
-            <TextInput
-              name="total_marks"
-              control={control}
-              label="Total Marks *"
-              type="number"
-              placeholder="Enter your total marks"
-              rules={{ required: "Total marks is required" }} // Validation rule
-              error={errors.total_marks?.message} // Show error message
-            />
-          </div>
-          {/* Total Questions */}
-          <div>
-            <TextInput
-              name="total_questions"
-              control={control}
-              label="Total Question *"
-              type="number"
-              placeholder="Enter your Total marks"
-              rules={{ required: "Total questions is required" }} // Validation rule
-              error={errors.total_questions?.message} // Show error message
-            />
-          </div>
-
-          {/* Duration */}
-          <div>
-            <TextInput
-              name="duration"
-              control={control}
-              label="Duration *"
-              type="number"
-              placeholder="Enter your Duration"
-              rules={{ required: "Duration is required" }} // Validation rule
-              error={errors.duration?.message} // Show error message
-            />
-          </div>
-        </div>
-        {/* Thumbnail Upload */}
-        <div className="mt-4 cursor-pointer">
-          <ImageUpload
-            name="thumbnail"
-            control={control}
-            label="Category Picture"
-            onUpload={(file) => setValue("thumbnail", file)}
-          />
-        </div>
-        {/* Status (Checkbox) */}
-        <div className="mt-4 cursor-pointer">
-          {/* <label className="flex items-center"> */}
-          <input
-            type="checkbox"
-            id="status"
-            {...register("status")}
-            className="mr-2 cursor-pointer"
-            value="1"
-            checked={watch("status") === 1}
-            onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
-          />
-          <span className="text-gray-500 font-normal">Status</span>
-          {/* </label> */}
-        </div>
-
-        {/* Submit Button */}
-        <button
-          type="submit"
-          className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
-            btnloading
-              ? "bg-gray-500 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          }`}
-          disabled={btnloading} // Disable button when loading
+      <div className="">
+        <form
+          onSubmit={handleSubmit(onFormSubmit)}
+          className="p-4 shadow-md rounded-md bg-lightCard dark:bg-darkCard"
         >
-          {btnloading ? "Loading..." : "Create Exam"}
-        </button>
-      </form>
+          {/* Category */}
+          <div className="mb-4">
+            <SingleSelect
+              name="singleSelect"
+              control={control}
+              options={categories}
+              rules={{ required: "Category selection is required" }}
+              onSelected={(selected) =>
+                setValue("category_id", selected?.category_id)
+              }
+              placeholder="Select a category *"
+              error={errors.singleSelect?.message}
+              label="Choose a category"
+              // error={errors} // Pass an error message if validation fails
+            />
+          </div>
+
+          {/* Exam Name */}
+          <div className="mb-4">
+            <TextInput
+              name="exam_name"
+              control={control}
+              label="Exam Name *"
+              placeholder="Enter your exam name"
+              rules={{ required: "Exam Name is required" }} // Validation rule
+              error={errors?.exam_name?.message} // Show error message
+            />
+          </div>
+
+          {/* Grid Layout for Additional Fields */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Total Marks */}
+            <div>
+              <TextInput
+                name="total_marks"
+                control={control}
+                label="Total Marks *"
+                type="number"
+                placeholder="Enter your total marks"
+                rules={{ required: "Total marks is required" }} // Validation rule
+                error={errors.total_marks?.message} // Show error message
+              />
+            </div>
+            {/* Total Questions */}
+            <div>
+              <TextInput
+                name="total_questions"
+                control={control}
+                label="Total Question *"
+                type="number"
+                placeholder="Enter your Total marks"
+                rules={{ required: "Total questions is required" }} // Validation rule
+                error={errors.total_questions?.message} // Show error message
+              />
+            </div>
+
+            {/* Duration */}
+            <div>
+              <TextInput
+                name="duration"
+                control={control}
+                label="Duration *"
+                type="number"
+                placeholder="Enter your Duration"
+                rules={{ required: "Duration is required" }} // Validation rule
+                error={errors.duration?.message} // Show error message
+              />
+            </div>
+          </div>
+          {/* Thumbnail Upload */}
+          <div className="mt-4 cursor-pointer">
+            <ImageUpload
+              name="thumbnail"
+              control={control}
+              label="Category Picture"
+              onUpload={(file) => setValue("thumbnail", file)}
+            />
+          </div>
+          {/* Status (Checkbox) */}
+          <div className="mt-4 cursor-pointer">
+            {/* <label className="flex items-center"> */}
+            <input
+              type="checkbox"
+              id="status"
+              {...register("status")}
+              className="mr-2 cursor-pointer"
+              value="1"
+              checked={watch("status") === 1}
+              onChange={(e) => setValue("status", e.target.checked ? 1 : 0)}
+            />
+            <span className="text-gray-500 font-normal">Status</span>
+            {/* </label> */}
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
+              btnloading
+                ? "bg-gray-500 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700"
+            }`}
+            disabled={btnloading} // Disable button when loading
+          >
+            {btnloading ? "Loading..." : "Create Exam"}
+          </button>
+        </form>
+      </div>
     </>
   );
 };

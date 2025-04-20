@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { NetworkServices } from "../../network";
-
-import PageHeaderSkeleton from "../../components/loading/pageHeader-skeleton";
-import { SkeletonForm } from "../../components/loading/skeleton-table";
 import { GiSandsOfTime } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 import { FcQuestions } from "react-icons/fc";

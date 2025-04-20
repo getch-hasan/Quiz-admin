@@ -605,7 +605,7 @@ export const ExcelUpload = (props) => {
         {props?.label}{" "}
         <span className="text-red-500">{props?.required ? "*" : ""}</span>
       </span>
-      <div className="relative border rounded-md w-full cursor-pointer bg-white px-4 py-2">
+      <div className="relative border border-lightBorder dark:border-darkBorder rounded-md w-full cursor-pointer bg-lightCard dark:bg- text-lightTitle dark:text-darkTitle px-4 py-2">
         <input
           type="file"
           accept=".xlsx,.xls,.csv"

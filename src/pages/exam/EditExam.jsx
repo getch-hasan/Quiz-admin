@@ -153,7 +153,7 @@ const EditExam = () => {
 
       <form
         onSubmit={handleSubmit(onFormSubmit)}
-        className="p-4 shadow-md rounded-md bg-white"
+        className="p-4 shadow-md rounded-md bg-lightCard dark:bg-darkCard"
       >
         {/* Category */}
         <div className="mb-4">
