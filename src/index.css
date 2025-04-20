@@ -60,6 +60,12 @@ body {
 .dark .rdt_TableRow {
   @apply bg-darkCard text-darkTitle border-b border-darkBorder; 
 }
+.dark .rdt_TableRow {
+  @apply border; 
+}
+.dark .kgpTAk {
+  @apply bg-darkCard text-white; 
+}
 
 .dark .rdt_TableRow:hover {
   @apply bg-darkCard text-darkTitle ;  

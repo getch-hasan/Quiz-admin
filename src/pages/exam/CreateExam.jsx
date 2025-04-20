@@ -73,7 +73,7 @@ const CreateExam = () => {
       if (response && response.status === 200) {
         const examId = response.data?.data?.exam_id;
         navigate(`/dashboard/create-excel-exam/${examId}`);
-        return Toastify.Success("Category Created.");
+        return Toastify.Success("Create Exam Successfully");
        
       }
     } catch (error) {

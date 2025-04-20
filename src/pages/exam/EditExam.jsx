@@ -119,7 +119,7 @@ const EditExam = () => {
       console.log("response", response);
       if (response && response.status === 200) {
         navigate("/dashboard/exam-list");
-        Toastify.Success(examId ? "Exam Updated." : "Exam Created.");
+        Toastify.Success(examId ? "Update Exam Successfully" : "Create Exam Successfully");
       }
     } catch (error) {
       console.log("Error:", error);

@@ -8,13 +8,12 @@ import { GiSandsOfTime } from "react-icons/gi";
 import { GrAchievement } from "react-icons/gr";
 import { FcQuestions } from "react-icons/fc";
 import { networkErrorHandeller, responseChecker } from "../../utils/helpers";
+import ListSkeleton from "../../components/loading/ListSkeleton";
 
 const Show = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const { userId } = useParams();
- 
-
 
   // Fetch user details
   const fetchUser = async () => {
@@ -39,9 +38,7 @@ const Show = () => {
   if (loading) {
     return (
       <div className="text-center">
-        <PageHeaderSkeleton />
-        <br />
-        <SkeletonForm />
+        <ListSkeleton />
       </div>
     );
   }
@@ -59,7 +56,9 @@ const Show = () => {
               className="absolute inset-0 bg-cover bg-center transition-all duration-300"
               style={{
                 backgroundImage: exam?.exam?.thumbnail
-                  ? `url(${import.meta.env.VITE_API_SERVER}${exam?.exam?.thumbnail})`
+                  ? `url(${import.meta.env.VITE_API_SERVER}${
+                      exam?.exam?.thumbnail
+                    })`
                   : `url('/images/exam.jpg')`,
               }}
             >

@@ -39,7 +39,7 @@ const CreateExamExcel = () => {
       const response = await NetworkServices.Question.store(formData);
       if (response && response.status === 200) {
         navigate("/dashboard/exam-list");
-        return Toastify.Success("Question Created.");
+        return Toastify.Success("Create Question Successfully");
       }
     } catch (error) {
       networkErrorHandeller(error);

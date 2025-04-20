@@ -52,7 +52,7 @@ const CreateTestimonial = () => {
   
       if (response && response.status === 200) {
         navigate("/dashboard/testimonial-list");
-        return Toastify.Success("Testimonial Created.");
+        return Toastify.Success("Create Testimonial Successfully ");
       }
     } catch (error) {
       networkErrorHandeller(error);

@@ -70,7 +70,7 @@ const CreateCategory = () => {
       console.log("objecttt", response);
       if (response && response.status === 200) {
         navigate("/dashboard/category");
-        return Toastify.Success("Category Created.");
+        return Toastify.Success("Create Category Successfully");
       }
     } catch (error) {
       console.log("error", error);

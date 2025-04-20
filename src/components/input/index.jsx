@@ -554,7 +554,7 @@ export const TextCheckbox = (props) => {
         className={
           props?.error
             ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border !border-danger ${props?.className}`
-            : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props?.className}`
+            : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border  disabled:border-gray-300 ${props?.className}`
         }
       />
     </div>

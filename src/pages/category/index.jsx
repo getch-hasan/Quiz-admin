@@ -79,7 +79,7 @@ export const CategoryList = () => {
       name: "Thumbnail",
       cell: (row) => (
         <img
-          className="w-10 h-10 rounded-full border  border-gray-300"
+          className="w-10 h-10 rounded-full border  border-lightBorder dark:border-darkBorder"
           src={
             row?.thumbnail
               ? `${import.meta.env.VITE_API_SERVER}${row?.thumbnail}`

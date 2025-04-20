@@ -82,7 +82,7 @@ const EditTestimonial = () => {
 
       const response = await NetworkServices.Testimonial.update(id, formData);
       if (response && response.status === 200) {
-        Toastify.Success("Testimonial Updated.");
+        Toastify.Success("Update Testimonial Successfully");
         navigate("/dashboard/testimonial-list");
       }
     } catch (error) {

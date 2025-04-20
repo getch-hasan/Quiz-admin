@@ -107,7 +107,7 @@ const EditCategory = () => {
 
       if (responseChecker(response, 200)) {
         navigate("/dashboard/category");
-        return Toastify.Success("Category Updated.");
+        return Toastify.Success(" Update Category Successfully");
       }
     } catch (error) {
       networkErrorHandeller(error);
