@@ -43,16 +43,19 @@ const Dashboard = () => {
           <CalendarComponent />
           {/* <MyCalendar/> */}
         </div>
-        <div className="col-span-4">
+        {/* <div className="col-span-4">
           <RecentOrderChart />
+        </div> */}
+              <div className=" col-span-4">
+          <EarningsChart dashboard={dashboard} />
         </div>
   
       </div>
-      <div className="mt-8">
+      {/* <div className="mt-8">
           <EarningsChart dashboard={dashboard} />
-        </div>
-      <div className="mt-6">
-        <ShowTable />
+        </div> */}
+      <div className="mt-8">
+        <ShowTable dashboard={dashboard}/>
       </div>
     </div>
   );

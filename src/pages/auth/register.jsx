@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [focusField, setFocusField] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  // const [btnloading, setBtnLoading] = useState(false);
   const [inputValues, setInputValues] = useState({
     username: "",
     email: "",

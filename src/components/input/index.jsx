@@ -128,7 +128,7 @@ export const TextAreaInput = (props) => {
         className={
           props.error
             ? `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border border-red-500 ${props.className}`
-            : `w-full text-sm bg-white disabled:bg-gray-300 rounded-md outline-none p-[14px] border disabled:border-gray-300 ${props.className}`
+            : `w-full text-sm bg-lightCard dark:bg-darkCard text-lightTitle dark:text-darkTitle disabled:bg-gray-300 rounded-md outline-none p-[14px] border   border-lightBorder  dark:border-darkBorder ${props.className}`
         }
       />
     </div>
@@ -605,7 +605,7 @@ export const ExcelUpload = (props) => {
         {props?.label}{" "}
         <span className="text-red-500">{props?.required ? "*" : ""}</span>
       </span>
-      <div className="relative border border-lightBorder dark:border-darkBorder rounded-md w-full cursor-pointer bg-lightCard dark:bg- text-lightTitle dark:text-darkTitle px-4 py-2">
+      <div className="relative border border-lightBorder dark:border-darkBorder rounded-md w-full cursor-pointer bg-lightCard dark:bg-darkCard text-lightTitle dark:text-darkTitle px-4 py-2">
         <input
           type="file"
           accept=".xlsx,.xls,.csv"
@@ -614,7 +614,7 @@ export const ExcelUpload = (props) => {
           onChange={handleFileChange}
         />
         <div className="flex items-center justify-between">
-          <span className="text-gray-700 truncate w-5/6">
+          <span className="text-lightTitle dark:text-darkTitle truncate w-5/6">
             {fileName || "Click to upload Excel/CSV file"}
           </span>
           <span className="text-blue-500 font-medium">📁</span>

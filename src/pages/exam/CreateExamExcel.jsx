@@ -13,7 +13,8 @@ import { networkErrorHandeller } from "../../utils/helpers";
 
 const CreateExamExcel = () => {
 
-  const [loading, setLoading] = useState(false);
+  
+  const [btnloading, setBtnLoading] = useState(false);
   const { id } = useParams();
   console.log("id", id);
 
@@ -31,20 +32,20 @@ const CreateExamExcel = () => {
 
   const onFormSubmit = async (data) => {
     try {
-      setLoading(true);
+      setBtnLoading(true);
       const formData = new FormData();
       formData.append("exam_id", id);
       formData.append("question_file", data.file);
 
       const response = await NetworkServices.Question.store(formData);
       if (response && response.status === 200) {
-        navigate("/dashboard/exam-list");
+        navigate("/dashboard/question-list");
         return Toastify.Success("Create Question Successfully");
       }
     } catch (error) {
       networkErrorHandeller(error);
     } finally {
-      setLoading(false);
+      setBtnLoading(false);
     }
   };
 
@@ -55,15 +56,7 @@ const CreateExamExcel = () => {
     buttonUrl: "/dashboard/exam-list",
     type: "list", // This indicates the page type for the button
   };
-  if (loading) {
-    return (
-      <>
-        <PageHeaderSkeleton />
-        <br />
-        <CategoryFormSkeleton />
-      </>
-    );
-  }
+
   return (
     <div>
       <PageHeader propsData={propsData} />
@@ -82,13 +75,13 @@ const CreateExamExcel = () => {
         <button
           type="submit"
           className={`mt-4 px-4 py-2 text-white rounded-md transition cursor-pointer ${
-            loading
+            btnloading
               ? "bg-gray-500 cursor-not-allowed"
               : "bg-blue-600 hover:bg-blue-700"
           }`}
-          disabled={loading} // Disable button when loading
+          disabled={btnloading} // Disable button when loading
         >
-          {loading ? "Loading..." : "Create Question"}
+          {btnloading ? "Loading..." : "Create Question"}
         </button>
       </form>
     </div>

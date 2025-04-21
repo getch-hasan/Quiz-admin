@@ -29,9 +29,10 @@ export default function EarningsChart({dashboard}) {
       <h2 className="text-lg font-semibold mb-4">Monthly Exam Overview</h2>
 
       <ResponsiveContainer width="100%" >
-        <BarChart data={dashboard.latest_exam}>
+        <BarChart data={dashboard.latest_exam} barSize={100}>
           <XAxis dataKey="month_name" stroke="#ccc" />
           <YAxis stroke="#ccc" />
+         
           {/* <Tooltip /> */}
           <Legend />
           <Bar dataKey="total_exams" fill="#3b82f6" name="Total Exams" />

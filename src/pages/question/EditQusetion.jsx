@@ -251,7 +251,7 @@ export const EditQuestion = () => {
           <TextAreaInput
             name="q_description"
             control={control}
-            label="Question Description *"
+            label="Question Description "
             placeholder="Enter question description"
             error={errors.q_description?.message}
           />
@@ -272,7 +272,7 @@ export const EditQuestion = () => {
             }
             placeholder={watch("difficulty_level") || "Select Difficulty"}
             error={errors.difficulty_level?.message}
-            label="Choose Difficulty *"
+            label="Choose Difficulty "
             isClearable
           />
         </div>
